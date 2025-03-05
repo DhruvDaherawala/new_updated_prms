@@ -1,0 +1,97 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import PropertyList from './PropertyList1';
+import AddPropertyForm from './AddProperty1';
+import PropertyDetailModal from './PropertyDetailModal1';
+
+export default function PropertyMasterForm() {
+  // Pull API URL from Vite environment
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // States
+  const [properties, setProperties] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  // Fetch all properties on mount
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = async () => {
+    try {
+      const response = await axios.get(`${API_URL}property`);
+      setProperties(response.data);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    }
+  };
+
+  // Edit function - opens modal directly in edit mode
+  const handleEditClick = async (prop) => {
+    try {
+      const response = await axios.get(`${API_URL}property/with-children/${prop.id}`);
+      setSelectedProperty({ ...response.data, isEditing: true, isChildEditing: true });
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching property details:', error);
+      alert('Failed to load property details.');
+    }
+  };
+
+  // Property Details Modal
+  const handleDetailsClick = async (prop) => {
+    try {
+      const response = await axios.get(`${API_URL}property/with-children/${prop.id}`);
+      setSelectedProperty(response.data);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching property details:', error);
+      alert('Failed to load property details.');
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProperty(null);
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto p-4 space-y-6">
+      {/* Properties Listing */}
+      <div className="bg-white shadow rounded-md p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-800">Registered Properties</h2>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            {showForm ? 'Close Form' : 'Add Property'}
+          </button>
+        </div>
+        <div className="overflow-scroll">
+          <PropertyList properties={properties} onEdit={handleEditClick} onDetails={handleDetailsClick} apiUrl={API_URL} />
+        </div>
+      </div>
+
+      {/* Add Property Form */}
+      {showForm && (
+        <AddPropertyForm
+          apiUrl={API_URL}
+          onSubmitSuccess={() => {
+            fetchProperties();
+            setShowForm(false);
+          }}
+        />
+      )}
+
+      {/* Modal for Property Details */}
+      {isModalOpen && selectedProperty && (
+        <PropertyDetailModal property={selectedProperty} onClose={closeModal} refreshProperties={fetchProperties} apiUrl={API_URL} />
+      )}
+    </div>
+  );
+}
