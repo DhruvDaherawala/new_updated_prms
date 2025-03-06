@@ -9,9 +9,11 @@ const authRoutes = require("./routes/auth.routes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const renterRoutes = require("./routes/renterRoutes");
 const renterAllocationRoutes = require("./routes/renterAllocationRoutes");
+const childPropertyRoutes = require("./routes/childPropertyRoutes");
+
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
@@ -20,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS setup – ensure FRONT_URL in .env matches your frontend URL.
 app.use(
   cors({
-    origin: process.env.FRONT_URL || "http://localhost:5174",
+    origin: process.env.FRONT_URL || "http://localhost:3001",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -38,6 +40,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/property", propertyRoutes);
 app.use("/api/renter", renterRoutes);
 app.use("/api/allocations", renterAllocationRoutes);
+app.use("/api/child_property", childPropertyRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

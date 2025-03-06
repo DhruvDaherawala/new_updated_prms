@@ -7,6 +7,7 @@ import AddPropertyForm from 'component/PropertyMaster/AddProperty';
 import PropertyMasterForm1 from 'component/PropertyMaster1/PropertyMasterForm1';
 import RenterMasterForm1 from 'component/RenterMaster1/RenterMasterForm1';
 import RentalAllocation from 'component/RentalAllocation/RentalAllocation';
+import ChildPropertyMasterForm from 'component/ChildProperty/ChildPropertyMasterForm';
 
 const DashboardDefault = Loadable(lazy(() => import('views/Dashboard/Default')));
 const UtilsTypography = Loadable(lazy(() => import('views/Utils/Typography')));
@@ -29,7 +30,8 @@ const MainRoutes = {
     { path: '/utils/util-typography', element: <UtilsTypography /> },
     { path: '/property-page', element: <PropertyMasterForm1 /> },
     { path: '/renter-page', element: <RenterMasterForm1 /> },
-    { path: '/rental-allocation-page', element: <RentalAllocation /> }
+    { path: '/rental-allocation-page', element: <RentalAllocation /> },
+    { path: '/childproperty-page', element: <ChildPropertyMasterForm /> }
   ]
 };
 

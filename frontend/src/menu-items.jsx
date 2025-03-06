@@ -57,7 +57,7 @@ export default {
           icon: icons['ChromeReaderModeOutlinedIcon']
         },
         {
-          id: 'renter-page',
+          id: 'childproperty-page',
           title: 'Child Property',
           type: 'item',
           url: '/childproperty-page',
