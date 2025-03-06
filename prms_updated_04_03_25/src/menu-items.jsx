@@ -51,14 +51,37 @@ export default {
       children: [
         {
           id: 'property-page',
-          title: 'Property Page',
+          title: 'Property',
           type: 'item',
           url: '/property-page',
           icon: icons['ChromeReaderModeOutlinedIcon']
         },
         {
           id: 'renter-page',
-          title: 'Renter Page',
+          title: 'Child Property',
+          type: 'item',
+          url: '/childproperty-page',
+          icon: icons['SecurityOutlinedIcon']
+          // children: [
+          //   {
+          //     id: 'login-1',
+          //     title: 'Login',
+          //     type: 'item',
+          //     url: '/application/login',
+          //     target: true
+          //   }
+          //   // {
+          //   //   id: 'register',
+          //   //   title: 'Register',
+          //   //   type: 'item',
+          //   //   url: '/application/register',
+          //   //   target: true
+          //   // }
+          // ]
+        },
+        {
+          id: 'renter-page',
+          title: 'Renter',
           type: 'item',
           url: '/renter-page',
           icon: icons['SecurityOutlinedIcon']
@@ -81,7 +104,7 @@ export default {
         },
         {
           id: 'rental-allocation-page',
-          title: 'Rental Allocation Page',
+          title: 'Rental Allocation',
           type: 'item',
           url: '/rental-allocation-page',
           icon: icons['ChromeReaderModeOutlinedIcon']

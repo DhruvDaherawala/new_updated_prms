@@ -58,6 +58,7 @@ export default function RentalAllocation() {
       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
       setSelectedAllocation({ ...allocationData, isEditing: true });
       setIsModalOpen(true);
+      console.log(allocationData);
     } catch (error) {
       alert('Failed to load allocation details.');
     }

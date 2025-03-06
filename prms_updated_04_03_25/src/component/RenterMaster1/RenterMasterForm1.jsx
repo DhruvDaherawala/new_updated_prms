@@ -39,6 +39,7 @@ export default function RenterMasterForm() {
     try {
       const response = await axios.get(`${API_URL}renter`);
       setRenters(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error('Error fetching renters:', error);
     }
@@ -128,18 +129,12 @@ export default function RenterMasterForm() {
 
   // Edit function - opens modal directly in edit mode
   const handleEditClick = async (renter) => {
-    try {
-      const response = await axios.get(`${API_URL}renter/${renter.id}`);
-      setSelectedRenter({ ...response.data, isEditing: true });
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error('Error fetching renter details:', error);
-      alert('Failed to load renter details.');
-    }
+    setShowForm(true);
+    setFormData(renter);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setShowForm(false);
     setSelectedRenter(null);
   };
 
@@ -157,7 +152,13 @@ export default function RenterMasterForm() {
 
       {/* Add Renter Form */}
       {showForm && (
-        <RenterForm formData={formData} onInputChange={handleInputChange} onFileChange={handleFileChange} onSubmit={handleSubmit} />
+        <RenterForm
+          formData={formData}
+          onInputChange={handleInputChange}
+          onFileChange={handleFileChange}
+          onSubmit={handleSubmit}
+          onClose={closeModal}
+        />
       )}
 
       {/* Modal for Renter Details */}
