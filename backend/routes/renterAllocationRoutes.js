@@ -81,7 +81,7 @@
 // //   const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
 
 // //   const updateQuery = `
-// //     UPDATE renter_allocation 
+// //     UPDATE renter_allocation
 // //     SET renterId = ?, propertyId = ?, rentAmount = ?, startDate = ?, endDate = ?
 // //     WHERE id = ?
 // //   `;
@@ -119,7 +119,6 @@
 // //   });
 // // });
 // // module.exports = router;
-
 
 // //-------------------------
 
@@ -175,7 +174,7 @@
 //       const idProof = req.files["idProof"]?.[0]?.filename || null;
 
 //       const insertQuery = `
-//         INSERT INTO renter_allocation 
+//         INSERT INTO renter_allocation
 //           (renterId, propertyId, rentAmount, startDate, endDate, agreementDocument, idProof)
 //         VALUES (?, ?, ?, ?, ?, ?, ?)
 //       `;
@@ -205,7 +204,7 @@
 //     const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
 
 //     const updateQuery = `
-//       UPDATE renter_allocation 
+//       UPDATE renter_allocation
 //       SET renterId = ?, propertyId = ?, rentAmount = ?, startDate = ?, endDate = ?
 //       WHERE id = ?
 //     `;
@@ -248,9 +247,7 @@
 
 // module.exports = router;
 
-
 // //----------------------------
-
 
 const express = require("express");
 const router = express.Router();
@@ -316,27 +313,61 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
+      // const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
+
+      const {
+        renter_id,
+        property_id,
+        childproperty_id,
+        allocation_date,
+        rent_agreement,
+        other_document,
+        remarks,
+        status,
+      } = req.body;
       // Use Cloudinary URLs returned in "path"
-      const agreementDocument = req.files["agreementDocument"]?.[0]?.path || null;
-      const idProof = req.files["idProof"]?.[0]?.path || null;
+      // const agreementDocument =
+      //   req.files["agreementDocument"]?.[0]?.path || null;
+      // const idProof = req.files["idProof"]?.[0]?.path || null;
+
+      const agreementDocument =
+        req.files && req.files["agreementDocument"]
+          ? req.files["agreementDocument"][0].path
+          : null;
+      const idProof =
+        req.files && req.files["idProof"] ? req.files["idProof"][0].path : null;
+
+      // const insertQuery = `
+      //   INSERT INTO renter_allocation
+      //     (renterId, propertyId, rentAmount, startDate, endDate, agreementDocument, idProof)
+      //   VALUES (?, ?, ?, ?, ?, ?, ?)
+      // `;
 
       const insertQuery = `
-        INSERT INTO renter_allocation 
-          (renterId, propertyId, rentAmount, startDate, endDate, agreementDocument, idProof)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `;
+      INSERT INTO renter_allocation 
+        (renter_id, property_id, childproperty_id, allocation_date, rent_agreement, other_document, remarks, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+      // await pool.query(insertQuery, [
+      //   renterId,
+      //   propertyId,
+      //   rentAmount,
+      //   startDate,
+      //   endDate,
+      //   agreementDocument,
+      //   idProof,
+      // ]);
 
       await pool.query(insertQuery, [
-        renterId,
-        propertyId,
-        rentAmount,
-        startDate,
-        endDate,
-        agreementDocument,
-        idProof,
+        renter_id,
+        property_id,
+        childproperty_id,
+        allocation_date,
+        rent_agreement,
+        other_document,
+        remarks,
+        status,
       ]);
-
       res.status(201).json({ message: "Allocation created successfully" });
     } catch (error) {
       console.error("Error inserting allocation:", error);
