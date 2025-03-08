@@ -13,10 +13,11 @@ export default function RentalAllocation() {
   const [renters, setRenters] = useState([]);
   const [childProperties, setChildProperties] = useState([]);
   const [showForm, setShowForm] = useState(false);
-
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formMode, setFormMode] = useState('add');
   const [selectedAllocation, setSelectedAllocation] = useState(null);
+
+  // Modal state for AllocationDetailModal (only for viewing details)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function RentalAllocation() {
     }
   };
 
-  // Allocation Details Modal
+  // Allocation Details Modal (only for viewing details)
   const handleDetailsClick = async (allocation) => {
     try {
       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
@@ -52,12 +53,13 @@ export default function RentalAllocation() {
     }
   };
 
-  // Edit function - opens modal directly in edit mode
+  // Edit function - opens AllocationForm in edit mode
   const handleEditClick = async (allocation) => {
     try {
       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
-      setSelectedAllocation({ ...allocationData, isEditing: true });
-      setIsModalOpen(true);
+      setSelectedAllocation(allocationData);
+      setFormMode('edit');
+      setShowForm(true);
       console.log(allocationData);
     } catch (error) {
       alert('Failed to load allocation details.');
@@ -69,6 +71,12 @@ export default function RentalAllocation() {
     setSelectedAllocation(null);
   };
 
+  const closeForm = () => {
+    setShowForm(false);
+    setFormMode('add');
+    setSelectedAllocation(null);
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       {/* Allocations Listing */}
@@ -76,10 +84,13 @@ export default function RentalAllocation() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-800">Rental Allocations</h2>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              setFormMode('add');
+              setShowForm(!showForm);
+            }}
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
           >
-            {showForm ? 'Close Form' : 'Add Allocation'}
+            {showForm && formMode === 'add' ? 'Close Form' : 'Add Allocation'}
           </button>
         </div>
         {allocations.length === 0 ? (
@@ -97,18 +108,20 @@ export default function RentalAllocation() {
         )}
       </div>
 
-      {/* Add Allocation Form */}
+      {/* Allocation Form (for both adding and editing) */}
       {showForm && (
         <AllocationForm
           renters={renters}
           properties={properties}
           childProperties={childProperties}
           onAllocationAdded={fetchData}
-          onClose={() => setShowForm(false)}
+          onClose={closeForm}
+          mode={formMode}
+          allocation={selectedAllocation}
         />
       )}
 
-      {/* Modal for Allocation Details */}
+      {/* Modal for Allocation Details (only for viewing) */}
       {isModalOpen && selectedAllocation && (
         <AllocationDetailModal
           allocation={selectedAllocation}

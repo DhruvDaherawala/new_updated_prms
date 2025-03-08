@@ -76,11 +76,6 @@
 //   );
 // }
 
-
-
-
-
-
 // ChildPropertyList.jsx
 import React from 'react';
 
@@ -95,7 +90,7 @@ export default function ChildPropertyList({
 }) {
   // Helper to get parent's propertyName using property_id
   const getParentName = (property_id) => {
-    const parent = parentProperties.find(p => p.id === parseInt(property_id));
+    const parent = parentProperties.find((p) => p.id === parseInt(property_id));
     return parent ? parent.propertyName : 'N/A';
   };
 
@@ -126,7 +121,7 @@ export default function ChildPropertyList({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {childProperties.map(child => (
+            {childProperties.map((child) => (
               <tr key={child.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 whitespace-nowrap text-sm">{getParentName(child.property_id)}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm">{child.floor}</td>
@@ -142,9 +137,9 @@ export default function ChildPropertyList({
                     <button className="bg-blue-100 text-blue-600 px-2 py-1 rounded" onClick={() => onEditClick(child)}>
                       Edit
                     </button>
-                    <button className="bg-indigo-100 text-indigo-600 px-2 py-1 rounded" onClick={() => onDetailsClick(child)}>
+                    {/* <button className="bg-indigo-100 text-indigo-600 px-2 py-1 rounded" onClick={() => onDetailsClick(child)}>
                       Details
-                    </button>
+                    </button> */}
                     <button className="bg-red-100 text-red-600 px-2 py-1 rounded" onClick={() => onDeleteClick(child)}>
                       Delete
                     </button>

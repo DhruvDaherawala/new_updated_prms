@@ -11,6 +11,7 @@ export default function RenterMasterForm() {
   // States
   const [renters, setRenters] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [editFlag, setEditFlag] = useState(false);
   const [formData, setFormData] = useState({
     renterName: '',
     fullAddress: '',
@@ -129,8 +130,10 @@ export default function RenterMasterForm() {
 
   // Edit function - opens modal directly in edit mode
   const handleEditClick = async (renter) => {
+    console.log(renter, 'EDIT RENTER DATA HERE NOW.............');
     setShowForm(true);
     setFormData(renter);
+    setEditFlag(true);
   };
 
   const closeModal = () => {
@@ -143,21 +146,26 @@ export default function RenterMasterForm() {
       {/* Renters Listing */}
       <RenterList
         renters={renters}
-        onAddClick={() => setShowForm(!showForm)}
+        onAddClick={() => {
+          setShowForm(!showForm);
+          setFormData({});
+        }}
         showForm={showForm}
         apiUrl={API_URL}
         onEditClick={handleEditClick}
         onDetailsClick={handleDetailsClick}
+        setEditForm={setFormData}
       />
 
       {/* Add Renter Form */}
       {showForm && (
         <RenterForm
-          formData={formData}
+          editformData={formData}
           onInputChange={handleInputChange}
           onFileChange={handleFileChange}
           onSubmit={handleSubmit}
           onClose={closeModal}
+          editFlag={editFlag}
         />
       )}
 

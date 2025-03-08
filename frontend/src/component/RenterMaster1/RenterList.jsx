@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function RenterList({ renters, onAddClick, showForm, apiUrl, onEditClick, onDetailsClick }) {
+export default function RenterList({ renters, onAddClick, showForm, apiUrl, onEditClick, onDetailsClick, editForm, setEditForm }) {
   return (
     <div className="bg-white shadow rounded-md p-6">
       <div className="flex items-center justify-between mb-4">

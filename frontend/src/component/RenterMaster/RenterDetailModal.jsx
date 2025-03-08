@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [localRenter, setLocalRenter] = useState(renter);
 
-  const cardStyle = "p-2 border rounded-lg bg-gray-100";
-  const formInputStyle =
-    "w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200";
+  const cardStyle = 'p-2 border rounded-lg bg-gray-100';
+  const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
 
   // Handle changes for renter details
   const handleRenterChange = (field, value) => {
@@ -25,7 +24,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
     try {
       // Prepare form data
       const form = new FormData();
-      
+
       // Create a data object with all the text fields
       const dataToSend = {
         id: localRenter.id,
@@ -35,64 +34,59 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
         numberOfStayers: localRenter.numberOfStayers,
         contact1: localRenter.contact1,
         contact2: localRenter.contact2,
-        remarks: localRenter.remarks,
+        remarks: localRenter.remarks
       };
 
       // Append the JSON data
-      form.append("formData", JSON.stringify(dataToSend));
+      form.append('formData', JSON.stringify(dataToSend));
 
       // Append files if they exist
       if (localRenter.aadhaarCard && typeof localRenter.aadhaarCard !== 'string') {
-        form.append("aadhaarCard", localRenter.aadhaarCard);
+        form.append('aadhaarCard', localRenter.aadhaarCard);
       }
-      
+
       if (localRenter.panCard && typeof localRenter.panCard !== 'string') {
-        form.append("panCard", localRenter.panCard);
+        form.append('panCard', localRenter.panCard);
       }
-      
+
       if (localRenter.passportPhoto && typeof localRenter.passportPhoto !== 'string') {
-        form.append("passportPhoto", localRenter.passportPhoto);
+        form.append('passportPhoto', localRenter.passportPhoto);
       }
-      
+
       if (localRenter.otherDocument && typeof localRenter.otherDocument !== 'string') {
-        form.append("otherDocument", localRenter.otherDocument);
+        form.append('otherDocument', localRenter.otherDocument);
       }
 
       // Make PUT request with FormData and proper API URL
       await axios.put(`${apiUrl}renter/${localRenter.id}`, form, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      alert("Renter updated successfully!");
+      alert('Renter updated successfully!');
       refreshRenters();
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating renter:", error);
-      let errorMessage = "Failed to update renter! ";
+      console.error('Error updating renter:', error);
+      let errorMessage = 'Failed to update renter! ';
       if (error.response) {
-        errorMessage += `Server error: ${
-          error.response.data?.message || error.response.statusText
-        }`;
+        errorMessage += `Server error: ${error.response.data?.message || error.response.statusText}`;
       } else if (error.request) {
-        errorMessage += "No response received from server.";
+        errorMessage += 'No response received from server.';
       } else {
         errorMessage += error.message;
       }
       alert(errorMessage);
     }
   };
-  
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50  bg-opacity-50">
       <div className="bg-white w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
-        <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-          onClick={onClose}
-        >
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700" onClick={onClose}>
           ✕
         </button>
         <h2 className="text-2xl font-bold mb-4">Renter Details</h2>
-        
+
         <div className="space-y-4">
           <div>
             <label className="font-semibold">Renter ID:</label>
@@ -103,8 +97,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             {isEditing ? (
               <input
                 type="text"
-                value={localRenter.renterName || ""}
-                onChange={(e) => handleRenterChange("renterName", e.target.value)}
+                value={localRenter.renterName || ''}
+                onChange={(e) => handleRenterChange('renterName', e.target.value)}
                 className={formInputStyle}
               />
             ) : (
@@ -116,8 +110,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             {isEditing ? (
               <input
                 type="text"
-                value={localRenter.age || ""}
-                onChange={(e) => handleRenterChange("age", e.target.value)}
+                value={localRenter.age || ''}
+                onChange={(e) => handleRenterChange('age', e.target.value)}
                 className={formInputStyle}
               />
             ) : (
@@ -128,8 +122,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             <label className="font-semibold">Full Address:</label>
             {isEditing ? (
               <textarea
-                value={localRenter.fullAddress || ""}
-                onChange={(e) => handleRenterChange("fullAddress", e.target.value)}
+                value={localRenter.fullAddress || ''}
+                onChange={(e) => handleRenterChange('fullAddress', e.target.value)}
                 className={`${formInputStyle} h-24`}
               />
             ) : (
@@ -141,8 +135,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             {isEditing ? (
               <input
                 type="text"
-                value={localRenter.numberOfStayers || ""}
-                onChange={(e) => handleRenterChange("numberOfStayers", e.target.value)}
+                value={localRenter.numberOfStayers || ''}
+                onChange={(e) => handleRenterChange('numberOfStayers', e.target.value)}
                 className={formInputStyle}
               />
             ) : (
@@ -154,8 +148,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             {isEditing ? (
               <input
                 type="text"
-                value={localRenter.contact1 || ""}
-                onChange={(e) => handleRenterChange("contact1", e.target.value)}
+                value={localRenter.contact1 || ''}
+                onChange={(e) => handleRenterChange('contact1', e.target.value)}
                 className={formInputStyle}
               />
             ) : (
@@ -167,8 +161,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             {isEditing ? (
               <input
                 type="text"
-                value={localRenter.contact2 || ""}
-                onChange={(e) => handleRenterChange("contact2", e.target.value)}
+                value={localRenter.contact2 || ''}
+                onChange={(e) => handleRenterChange('contact2', e.target.value)}
                 className={formInputStyle}
               />
             ) : (
@@ -179,8 +173,8 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
             <label className="font-semibold">Remarks:</label>
             {isEditing ? (
               <textarea
-                value={localRenter.remarks || ""}
-                onChange={(e) => handleRenterChange("remarks", e.target.value)}
+                value={localRenter.remarks || ''}
+                onChange={(e) => handleRenterChange('remarks', e.target.value)}
                 className={`${formInputStyle} h-24`}
               />
             ) : (
@@ -193,12 +187,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
               <div>
                 <p className="text-sm font-medium">Aadhaar Card:</p>
                 {isEditing ? (
-                  <input
-                    type="file"
-                    name="aadhaarCard"
-                    onChange={handleFileChange}
-                    className={formInputStyle}
-                  />
+                  <input type="file" name="aadhaarCard" onChange={handleFileChange} className={formInputStyle} />
                 ) : (
                   <p className={cardStyle}>
                     {localRenter.aadhaarCard ? (
@@ -211,7 +200,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
                         View Document
                       </a>
                     ) : (
-                      "Not uploaded"
+                      'Not uploaded'
                     )}
                   </p>
                 )}
@@ -219,12 +208,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
               <div>
                 <p className="text-sm font-medium">PAN Card:</p>
                 {isEditing ? (
-                  <input
-                    type="file"
-                    name="panCard"
-                    onChange={handleFileChange}
-                    className={formInputStyle}
-                  />
+                  <input type="file" name="panCard" onChange={handleFileChange} className={formInputStyle} />
                 ) : (
                   <p className={cardStyle}>
                     {localRenter.panCard ? (
@@ -237,7 +221,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
                         View Document
                       </a>
                     ) : (
-                      "Not uploaded"
+                      'Not uploaded'
                     )}
                   </p>
                 )}
@@ -245,12 +229,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
               <div>
                 <p className="text-sm font-medium">Passport Photo:</p>
                 {isEditing ? (
-                  <input
-                    type="file"
-                    name="passportPhoto"
-                    onChange={handleFileChange}
-                    className={formInputStyle}
-                  />
+                  <input type="file" name="passportPhoto" onChange={handleFileChange} className={formInputStyle} />
                 ) : (
                   <p className={cardStyle}>
                     {localRenter.passportPhoto ? (
@@ -263,7 +242,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
                         View Document
                       </a>
                     ) : (
-                      "Not uploaded"
+                      'Not uploaded'
                     )}
                   </p>
                 )}
@@ -271,12 +250,7 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
               <div>
                 <p className="text-sm font-medium">Other Document:</p>
                 {isEditing ? (
-                  <input
-                    type="file"
-                    name="otherDocument"
-                    onChange={handleFileChange}
-                    className={formInputStyle}
-                  />
+                  <input type="file" name="otherDocument" onChange={handleFileChange} className={formInputStyle} />
                 ) : (
                   <p className={cardStyle}>
                     {localRenter.otherDocument ? (
@@ -289,36 +263,26 @@ const RenterDetailModal = ({ renter, onClose, refreshRenters, apiUrl }) => {
                         View Document
                       </a>
                     ) : (
-                      "Not uploaded"
+                      'Not uploaded'
                     )}
                   </p>
                 )}
               </div>
             </div>
           </div>
-     
         </div>
-        
+
         <div className="mt-6 flex justify-end space-x-3">
           {isEditing ? (
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded"
-              onClick={saveRenter}
-            >
+            <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={saveRenter}>
               Save
             </button>
           ) : (
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={() => setIsEditing(true)}
-            >
+            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setIsEditing(true)}>
               Edit
             </button>
           )}
-          <button
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-            onClick={onClose}
-          >
+          <button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={onClose}>
             Close
           </button>
         </div>

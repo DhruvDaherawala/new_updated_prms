@@ -1,290 +1,123 @@
-// // ChildPropertyForm.jsx
-// import React from 'react';
-
-// const formInputStyle = 'w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500';
-
-// export default function ChildPropertyForm({ formData, onInputChange, onSubmit, onClose, parentProperties, floorError }) {
-//   return (
-//     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 p-6">
-//       <div className="bg-white w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
-//         <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-800" onClick={onClose}>
-//           ✕
-//         </button>
-//         <h2 className="text-2xl font-bold mb-4">
-//           {formData.id ? 'Edit Child Property' : 'Add New Child Property'}
-//         </h2>
-//         <form onSubmit={onSubmit} className="space-y-4">
-//           <div>
-//             <label className="block mb-1 font-medium">Parent Property</label>
-//             <select
-//               name="property_id"
-//               value={formData.property_id}
-//               onChange={onInputChange}
-//               className={formInputStyle}
-//               required
-//             >
-//               <option value="">Select Parent Property</option>
-//               {parentProperties.map(parent => (
-//                 <option key={parent.id} value={parent.id}>
-//                   {parent.propertyName} - {parent.ownerName} (Max Floors: {parent.numberOfFloors})
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//           <div>
-//             <label className="block mb-1 font-medium">Floor</label>
-//             <input
-//               type="number"
-//               name="floor"
-//               value={formData.floor}
-//               onChange={onInputChange}
-//               className={formInputStyle}
-//               required
-//             />
-//             {floorError && <p className="text-red-600 text-sm mt-1">{floorError}</p>}
-//           </div>
-//           <div>
-//             <label className="block mb-1 font-medium">Title</label>
-//             <input
-//               type="text"
-//               name="title"
-//               value={formData.title}
-//               onChange={onInputChange}
-//               className={formInputStyle}
-//               required
-//             />
-//           </div>
-//           <div>
-//             <label className="block mb-1 font-medium">Description</label>
-//             <textarea
-//               name="description"
-//               value={formData.description}
-//               onChange={onInputChange}
-//               className={`${formInputStyle} h-24`}
-//               required
-//             ></textarea>
-//           </div>
-//           <div className="grid grid-cols-2 gap-4">
-//             <div>
-//               <label className="block mb-1 font-medium">Rooms</label>
-//               <input
-//                 type="number"
-//                 name="rooms"
-//                 value={formData.rooms}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//                 required
-//               />
-//             </div>
-//             <div>
-//               <label className="block mb-1 font-medium">Washroom</label>
-//               <input
-//                 type="number"
-//                 name="washroom"
-//                 value={formData.washroom}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//                 required
-//               />
-//             </div>
-//           </div>
-//           <div className="grid grid-cols-2 gap-4">
-//             <div>
-//               <label className="block mb-1 font-medium">Gas</label>
-//               <input
-//                 type="text"
-//                 name="gas"
-//                 value={formData.gas}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//               />
-//             </div>
-//             <div>
-//               <label className="block mb-1 font-medium">Electricity</label>
-//               <input
-//                 type="text"
-//                 name="electricity"
-//                 value={formData.electricity}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//               />
-//             </div>
-//           </div>
-//           <div className="grid grid-cols-2 gap-4">
-//             <div>
-//               <label className="block mb-1 font-medium">Deposit</label>
-//               <input
-//                 type="number"
-//                 name="deposit"
-//                 value={formData.deposit}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//                 required
-//               />
-//             </div>
-//             <div>
-//               <label className="block mb-1 font-medium">Rent</label>
-//               <input
-//                 type="number"
-//                 name="rent"
-//                 value={formData.rent}
-//                 onChange={onInputChange}
-//                 className={formInputStyle}
-//                 required
-//               />
-//             </div>
-//           </div>
-//           <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700 transition">
-//             {formData.id ? 'Update Child Property' : 'Create Child Property'}
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-// ChildPropertyForm.jsx
 import React from 'react';
 
-const formInputStyle = 'w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500';
+const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
 
 export default function ChildPropertyForm({ formData, onInputChange, onSubmit, onClose, parentProperties, floorError }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 p-6">
-      <div className="bg-white w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
-        <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-800" onClick={onClose}>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
+      <div className="bg-white w-[800px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700" onClick={onClose}>
           ✕
         </button>
-        <h2 className="text-2xl font-bold mb-4">
-          {formData.id ? 'Edit Child Property' : 'Add New Child Property'}
-        </h2>
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 font-medium">Parent Property</label>
-            <select
-              name="property_id"
-              value={formData.property_id}
-              onChange={onInputChange}
-              className={formInputStyle}
-              required
-            >
-              <option value="">Select Parent Property</option>
-              {parentProperties.map(parent => (
-                <option key={parent.id} value={parent.id}>
-                  {parent.propertyName} - {parent.ownerName} (Max Floors: {parent.numberOfFloors})
-                </option>
-              ))}
-            </select>
+        <h2 className="text-2xl font-semibold text-indigo-600 mb-4">{formData.id ? 'Edit Child Property' : 'Add New Child Property'}</h2>
+
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <select name="property_id" value={formData.property_id} onChange={onInputChange} className={formInputStyle} required>
+                <option value="">Select Parent Property</option>
+                {parentProperties.map((parent) => (
+                  <option key={parent.id} value={parent.id}>
+                    {parent.propertyName} - {parent.ownerName} (Max Floors: {parent.numberOfFloors})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <input
+                type="number"
+                name="floor"
+                placeholder="Floor"
+                value={formData.floor}
+                onChange={onInputChange}
+                className={formInputStyle}
+                required
+              />
+              {floorError && <p className="text-red-600 text-sm mt-1">{floorError}</p>}
+            </div>
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Floor</label>
+
+          <input
+            type="text"
+            name="title"
+            placeholder="Child Property Title"
+            value={formData.title}
+            onChange={onInputChange}
+            className={formInputStyle}
+            required
+          />
+
+          <textarea
+            name="description"
+            placeholder="Child Property Description"
+            value={formData.description}
+            onChange={onInputChange}
+            className={`${formInputStyle} h-32`}
+            required
+          />
+
+          <div className="grid grid-cols-2 gap-6">
             <input
               type="number"
-              name="floor"
-              value={formData.floor}
+              name="rooms"
+              placeholder="Number of Rooms"
+              value={formData.rooms}
               onChange={onInputChange}
               className={formInputStyle}
               required
             />
-            {floorError && <p className="text-red-600 text-sm mt-1">{floorError}</p>}
+            <input
+              type="number"
+              name="washroom"
+              placeholder="Number of Washrooms"
+              value={formData.washroom}
+              onChange={onInputChange}
+              className={formInputStyle}
+              required
+            />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Title</label>
+
+          <div className="grid grid-cols-2 gap-6">
             <input
               type="text"
-              name="title"
-              value={formData.title}
+              name="gas"
+              placeholder="Gas Availability"
+              value={formData.gas}
+              onChange={onInputChange}
+              className={formInputStyle}
+            />
+            <input
+              type="text"
+              name="electricity"
+              placeholder="Electricity Availability"
+              value={formData.electricity}
+              onChange={onInputChange}
+              className={formInputStyle}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <input
+              type="number"
+              name="deposit"
+              placeholder="Deposit Amount"
+              value={formData.deposit}
+              onChange={onInputChange}
+              className={formInputStyle}
+              required
+            />
+            <input
+              type="number"
+              name="rent"
+              placeholder="Rent Amount"
+              value={formData.rent}
               onChange={onInputChange}
               className={formInputStyle}
               required
             />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={onInputChange}
-              className={`${formInputStyle} h-24`}
-              required
-            ></textarea>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Rooms</label>
-              <input
-                type="number"
-                name="rooms"
-                value={formData.rooms}
-                onChange={onInputChange}
-                className={formInputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Washroom</label>
-              <input
-                type="number"
-                name="washroom"
-                value={formData.washroom}
-                onChange={onInputChange}
-                className={formInputStyle}
-                required
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Gas</label>
-              <input
-                type="text"
-                name="gas"
-                value={formData.gas}
-                onChange={onInputChange}
-                className={formInputStyle}
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Electricity</label>
-              <input
-                type="text"
-                name="electricity"
-                value={formData.electricity}
-                onChange={onInputChange}
-                className={formInputStyle}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Deposit</label>
-              <input
-                type="number"
-                name="deposit"
-                value={formData.deposit}
-                onChange={onInputChange}
-                className={formInputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Rent</label>
-              <input
-                type="number"
-                name="rent"
-                value={formData.rent}
-                onChange={onInputChange}
-                className={formInputStyle}
-                required
-              />
-            </div>
-          </div>
-          <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700 transition">
+
+          <button type="submit" className="w-full bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition">
             {formData.id ? 'Update Child Property' : 'Create Child Property'}
           </button>
         </form>

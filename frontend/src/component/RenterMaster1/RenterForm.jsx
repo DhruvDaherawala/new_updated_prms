@@ -129,20 +129,24 @@ import { useState } from 'react';
 
 const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
 
-export default function AddRenterModal({ onClose, onSubmitSuccess }) {
-  const [formData, setFormData] = useState({
-    renterName: '',
-    age: '',
-    fullAddress: '',
-    numberOfStayers: '',
-    contact1: '',
-    contact2: '',
-    remarks: '',
-    aadhaarCard: null,
-    panCard: null,
-    passportPhoto: null,
-    otherDocument: null
-  });
+export default function AddRenterModal({ onClose, onSubmitSuccess, editFlag, editformData }) {
+  const [formData, setFormData] = useState(
+    editformData
+      ? editformData
+      : {
+          renterName: '',
+          age: '',
+          fullAddress: '',
+          numberOfStayers: '',
+          contact1: '',
+          contact2: '',
+          remarks: '',
+          aadhaarCard: null,
+          panCard: null,
+          passportPhoto: null,
+          otherDocument: null
+        }
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -163,12 +167,12 @@ export default function AddRenterModal({ onClose, onSubmitSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 p-6 mt-8">
-      <div className="bg-white w-[800px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
+    <div className="fixed inset-0 flex items-center justify-center z-50  bg-opacity-50 p-6 mt-8">
+      <div className="bg-white w-[800px] max-h-[80vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
         <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10" onClick={onClose}>
           ✕
         </button>
-        <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Renter</h2>
+        <h2 className="text-2xl font-semibold text-indigo-600 mb-4">{Object.keys(editformData)?.length > 0 ? 'Edit' : 'Add New'} Renter</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">

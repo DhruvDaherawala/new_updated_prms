@@ -70,6 +70,7 @@ export const ApiService = {
   getAllocationDetails: async (id) => {
     try {
       const response = await axios.get(`${ApiService.API_URL}allocations/${id}`);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching allocation details:', error);
