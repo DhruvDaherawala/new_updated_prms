@@ -1,129 +1,25 @@
-// // // models/propertyModel.js:'''
-// // const db = require("../config/db");
-
-// // // Example function to insert a property record
-// // async function createProperty(propertyData, childProperties) {
-// //   // propertyData = { propertyName, ownerName, address, documents, ... }
-// //   const {
-// //     propertyName,
-// //     ownerName,
-// //     address,
-// //     documents
-// //   } = propertyData;
-
-// //   // 1. Insert the main property
-// //   const [propertyResult] = await db.execute(
-// //     `INSERT INTO properties (propertyName, ownerName, address, documents)
-// //      VALUES (?, ?, ?, ?)`,
-// //     [propertyName, ownerName, address, documents]
-// //   );
-// //   const propertyId = propertyResult.insertId;
-
-// //   // 2. Insert child properties (floors)
-// //   for (const child of childProperties) {
-// //     const {
-// //       floor,
-// //       title,
-// //       description,
-// //       rooms,
-// //       washroom,
-// //       gas,
-// //       electricity,
-// //       deposit,
-// //       rent
-// //     } = child;
-
-// //     await db.execute(
-// //       `INSERT INTO child_properties (
-// //         propertyId, floor, title, description,
-// //         rooms, washroom, gas, electricity, deposit, rent
-// //       )
-// //       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-// //       [
-// //         propertyId,
-// //         floor,
-// //         title,
-// //         description,
-// //         rooms,
-// //         washroom,
-// //         gas,
-// //         electricity,
-// //         deposit,
-// //         rent
-// //       ]
-// //     );
-// //   }
-
-// //   return propertyId;
-// // }
-
-// // module.exports = {
-// //   createProperty,
-// // };
-
-
-// const pool = require("../config/db");
-
-// async function createProperty(propertyData, childProperties) {
-//   const { propertyName, ownerName, address, documents } = propertyData;
-
-//   // Insert main property
-//   const [propertyResult] = await pool.query(
-//     `INSERT INTO properties (propertyName, ownerName, address, documents)
-//      VALUES (?, ?, ?, ?)`,
-//     [propertyName, ownerName, address, documents]
-//   );
-//   const propertyId = propertyResult.insertId;
-
-//   // Insert child properties
-//   if (Array.isArray(childProperties) && childProperties.length > 0) {
-//     const insertChildQuery = `
-//       INSERT INTO child_properties (
-//         property_id, floor, title, description, rooms, washroom,
-//         gas, electricity, deposit, rent
-//       )
-//       VALUES ?
-//     `;
-//     const childValues = childProperties.map((child) => [
-//       propertyId,
-//       child.floor,
-//       child.title,
-//       child.description,
-//       child.rooms,
-//       child.washroom,
-//       child.gas,
-//       child.electricity,
-//       child.deposit,
-//       child.rent,
-//     ]);
-//     await pool.query(insertChildQuery, [childValues]);
-//   }
-
-//   return propertyId;
-// }
-
-// module.exports = {
-//   createProperty,
-// };
-
 const pool = require("../config/db");
+
 async function getAllProperties() {
   const [rows] = await pool.query("SELECT * FROM properties");
   return rows;
 }
+
 async function createProperty(propertyData, childProperties = []) {
-  const { propertyName, ownerName, address, documents } = propertyData;
+  // Destructure including numberOfFloors from propertyData
+  const { propertyName, ownerName, address, documents, numberOfFloors } = propertyData;
 
   // 1. Insert the main property
   const insertPropertyQuery = `
-    INSERT INTO properties (propertyName, ownerName, address, documents)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO properties (propertyName, ownerName, address, documents, numberOfFloors)
+    VALUES (?, ?, ?, ?, ?)
   `;
   const [result] = await pool.query(insertPropertyQuery, [
     propertyName,
     ownerName,
     address,
     documents,
+    numberOfFloors,
   ]);
   const newPropertyId = result.insertId;
 
@@ -163,6 +59,7 @@ async function getPropertyWithChildren(propertyId) {
       p.ownerName,
       p.address,
       p.documents,
+      p.numberOfFloors,
       cp.id AS childId,
       cp.floor,
       cp.title,
@@ -191,6 +88,7 @@ async function getPropertyWithChildren(propertyId) {
     ownerName: rows[0].ownerName,
     address: rows[0].address,
     documents: rows[0].documents,
+    numberOfFloors: rows[0].numberOfFloors,
     childProperties: [],
   };
 
@@ -219,12 +117,13 @@ async function getPropertyWithChildren(propertyId) {
  * UPDATE an existing property (replace child properties)
  */
 async function updateProperty(propertyId, propertyData) {
-  const { propertyName, ownerName, address, documents, childProperties } = propertyData;
+  // Destructure including numberOfFloors
+  const { propertyName, ownerName, address, documents, childProperties, numberOfFloors } = propertyData;
 
   // 1. Update the main property
   const updatePropertyQuery = `
     UPDATE properties
-    SET propertyName = ?, ownerName = ?, address = ?, documents = ?
+    SET propertyName = ?, ownerName = ?, address = ?, documents = ?, numberOfFloors = ?
     WHERE id = ?
   `;
   await pool.query(updatePropertyQuery, [
@@ -232,6 +131,7 @@ async function updateProperty(propertyId, propertyData) {
     ownerName,
     address,
     documents,
+    numberOfFloors,
     propertyId,
   ]);
 
