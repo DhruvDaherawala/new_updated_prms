@@ -194,25 +194,73 @@ export default function AllocationForm({ renters, properties, childProperties, o
     setFormData((prev) => ({ ...prev, [name]: files[0] }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const form = new FormData();
+  //     const textData = {
+  //       renter_id: formData.renter_id,
+  //       property_id: formData.property_id,
+  //       childproperty_id: formData.childproperty_id,
+  //       allocation_date: formData.allocation_date,
+  //       remarks: formData.remarks,
+  //       status: formData.status
+  //     };
+
+  //     form.append('formData', JSON.stringify(textData));
+  //     if (formData.rent_agreement) {
+  //       // form.append('rent_agreement', formData.rent_agreement);
+  //       form.append('agreementDocument', formData.rent_agreement);
+  //     }
+  //     if (formData.other_document) {
+  //       // form.append('other_document', formData.other_document);
+  //       form.append('idProof', formData.other_document);
+  //     }
+
+  //     await ApiService.createAllocation(form);
+
+  //     alert('Allocation data saved successfully!');
+  //     onAllocationAdded(); // Refresh data
+  //     setFormData({
+  //       renter_id: '',
+  //       property_id: '',
+  //       childproperty_id: '',
+  //       allocation_date: '',
+  //       remarks: '',
+  //       rent_agreement: null,
+  //       other_document: null,
+  //       status: 'Active'
+  //     });
+  //     onClose(); // Close modal
+  //   } catch (error) {
+  //     alert('Failed to save allocation data!');
+  //     console.error(error);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const form = new FormData();
-      const textData = {
-        renter_id: formData.renter_id,
-        property_id: formData.property_id,
-        childproperty_id: formData.childproperty_id,
-        allocation_date: formData.allocation_date,
-        remarks: formData.remarks,
-        status: formData.status
-      };
+      form.append('renter_id', formData.renter_id);
+      form.append('property_id', formData.property_id);
+      form.append('childproperty_id', formData.childproperty_id);
+      form.append('allocation_date', formData.allocation_date);
+      form.append('remarks', formData.remarks);
+      form.append('status', formData.status);
 
-      form.append('formData', JSON.stringify(textData));
       if (formData.rent_agreement) {
-        form.append('rent_agreement', formData.rent_agreement);
+        form.append('agreementDocument', formData.rent_agreement);
       }
       if (formData.other_document) {
-        form.append('other_document', formData.other_document);
+        form.append('idProof', formData.other_document);
+      }
+
+      // Debugging - Log FormData before sending
+      for (let pair of form.entries()) {
+        console.log(pair[0], pair[1]); // Should show all fields correctly
       }
 
       await ApiService.createAllocation(form);

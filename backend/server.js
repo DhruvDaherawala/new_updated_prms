@@ -3,6 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
+const bodyParser = require("body-parser");
+const multer = require("multer");
+
+const upload = multer(); // This allows handling multipart form data
 
 // Routes
 const authRoutes = require("./routes/auth.routes");
@@ -11,8 +15,13 @@ const renterRoutes = require("./routes/renterRoutes");
 const renterAllocationRoutes = require("./routes/renterAllocationRoutes");
 const childPropertyRoutes = require("./routes/childPropertyRoutes");
 
-
 const app = express();
+// parse application/x-www-form-urlencoded
+// app.use(bodyParser.urlencoded());
+
+// parse application/json
+app.use(bodyParser.json());
+// app.use(upload.none());
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -41,7 +50,6 @@ app.use("/api/property", propertyRoutes);
 app.use("/api/renter", renterRoutes);
 app.use("/api/allocations", renterAllocationRoutes);
 app.use("/api/child_property", childPropertyRoutes);
-
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

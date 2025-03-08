@@ -28,7 +28,7 @@ export default {
   items: [
     {
       id: 'navigation',
-      title: 'Materially',
+      title: 'PRMS',
       caption: 'Dashboard',
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],

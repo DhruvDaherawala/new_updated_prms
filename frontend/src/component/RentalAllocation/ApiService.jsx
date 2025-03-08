@@ -9,6 +9,7 @@ export const ApiService = {
   fetchAllocations: async () => {
     try {
       const response = await axios.get(`${ApiService.API_URL}allocations`);
+      console.log('Rental Allocation', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching allocations:', error);
@@ -20,7 +21,7 @@ export const ApiService = {
   fetchProperties: async () => {
     try {
       const response = await axios.get(`${ApiService.API_URL}property`);
-      console.log(response);
+      console.log('properties', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching properties:', error);
@@ -32,6 +33,7 @@ export const ApiService = {
   fetchRenters: async () => {
     try {
       const response = await axios.get(`${ApiService.API_URL}renter`);
+      console.log('Renters', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching renters:', error);
@@ -42,7 +44,8 @@ export const ApiService = {
   // Fetch child properties
   fetchChildProperties: async () => {
     try {
-      const response = await axios.get(`${ApiService.API_URL}childproperty`);
+      const response = await axios.get(`${ApiService.API_URL}child_property`);
+      console.log('Child properties', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching child properties:', error);

@@ -1,40 +1,30 @@
-"use client"
+import { useState } from 'react';
+import { ApiService } from './ApiService';
+import { Utils, Styles } from './Utils';
 
-import { useState } from "react"
-import { ApiService } from "./ApiService"
-import { Utils, Styles } from "./Utils"
-
-export default function AllocationDetailModal({
-  allocation,
-  onClose,
-  refreshAllocations,
-  apiUrl,
-  renters,
-  properties,
-  childProperties,
-}) {
-  const [isEditing, setIsEditing] = useState(allocation.isEditing || false)
-  const [localAllocation, setLocalAllocation] = useState(allocation)
+export default function AllocationDetailModal({ allocation, onClose, refreshAllocations, apiUrl, renters, properties, childProperties }) {
+  const [isEditing, setIsEditing] = useState(allocation.isEditing || false);
+  const [localAllocation, setLocalAllocation] = useState(allocation);
   const [documents, setDocuments] = useState({
     rent_agreement: null,
-    other_document: null,
-  })
+    other_document: null
+  });
 
   // Handle changes for allocation details
   const handleAllocationChange = (field, value) => {
-    setLocalAllocation((prev) => ({ ...prev, [field]: value }))
-  }
+    setLocalAllocation((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Handle document file change
   const handleFileChange = (e) => {
-    const { name, files } = e.target
-    setDocuments((prev) => ({ ...prev, [name]: files[0] }))
-  }
+    const { name, files } = e.target;
+    setDocuments((prev) => ({ ...prev, [name]: files[0] }));
+  };
 
   // Save the allocation details
   const saveAllocation = async () => {
     try {
-      const form = new FormData()
+      const form = new FormData();
 
       const dataToSend = {
         renter_id: localAllocation.renter_id || localAllocation.renterId,
@@ -42,28 +32,28 @@ export default function AllocationDetailModal({
         childproperty_id: localAllocation.childproperty_id,
         allocation_date: localAllocation.allocation_date || localAllocation.startDate,
         remarks: localAllocation.remarks,
-        status: localAllocation.status || "Active",
-      }
+        status: localAllocation.status || 'Active'
+      };
 
-      form.append("formData", JSON.stringify(dataToSend))
+      form.append('formData', JSON.stringify(dataToSend));
 
       // Add documents if new ones were selected
       if (documents.rent_agreement) {
-        form.append("rent_agreement", documents.rent_agreement)
+        form.append('rent_agreement', documents.rent_agreement);
       }
       if (documents.other_document) {
-        form.append("other_document", documents.other_document)
+        form.append('other_document', documents.other_document);
       }
 
-      await ApiService.updateAllocation(localAllocation.id || localAllocation.allocation_id, form)
+      await ApiService.updateAllocation(localAllocation.id || localAllocation.allocation_id, form);
 
-      alert("Allocation updated successfully!")
-      refreshAllocations()
-      setIsEditing(false)
+      alert('Allocation updated successfully!');
+      refreshAllocations();
+      setIsEditing(false);
     } catch (error) {
-      alert("Failed to update allocation!")
+      alert('Failed to update allocation!');
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
@@ -83,9 +73,7 @@ export default function AllocationDetailModal({
               {isEditing ? (
                 <select
                   value={localAllocation.renter_id || localAllocation.renterId}
-                  onChange={(e) =>
-                    handleAllocationChange(localAllocation.renter_id ? "renter_id" : "renterId", e.target.value)
-                  }
+                  onChange={(e) => handleAllocationChange(localAllocation.renter_id ? 'renter_id' : 'renterId', e.target.value)}
                   className={Styles.formInputStyle}
                 >
                   {renters.map((renter) => (
@@ -95,9 +83,7 @@ export default function AllocationDetailModal({
                   ))}
                 </select>
               ) : (
-                <p className={Styles.cardStyle}>
-                  {Utils.getRenterName(localAllocation.renter_id || localAllocation.renterId, renters)}
-                </p>
+                <p className={Styles.cardStyle}>{Utils.getRenterName(localAllocation.renter_id || localAllocation.renterId, renters)}</p>
               )}
             </div>
             <div>
@@ -105,9 +91,7 @@ export default function AllocationDetailModal({
               {isEditing ? (
                 <select
                   value={localAllocation.property_id || localAllocation.propertyId}
-                  onChange={(e) =>
-                    handleAllocationChange(localAllocation.property_id ? "property_id" : "propertyId", e.target.value)
-                  }
+                  onChange={(e) => handleAllocationChange(localAllocation.property_id ? 'property_id' : 'propertyId', e.target.value)}
                   className={Styles.formInputStyle}
                 >
                   {properties.map((property) => (
@@ -126,8 +110,8 @@ export default function AllocationDetailModal({
               <label className="font-semibold">Unit/Floor:</label>
               {isEditing ? (
                 <select
-                  value={localAllocation.childproperty_id || ""}
-                  onChange={(e) => handleAllocationChange("childproperty_id", e.target.value)}
+                  value={localAllocation.childproperty_id || ''}
+                  onChange={(e) => handleAllocationChange('childproperty_id', e.target.value)}
                   className={Styles.formInputStyle}
                 >
                   <option value="">-- None --</option>
@@ -141,9 +125,7 @@ export default function AllocationDetailModal({
                   ))}
                 </select>
               ) : (
-                <p className={Styles.cardStyle}>
-                  {Utils.getChildPropertyName(localAllocation.childproperty_id, childProperties)}
-                </p>
+                <p className={Styles.cardStyle}>{Utils.getChildPropertyName(localAllocation.childproperty_id, childProperties)}</p>
               )}
             </div>
             <div>
@@ -151,27 +133,22 @@ export default function AllocationDetailModal({
               {isEditing ? (
                 <input
                   type="date"
-                  value={localAllocation.allocation_date || localAllocation.startDate || ""}
+                  value={localAllocation.allocation_date || localAllocation.startDate || ''}
                   onChange={(e) =>
-                    handleAllocationChange(
-                      localAllocation.allocation_date ? "allocation_date" : "startDate",
-                      e.target.value,
-                    )
+                    handleAllocationChange(localAllocation.allocation_date ? 'allocation_date' : 'startDate', e.target.value)
                   }
                   className={Styles.formInputStyle}
                 />
               ) : (
-                <p className={Styles.cardStyle}>
-                  {localAllocation.allocation_date || localAllocation.startDate || "Not set"}
-                </p>
+                <p className={Styles.cardStyle}>{localAllocation.allocation_date || localAllocation.startDate || 'Not set'}</p>
               )}
             </div>
             <div>
               <label className="font-semibold">Status:</label>
               {isEditing ? (
                 <select
-                  value={localAllocation.status || "Active"}
-                  onChange={(e) => handleAllocationChange("status", e.target.value)}
+                  value={localAllocation.status || 'Active'}
+                  onChange={(e) => handleAllocationChange('status', e.target.value)}
                   className={Styles.formInputStyle}
                 >
                   <option value="Active">Active</option>
@@ -180,19 +157,19 @@ export default function AllocationDetailModal({
                   <option value="Pending">Pending</option>
                 </select>
               ) : (
-                <p className={Styles.cardStyle}>{localAllocation.status || "Active"}</p>
+                <p className={Styles.cardStyle}>{localAllocation.status || 'Active'}</p>
               )}
             </div>
             <div>
               <label className="font-semibold">Remarks:</label>
               {isEditing ? (
                 <textarea
-                  value={localAllocation.remarks || ""}
-                  onChange={(e) => handleAllocationChange("remarks", e.target.value)}
+                  value={localAllocation.remarks || ''}
+                  onChange={(e) => handleAllocationChange('remarks', e.target.value)}
                   className={`${Styles.formInputStyle} h-24`}
                 />
               ) : (
-                <p className={Styles.cardStyle}>{localAllocation.remarks || "No remarks"}</p>
+                <p className={Styles.cardStyle}>{localAllocation.remarks || 'No remarks'}</p>
               )}
             </div>
             <div>
@@ -212,12 +189,7 @@ export default function AllocationDetailModal({
                           Current Document
                         </a>
                       )}
-                      <input
-                        type="file"
-                        name="rent_agreement"
-                        onChange={handleFileChange}
-                        className={Styles.formInputStyle}
-                      />
+                      <input type="file" name="rent_agreement" onChange={handleFileChange} className={Styles.formInputStyle} />
                     </div>
                   ) : (
                     <p className={Styles.cardStyle}>
@@ -231,7 +203,7 @@ export default function AllocationDetailModal({
                           View Document
                         </a>
                       ) : (
-                        "No document"
+                        'No document'
                       )}
                     </p>
                   )}
@@ -250,12 +222,7 @@ export default function AllocationDetailModal({
                           Current Document
                         </a>
                       )}
-                      <input
-                        type="file"
-                        name="other_document"
-                        onChange={handleFileChange}
-                        className={Styles.formInputStyle}
-                      />
+                      <input type="file" name="other_document" onChange={handleFileChange} className={Styles.formInputStyle} />
                     </div>
                   ) : (
                     <p className={Styles.cardStyle}>
@@ -269,7 +236,7 @@ export default function AllocationDetailModal({
                           View Document
                         </a>
                       ) : (
-                        "No document"
+                        'No document'
                       )}
                     </p>
                   )}
@@ -294,6 +261,5 @@ export default function AllocationDetailModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
-
