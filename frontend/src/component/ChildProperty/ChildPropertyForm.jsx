@@ -5,7 +5,7 @@ const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 fo
 export default function ChildPropertyForm({ formData, onInputChange, onSubmit, onClose, parentProperties, floorError }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
-      <div className="bg-white w-[800px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
+      <div className="bg-white w-[800px] max-h-[70vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
         <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700" onClick={onClose}>
           ✕
         </button>

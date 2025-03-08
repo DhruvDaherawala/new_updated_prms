@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const formInputStyle =
-  'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
+const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
 
 export default function AddPropertyModal({ apiUrl, onClose, onSubmitSuccess }) {
   const [formData, setFormData] = useState({
@@ -53,12 +52,9 @@ export default function AddPropertyModal({ apiUrl, onClose, onSubmitSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50  bg-opacity-50">
       <div className="bg-white w-[800px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
-        <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-          onClick={onClose}
-        >
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700" onClick={onClose}>
           ✕
         </button>
         <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Property</h2>
@@ -96,15 +92,11 @@ export default function AddPropertyModal({ apiUrl, onClose, onSubmitSuccess }) {
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Property Documents
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Property Documents</label>
               <input type="file" onChange={handleFileChange} className={formInputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Number of Floors
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Number of Floors</label>
               <input
                 type="number"
                 min="0"
@@ -117,10 +109,7 @@ export default function AddPropertyModal({ apiUrl, onClose, onSubmitSuccess }) {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition"
-          >
+          <button type="submit" className="w-full bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition">
             Submit
           </button>
         </form>
