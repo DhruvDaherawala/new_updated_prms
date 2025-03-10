@@ -1,43 +1,143 @@
-import React from 'react';
+// import React, { useEffect, useState } from 'react';
+// import { useTheme } from '@mui/material/styles';
+// import { Grid } from '@mui/material';
+// import axios from 'axios';
 
-// material-ui
-import { useTheme, styled } from '@mui/material/styles';
-import { Grid, Card, CardHeader, CardContent, Typography, Divider, LinearProgress } from '@mui/material';
+// // Project imports
+// import ReportCard from './ReportCard';
+// import { gridSpacing } from 'config.js';
 
-//project import
-import SalesLineCard from 'views/Dashboard/card/SalesLineCard';
-import SalesLineCardData from 'views/Dashboard/card/sale-chart-1';
-import RevenuChartCard from 'views/Dashboard/card/RevenuChartCard';
-import RevenuChartCardData from 'views/Dashboard/card/revenu-chart';
+// // Icons
+// import HomeTwoTone from '@mui/icons-material/HomeTwoTone';
+// import PeopleAltTwoTone from '@mui/icons-material/PeopleAltTwoTone';
+// import BusinessTwoTone from '@mui/icons-material/BusinessTwoTone';
+// import ApartmentTwoTone from '@mui/icons-material/ApartmentTwoTone';
+// import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+
+// const API_URL = import.meta.env.VITE_API_URL;
+
+// const Dashboard = () => {
+//   const theme = useTheme();
+//   const [properties, setProperties] = useState([]);
+
+//   useEffect(() => {
+//     // Fetch all properties from your API
+//     const fetchProperties = async () => {
+//       try {
+//         const response = await axios.get(`${API_URL}property`);
+//         setProperties(response.data);
+//       } catch (error) {
+//         console.error('Error fetching properties:', error);
+//       }
+//     };
+//     fetchProperties();
+//   }, []);
+
+
+//   // fetch the data from the API
+//   const totalProperties = properties.length;
+//   const allocatedProperties = 0
+//   const availableProperties = 0
+//   const availableRenters = renters.filter(renter => renter.status === 'Active').length;
+
+  
+//   return (
+//     <Grid container spacing={gridSpacing}>
+//       <Grid item xs={12}>
+//         <Grid container spacing={gridSpacing}>
+//           <Grid item lg={3} sm={6} xs={12}>
+//             <ReportCard
+//               primary={totalProperties}
+//               secondary="Total Properties"
+//               color={theme.palette.primary.main}
+//               footerData="Total registered properties"
+//               iconPrimary={HomeTwoTone}
+//               iconFooter={TrendingUpIcon}
+//             />
+//           </Grid>
+//           <Grid item lg={3} sm={6} xs={12}>
+//             <ReportCard
+//               primary={availableRenters}
+//               secondary="Total Available Renters"
+//               color={theme.palette.success.main}
+//               footerData="Renters looking for properties"
+//               iconPrimary={PeopleAltTwoTone}
+//               iconFooter={TrendingUpIcon}
+//             />
+//           </Grid>
+//           <Grid item lg={3} sm={6} xs={12}>
+//             <ReportCard
+//               primary={allocatedProperties}
+//               secondary="Total Allocated Properties"
+//               color={theme.palette.warning.main}
+//               footerData="Properties currently rented"
+//               iconPrimary={BusinessTwoTone}
+//               iconFooter={TrendingUpIcon}
+//             />
+//           </Grid>
+//           <Grid item lg={3} sm={6} xs={12}>
+//             <ReportCard
+//               primary={availableProperties}
+//               secondary="Total Available Properties"
+//               color={theme.palette.error.main}
+//               footerData="Properties ready for rent"
+//               iconPrimary={ApartmentTwoTone}
+//               iconFooter={TrendingUpIcon}
+//             />
+//           </Grid>
+//         </Grid>
+//       </Grid>
+//     </Grid>
+//   );
+// };
+
+// export default Dashboard;
+
+
+import React, { useEffect, useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import { Grid } from '@mui/material';
+import axios from 'axios';
+
+// Project imports
 import ReportCard from './ReportCard';
-
 import { gridSpacing } from 'config.js';
 
-// assets
+// Icons
+import HomeTwoTone from '@mui/icons-material/HomeTwoTone';
+import PeopleAltTwoTone from '@mui/icons-material/PeopleAltTwoTone';
+import BusinessTwoTone from '@mui/icons-material/BusinessTwoTone';
+import ApartmentTwoTone from '@mui/icons-material/ApartmentTwoTone';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import MonetizationOnTwoTone from '@mui/icons-material/MonetizationOnTwoTone';
-import DescriptionTwoTone from '@mui/icons-material/DescriptionTwoTone';
-import ThumbUpAltTwoTone from '@mui/icons-material/ThumbUpAltTwoTone';
-import CalendarTodayTwoTone from '@mui/icons-material/CalendarTodayTwoTone';
 
-// custom style
-const FlatCardBlock = styled((props) => <Grid item sm={6} xs={12} {...props} />)(({ theme }) => ({
-  padding: '25px 25px',
-  borderLeft: '1px solid' + theme.palette.background.default,
-  [theme.breakpoints.down('sm')]: {
-    borderLeft: 'none',
-    borderBottom: '1px solid' + theme.palette.background.default
-  },
-  [theme.breakpoints.down('md')]: {
-    borderBottom: '1px solid' + theme.palette.background.default
-  }
-}));
+const API_URL = import.meta.env.VITE_API_URL;
 
-// ==============================|| DASHBOARD DEFAULT ||============================== //
-
-const Default = () => {
+const Dashboard = () => {
   const theme = useTheme();
+  const [properties, setProperties] = useState([]);
+  const [renters, setRenters] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [propertiesResponse, rentersResponse] = await Promise.all([
+          axios.get(`${API_URL}property`),
+          axios.get(`${API_URL}renter`)
+        ]);
+        setProperties(propertiesResponse.data);
+        setRenters(rentersResponse.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    };
+    fetchDashboardData();
+  }, []);
+
+  // Calculate stats
+  const totalProperties = properties.length;
+  const allocatedProperties = properties.filter(property => property.allocated).length;
+  const availableProperties = properties.filter(property => !property.allocated).length;
+  const availableRenters = renters.length;
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -45,208 +145,48 @@ const Default = () => {
         <Grid container spacing={gridSpacing}>
           <Grid item lg={3} sm={6} xs={12}>
             <ReportCard
-              primary="$30200"
-              secondary="All Earnings"
-              color={theme.palette.warning.main}
-              footerData="10% changes on profit"
-              iconPrimary={MonetizationOnTwoTone}
-              iconFooter={TrendingUpIcon}
-            />
-          </Grid>
-          <Grid item lg={3} sm={6} xs={12}>
-            <ReportCard
-              primary="145"
-              secondary="Task"
-              color={theme.palette.error.main}
-              footerData="28% task performance"
-              iconPrimary={CalendarTodayTwoTone}
-              iconFooter={TrendingDownIcon}
-            />
-          </Grid>
-          <Grid item lg={3} sm={6} xs={12}>
-            <ReportCard
-              primary="290+"
-              secondary="Page Views"
-              color={theme.palette.success.main}
-              footerData="10k daily views"
-              iconPrimary={DescriptionTwoTone}
-              iconFooter={TrendingUpIcon}
-            />
-          </Grid>
-          <Grid item lg={3} sm={6} xs={12}>
-            <ReportCard
-              primary="500"
-              secondary="Downloads"
+              primary={`${totalProperties}`}
+              secondary="Total Properties"
               color={theme.palette.primary.main}
-              footerData="1k download in App store"
-              iconPrimary={ThumbUpAltTwoTone}
+              footerData="Total registered properties"
+              iconPrimary={HomeTwoTone}
+              iconFooter={TrendingUpIcon}
+            />
+          </Grid>
+          <Grid item lg={3} sm={6} xs={12}>
+            <ReportCard
+              primary={`${availableRenters}`}
+              secondary="Total Available Renters"
+              color={theme.palette.success.main}
+              footerData="Renters looking for properties"
+              iconPrimary={PeopleAltTwoTone}
+              iconFooter={TrendingUpIcon}
+            />
+          </Grid>
+          <Grid item lg={3} sm={6} xs={12}>
+            <ReportCard
+              primary={`${allocatedProperties}`}
+              secondary="Total Allocated Properties"
+              color={theme.palette.warning.main}
+              footerData="Properties currently rented"
+              iconPrimary={BusinessTwoTone}
+              iconFooter={TrendingUpIcon}
+            />
+          </Grid>
+          <Grid item lg={3} sm={6} xs={12}>
+            <ReportCard
+              primary={`${availableProperties}`}
+              secondary="Total Available Properties"
+              color={theme.palette.error.main}
+              footerData="Properties ready for rent"
+              iconPrimary={ApartmentTwoTone}
               iconFooter={TrendingUpIcon}
             />
           </Grid>
         </Grid>
       </Grid>
-      {/* <Grid item xs={12}>
-        <Grid container spacing={gridSpacing}>
-          <Grid item lg={8} xs={12}>
-            <Grid container spacing={gridSpacing}>
-              <Grid item xs={12} sm={6}>
-                <Grid container spacing={gridSpacing}>
-                  <Grid item xs={12}>
-                    <SalesLineCard
-                      chartData={SalesLineCardData}
-                      title="Sales Per Day"
-                      percentage="3%"
-                      icon={<TrendingDownIcon />}
-                      footerData={[
-                        {
-                          value: '$4230',
-                          label: 'Total Revenue'
-                        },
-                        {
-                          value: '321',
-                          label: 'Today Sales'
-                        }
-                      ]}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sx={{ display: { md: 'block', sm: 'none' } }}>
-                    <Card>
-                      <CardContent sx={{ p: '0 !important' }}>
-                        <Grid container alignItems="center" spacing={0}>
-                          <FlatCardBlock>
-                            <Grid container alignItems="center" spacing={1}>
-                              <Grid item>
-                                <Typography variant="subtitle2" align="left">
-                                  REALTY
-                                </Typography>
-                              </Grid>
-                              <Grid item sm zeroMinWidth>
-                                <Typography variant="h5" sx={{ color: theme.palette.error.main }} align="right">
-                                  -0.99
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </FlatCardBlock>
-                          <FlatCardBlock>
-                            <Grid container alignItems="center" spacing={1}>
-                              <Grid item>
-                                <Typography variant="subtitle2" align="left">
-                                  INFRA
-                                </Typography>
-                              </Grid>
-                              <Grid item sm zeroMinWidth>
-                                <Typography variant="h5" sx={{ color: theme.palette.success.main }} align="right">
-                                  -7.66
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </FlatCardBlock>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RevenuChartCard chartData={RevenuChartCardData} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item lg={4} xs={12}>
-            <Card>
-              <CardHeader
-                title={
-                  <Typography component="div" className="card-header">
-                    Traffic Sources
-                  </Typography>
-                }
-              />
-              <Divider />
-              <CardContent>
-                <Grid container spacing={gridSpacing}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item sm zeroMinWidth>
-                        <Typography variant="body2">Direct</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" align="right">
-                          80%
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LinearProgress variant="determinate" aria-label="direct" value={80} color="primary" />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item sm zeroMinWidth>
-                        <Typography variant="body2">Social</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" align="right">
-                          50%
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LinearProgress variant="determinate" aria-label="Social" value={50} color="secondary" />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item sm zeroMinWidth>
-                        <Typography variant="body2">Referral</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" align="right">
-                          20%
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LinearProgress variant="determinate" aria-label="Referral" value={20} color="primary" />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item sm zeroMinWidth>
-                        <Typography variant="body2">Bounce</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" align="right">
-                          60%
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LinearProgress variant="determinate" aria-label="Bounce" value={60} color="secondary" />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item sm zeroMinWidth>
-                        <Typography variant="body2">Internet</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" align="right">
-                          40%
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LinearProgress variant="determinate" aria-label="Internet" value={40} color="primary" />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid> */}
     </Grid>
   );
 };
 
-export default Default;
+export default Dashboard;
