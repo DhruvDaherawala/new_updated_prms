@@ -110,49 +110,117 @@ router.post(
 );
 
 // PUT update allocation
-router.put("/:id", async (req, res) => {
-  try {
-    const allocationId = req.params.id;
-    // const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
-    const {
-      renter_id,
-      property_id,
-      childproperty_id,
-      allocation_date,
-      rent_agreement,
-      other_document,
-      remarks,
-      status,
-    } = req.body;
+// router.put("/:id", async (req, res) => {
+//   try {
+//     const allocationId = req.params.id;
+//     // const { renterId, propertyId, rentAmount, startDate, endDate } = req.body;
+//     const {
+//       renter_id,
+//       property_id,
+//       childproperty_id,
+//       allocation_date,
+//       rent_agreement,
+//       other_document,
+//       remarks,
+//       status,
+//     } = req.body;
 
-    const updateQuery = `
-      UPDATE renter_allocation 
-      SET renter_id = ?, property_id = ?,childproperty_id=?,allocation_date=?,  rent_agreement=?, other_document=?,remarks=?,status=?
-      WHERE id = ?
-    `;
+//     const updateQuery = `
+//       UPDATE renter_allocation
+//       SET renter_id = ?, property_id = ?,childproperty_id=?,allocation_date=?,  rent_agreement=?, other_document=?,remarks=?,status=?
+//       WHERE id = ?
+//     `;
+//     console.log("Request Body", req.body);
+//     const [result] = await pool.query(updateQuery, [
+//       renter_id,
+//       property_id,
+//       childproperty_id,
+//       allocation_date,
+//       rent_agreement,
+//       other_document,
+//       remarks,
+//       status,
+//       allocationId,
+//     ]);
 
-    const [result] = await pool.query(updateQuery, [
-      renter_id,
-      property_id,
-      childproperty_id,
-      allocation_date,
-      rent_agreement,
-      other_document,
-      remarks,
-      status,
-      allocationId,
-    ]);
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ error: "Allocation not found" });
+//     }
+//     res.status(200).json({ message: "Allocation updated successfully" });
+//   } catch (err) {
+//     console.error("Error updating allocation:", err);
+//     res.status(500).json({ error: "Failed to update allocation" });
+//   }
+// });
+// PUT update allocation
+router.put(
+  "/:id",
+  upload.fields([
+    { name: "agreementDocument", maxCount: 1 },
+    { name: "idProof", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      console.log("Request Body:", req.body); // This should now have values
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Allocation not found" });
+      const allocationId = req.params.id;
+      const {
+        renter_id,
+        property_id,
+        childproperty_id,
+        allocation_date,
+        remarks,
+        status,
+      } = req.body;
+
+      // Make sure we have the required fields
+      if (!renter_id || !property_id) {
+        return res.status(400).json({
+          error:
+            "Required fields missing (renter_id and property_id are required)",
+        });
+      }
+
+      // Extract file paths if uploaded
+      const agreementDocument = req.files?.agreementDocument?.[0]?.path || null;
+      const idProof = req.files?.idProof?.[0]?.path || null;
+
+      // Only update fields that were provided or use existing values
+      const updateQuery = `
+        UPDATE renter_allocation 
+        SET renter_id = ?,
+            property_id = ?,
+            childproperty_id = ?,
+            allocation_date = ?,
+            rent_agreement = COALESCE(?, rent_agreement),
+            other_document = COALESCE(?, other_document),
+            remarks = ?,
+            status = ?
+        WHERE id = ?
+      `;
+
+      const [result] = await pool.query(updateQuery, [
+        renter_id,
+        property_id,
+        childproperty_id || null,
+        allocation_date || null,
+        agreementDocument, // Will use existing value if null
+        idProof, // Will use existing value if null
+        remarks || null,
+        status || "Active",
+        allocationId,
+      ]);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Allocation not found" });
+      }
+      res.status(200).json({ message: "Allocation updated successfully" });
+    } catch (err) {
+      console.error("Error updating allocation:", err);
+      res.status(500).json({ error: "Failed to update allocation" });
     }
-    res.status(200).json({ message: "Allocation updated successfully" });
-  } catch (err) {
-    console.error("Error updating allocation:", err);
-    res.status(500).json({ error: "Failed to update allocation" });
   }
-});
-
+);
 // DELETE allocation
 router.delete("/:id", async (req, res) => {
   try {
