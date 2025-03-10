@@ -157,7 +157,7 @@ export default function AllocationForm({ renters, properties, childProperties, o
               />
             </div>
           </div>
-
+          <label htmlFor="">Additon Notes or Remarks</label>
           <textarea
             name="remarks"
             placeholder="Additional notes or remarks"

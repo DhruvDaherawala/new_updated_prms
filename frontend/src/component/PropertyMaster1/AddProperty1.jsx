@@ -61,26 +61,32 @@ export default function AddPropertyModal({ apiUrl, onClose, onSubmitSuccess }) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
-            <input
-              type="text"
-              name="propertyName"
-              placeholder="Property Title"
-              value={formData.propertyName}
-              onChange={handleInputChange}
-              className={formInputStyle}
-              required
-            />
-            <input
-              type="text"
-              name="ownerName"
-              placeholder="Property Owner"
-              value={formData.ownerName}
-              onChange={handleInputChange}
-              className={formInputStyle}
-              required
-            />
+            <div>
+              <label htmlFor="">Property Name</label>
+              <input
+                type="text"
+                name="propertyName"
+                placeholder="Property Title"
+                value={formData.propertyName}
+                onChange={handleInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="">Property Owner</label>
+              <input
+                type="text"
+                name="ownerName"
+                placeholder="Property Owner"
+                value={formData.ownerName}
+                onChange={handleInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
           </div>
-
+          <label htmlFor="">Property Description</label>
           <textarea
             name="address"
             placeholder="Property Description"

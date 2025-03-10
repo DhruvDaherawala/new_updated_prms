@@ -162,6 +162,19 @@ export default function PropertyMasterForm() {
     setSelectedProperty(null);
   };
 
+  const handleDeleteClick = async (property) => {
+    if (window.confirm('Are you sure you want to delete this child property?')) {
+      try {
+        await axios.delete(`${API_URL}property/${property.id}`);
+        alert('Property deleted successfully!');
+        fetchProperties();
+      } catch (error) {
+        console.error('Error deleting property:', error);
+        alert('Failed to delete property!');
+      }
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       {/* Properties Listing */}
@@ -176,7 +189,13 @@ export default function PropertyMasterForm() {
           </button>
         </div>
         <div className="overflow-scroll">
-          <PropertyList properties={properties} onEdit={handleEditClick} onDetails={handleDetailsClick} apiUrl={API_URL} />
+          <PropertyList
+            properties={properties}
+            onEdit={handleEditClick}
+            onDetails={handleDetailsClick}
+            handleDeleteClick={handleDeleteClick}
+            apiUrl={API_URL}
+          />
         </div>
       </div>
 

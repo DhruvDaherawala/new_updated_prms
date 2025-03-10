@@ -140,6 +140,18 @@ export default function RenterMasterForm() {
     setShowForm(false);
     setSelectedRenter(null);
   };
+  const handleDeleteClick = async (renter) => {
+    if (window.confirm('Are you sure you want to delete this renter property?')) {
+      try {
+        await axios.delete(`${API_URL}renter/${renter.id}`);
+        alert('Renter deleted successfully!');
+        fetchRenters()();
+      } catch (error) {
+        console.error('Error deleting renter property:', error);
+        alert('Failed to delete renter property!');
+      }
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
@@ -155,6 +167,7 @@ export default function RenterMasterForm() {
         onEditClick={handleEditClick}
         onDetailsClick={handleDetailsClick}
         setEditForm={setFormData}
+        handleDeleteClick={handleDeleteClick}
       />
 
       {/* Add Renter Form */}

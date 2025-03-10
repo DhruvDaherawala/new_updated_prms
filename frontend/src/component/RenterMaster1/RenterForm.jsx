@@ -176,26 +176,32 @@ export default function AddRenterModal({ onClose, onSubmitSuccess, editFlag, edi
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
-            <input
-              type="text"
-              name="renterName"
-              placeholder="Renter Name"
-              value={formData.renterName}
-              onChange={handleInputChange}
-              className={formInputStyle}
-              required
-            />
-            <input
-              type="text"
-              name="age"
-              placeholder="Age"
-              value={formData.age}
-              onChange={handleInputChange}
-              className={formInputStyle}
-              required
-            />
+            <div>
+              <label htmlFor="">Renter Name</label>
+              <input
+                type="text"
+                name="renterName"
+                placeholder="Renter Name"
+                value={formData.renterName}
+                onChange={handleInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="">Age</label>
+              <input
+                type="text"
+                name="age"
+                placeholder="Age"
+                value={formData.age}
+                onChange={handleInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
           </div>
-
+          <label htmlFor="">Full Address</label>
           <textarea
             name="fullAddress"
             placeholder="Full Address"
@@ -206,33 +212,42 @@ export default function AddRenterModal({ onClose, onSubmitSuccess, editFlag, edi
           />
 
           <div className="grid grid-cols-3 gap-6">
-            <input
-              type="text"
-              name="numberOfStayers"
-              placeholder="Number of Stayers"
-              value={formData.numberOfStayers}
-              onChange={handleInputChange}
-              className={formInputStyle}
-            />
-            <input
-              type="text"
-              name="contact1"
-              placeholder="Contact Number 1"
-              value={formData.contact1}
-              onChange={handleInputChange}
-              className={formInputStyle}
-              required
-            />
-            <input
-              type="text"
-              name="contact2"
-              placeholder="Contact Number 2"
-              value={formData.contact2}
-              onChange={handleInputChange}
-              className={formInputStyle}
-            />
+            <div>
+              <label htmlFor="">Number Of Stayers</label>
+              <input
+                type="text"
+                name="numberOfStayers"
+                placeholder="Number of Stayers"
+                value={formData.numberOfStayers}
+                onChange={handleInputChange}
+                className={formInputStyle}
+              />
+            </div>
+            <div>
+              <label htmlFor="">Contact 1</label>
+              <input
+                type="text"
+                name="contact1"
+                placeholder="Contact Number 1"
+                value={formData.contact1}
+                onChange={handleInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="">Contact 2</label>
+              <input
+                type="text"
+                name="contact2"
+                placeholder="Contact Number 2"
+                value={formData.contact2}
+                onChange={handleInputChange}
+                className={formInputStyle}
+              />
+            </div>
           </div>
-
+          <label htmlFor="">Remarks</label>
           <textarea
             name="remarks"
             placeholder="Remarks"

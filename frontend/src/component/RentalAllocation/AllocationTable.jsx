@@ -1,8 +1,18 @@
+import axios from 'axios';
 import { Utils } from './Utils';
 
-export default function AllocationTable({ allocations, renters, properties, childProperties, onEdit, onDetails, apiUrl }) {
+export default function AllocationTable({
+  allocations,
+  renters,
+  properties,
+  childProperties,
+  onEdit,
+  onDetails,
+  apiUrl,
+  handleDeleteClick
+}) {
   return (
-    <table className="min-w-full divide-y divide-gray-200">
+    <table className="min-w-full  divide-y divide-gray-200">
       <thead className="bg-gray-50">
         <tr>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renter</th>
@@ -49,11 +59,14 @@ export default function AllocationTable({ allocations, renters, properties, chil
                 <button className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" onClick={() => onEdit(allocation)}>
                   Edit
                 </button>
-                <button
+                {/* <button
                   className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
                   onClick={() => onDetails(allocation)}
                 >
                   Details
+                </button> */}
+                <button className="bg-red-100 text-red-600 px-2 py-1 rounded" onClick={() => handleDeleteClick(allocation)}>
+                  Delete
                 </button>
               </div>
             </td>

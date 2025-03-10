@@ -14,6 +14,7 @@ export default function ChildPropertyForm({ formData, onInputChange, onSubmit, o
         <form onSubmit={onSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div>
+              <label htmlFor="">Property Name</label>
               <select name="property_id" value={formData.property_id} onChange={onInputChange} className={formInputStyle} required>
                 <option value="">Select Parent Property</option>
                 {parentProperties.map((parent) => (
@@ -24,6 +25,7 @@ export default function ChildPropertyForm({ formData, onInputChange, onSubmit, o
               </select>
             </div>
             <div>
+              <label htmlFor="">Floor Number</label>
               <input
                 type="number"
                 name="floor"
@@ -36,7 +38,7 @@ export default function ChildPropertyForm({ formData, onInputChange, onSubmit, o
               {floorError && <p className="text-red-600 text-sm mt-1">{floorError}</p>}
             </div>
           </div>
-
+          <label htmlFor="">Child Property Title</label>
           <input
             type="text"
             name="title"
@@ -47,6 +49,7 @@ export default function ChildPropertyForm({ formData, onInputChange, onSubmit, o
             required
           />
 
+          <label htmlFor="">Description</label>
           <textarea
             name="description"
             placeholder="Child Property Description"
@@ -57,66 +60,83 @@ export default function ChildPropertyForm({ formData, onInputChange, onSubmit, o
           />
 
           <div className="grid grid-cols-2 gap-6">
-            <input
-              type="number"
-              name="rooms"
-              placeholder="Number of Rooms"
-              value={formData.rooms}
-              onChange={onInputChange}
-              className={formInputStyle}
-              required
-            />
-            <input
-              type="number"
-              name="washroom"
-              placeholder="Number of Washrooms"
-              value={formData.washroom}
-              onChange={onInputChange}
-              className={formInputStyle}
-              required
-            />
+            <div>
+              <label htmlFor="">Number of Rooms</label>
+              <input
+                type="number"
+                name="rooms"
+                placeholder="Number of Rooms"
+                value={formData.rooms}
+                onChange={onInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="">Washroom</label>
+              <input
+                type="number"
+                name="washroom"
+                placeholder="Number of Washrooms"
+                value={formData.washroom}
+                onChange={onInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <input
-              type="text"
-              name="gas"
-              placeholder="Gas Availability"
-              value={formData.gas}
-              onChange={onInputChange}
-              className={formInputStyle}
-            />
-            <input
-              type="text"
-              name="electricity"
-              placeholder="Electricity Availability"
-              value={formData.electricity}
-              onChange={onInputChange}
-              className={formInputStyle}
-            />
+            <div>
+              <label htmlFor="">Gas Availability</label>
+              <input
+                type="text"
+                name="gas"
+                placeholder="Gas Availability"
+                value={formData.gas}
+                onChange={onInputChange}
+                className={formInputStyle}
+              />
+            </div>
+            <div>
+              <label htmlFor="">Electricity Availability</label>
+              <input
+                type="text"
+                name="electricity"
+                placeholder="Electricity Availability"
+                value={formData.electricity}
+                onChange={onInputChange}
+                className={formInputStyle}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <input
-              type="number"
-              name="deposit"
-              placeholder="Deposit Amount"
-              value={formData.deposit}
-              onChange={onInputChange}
-              className={formInputStyle}
-              required
-            />
-            <input
-              type="number"
-              name="rent"
-              placeholder="Rent Amount"
-              value={formData.rent}
-              onChange={onInputChange}
-              className={formInputStyle}
-              required
-            />
+            <div>
+              <label htmlFor="">Deposit Amount</label>
+              <input
+                type="number"
+                name="deposit"
+                placeholder="Deposit Amount"
+                value={formData.deposit}
+                onChange={onInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="">Rent Amount</label>
+              <input
+                type="number"
+                name="rent"
+                placeholder="Rent Amount"
+                value={formData.rent}
+                onChange={onInputChange}
+                className={formInputStyle}
+                required
+              />
+            </div>
           </div>
-
           <button type="submit" className="w-full bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition">
             {formData.id ? 'Update Child Property' : 'Create Child Property'}
           </button>

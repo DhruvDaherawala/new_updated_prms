@@ -1,4 +1,4 @@
-export default function PropertyList({ properties, onEdit, onDetails, apiUrl }) {
+export default function PropertyList({ properties, onEdit, handleDeleteClick, onDetails, apiUrl }) {
   return (
     <>
       {properties.length === 0 ? (
@@ -41,11 +41,14 @@ export default function PropertyList({ properties, onEdit, onDetails, apiUrl }) 
                     <button className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" onClick={() => onEdit(prop)}>
                       Edit
                     </button>
-                    <button
+                    {/* <button
                       className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
                       onClick={() => onDetails(prop)}
                     >
                       Details
+                    </button> */}
+                    <button className="bg-red-100 text-red-600 px-2 py-1 rounded" onClick={() => handleDeleteClick(prop)}>
+                      Delete
                     </button>
                   </div>
                 </td>

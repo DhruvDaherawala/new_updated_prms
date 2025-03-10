@@ -1,5 +1,4 @@
-'use client';
-
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { ApiService } from './ApiService';
 import AllocationForm from './AllocationForm';
@@ -18,7 +17,7 @@ export default function RentalAllocation() {
 
   // Modal state for AllocationDetailModal (only for viewing details)
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   // Fetch data on component mount
   useEffect(() => {
     fetchData();
@@ -77,10 +76,23 @@ export default function RentalAllocation() {
     setSelectedAllocation(null);
   };
 
+  const handleDeleteClick = async (allocation) => {
+    if (window.confirm('Are you sure you want to delete this allocation?')) {
+      try {
+        await axios.delete(`${API_URL}allocations/${allocation.id}`);
+        alert('Allocation deleted successfully!');
+        fetchData();
+      } catch (error) {
+        console.error('Error Deleteing Allocation :', error);
+        alert('Failed to Delete Allocation!');
+      }
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       {/* Allocations Listing */}
-      <div className="bg-white shadow rounded-md p-6">
+      <div className="bg-white shadow rounded-md p-6 overflow-scroll">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-800">Rental Allocations</h2>
           <button
@@ -104,6 +116,7 @@ export default function RentalAllocation() {
             onEdit={handleEditClick}
             onDetails={handleDetailsClick}
             apiUrl={ApiService.API_URL}
+            handleDeleteClick={handleDeleteClick}
           />
         )}
       </div>

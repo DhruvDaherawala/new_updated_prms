@@ -1,6 +1,16 @@
 import React from 'react';
 
-export default function RenterList({ renters, onAddClick, showForm, apiUrl, onEditClick, onDetailsClick, editForm, setEditForm }) {
+export default function RenterList({
+  renters,
+  onAddClick,
+  showForm,
+  apiUrl,
+  onEditClick,
+  onDetailsClick,
+  editForm,
+  setEditForm,
+  handleDeleteClick
+}) {
   return (
     <div className="bg-white shadow rounded-md p-6">
       <div className="flex items-center justify-between mb-4">
@@ -38,11 +48,14 @@ export default function RenterList({ renters, onAddClick, showForm, apiUrl, onEd
                     <button className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" onClick={() => onEditClick(renter)}>
                       Edit
                     </button>
-                    <button
+                    {/* <button
                       className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
                       onClick={() => onDetailsClick(renter)}
                     >
                       Details
+                    </button> */}
+                    <button className="bg-red-100 text-red-600 px-2 py-1 rounded" onClick={() => handleDeleteClick(renter)}>
+                      Delete
                     </button>
                   </div>
                 </td>
