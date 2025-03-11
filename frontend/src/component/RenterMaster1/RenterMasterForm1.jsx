@@ -145,7 +145,7 @@ export default function RenterMasterForm() {
       try {
         await axios.delete(`${API_URL}renter/${renter.id}`);
         alert('Renter deleted successfully!');
-        fetchRenters()();
+        fetchRenters();
       } catch (error) {
         console.error('Error deleting renter property:', error);
         alert('Failed to delete renter property!');
@@ -169,9 +169,8 @@ export default function RenterMasterForm() {
         setEditForm={setFormData}
         handleDeleteClick={handleDeleteClick}
       />
-
       {/* Add Renter Form */}
-      {showForm && (
+      {/* {showForm && (
         <RenterForm
           editformData={formData}
           onInputChange={handleInputChange}
@@ -180,8 +179,20 @@ export default function RenterMasterForm() {
           onClose={closeModal}
           editFlag={editFlag}
         />
+      )} */}
+      {/* // In RenterMasterForm1.jsx, update the showForm condition */}
+      {showForm && (
+        <RenterForm
+          editformData={formData}
+          editFlag={editFlag}
+          onSubmitSuccess={fetchRenters} // Pass the function to refresh data
+          onClose={() => {
+            setShowForm(false);
+            setEditFlag(false);
+            setFormData = { setFormData };
+          }}
+        />
       )}
-
       {/* Modal for Renter Details */}
       {isModalOpen && selectedRenter && (
         <RenterDetailModal renter={selectedRenter} onClose={closeModal} refreshRenters={fetchRenters} apiUrl={API_URL} />

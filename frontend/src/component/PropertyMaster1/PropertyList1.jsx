@@ -1,4 +1,12 @@
+import React, { useState } from 'react';
+import PaginatedList from '../Pagination/Pagination';
+const itemsPerPage = 5;
 export default function PropertyList({ properties, onEdit, handleDeleteClick, onDetails, apiUrl }) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+  const paginatedProperties = properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   return (
     <>
       {properties.length === 0 ? (
@@ -16,7 +24,7 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {properties.map((prop) => (
+            {paginatedProperties.map((prop) => (
               <tr key={prop.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{prop.ownerName}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{prop.propertyName}</td>
@@ -57,6 +65,8 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
           </tbody>
         </table>
       )}
+      {/* pagination */}
+      <PaginatedList properties={properties} currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </>
   );
 }
