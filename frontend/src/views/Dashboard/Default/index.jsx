@@ -19,35 +19,37 @@
 // const Dashboard = () => {
 //   const theme = useTheme();
 //   const [properties, setProperties] = useState([]);
+//   const [renters, setRenters] = useState([]);
 
 //   useEffect(() => {
-//     // Fetch all properties from your API
-//     const fetchProperties = async () => {
+//     const fetchDashboardData = async () => {
 //       try {
-//         const response = await axios.get(`${API_URL}property`);
-//         setProperties(response.data);
+//         const [propertiesResponse, rentersResponse] = await Promise.all([
+//           axios.get(`${API_URL}property`),
+//           axios.get(`${API_URL}renter`)
+//         ]);
+//         setProperties(propertiesResponse.data);
+//         setRenters(rentersResponse.data);
 //       } catch (error) {
-//         console.error('Error fetching properties:', error);
+//         console.error('Error fetching dashboard data:', error);
 //       }
 //     };
-//     fetchProperties();
+//     fetchDashboardData();
 //   }, []);
 
-
-//   // fetch the data from the API
+//   // Calculate stats
 //   const totalProperties = properties.length;
-//   const allocatedProperties = 0
-//   const availableProperties = 0
-//   const availableRenters = renters.filter(renter => renter.status === 'Active').length;
+//   const allocatedProperties = properties.filter(property => property.allocated).length;
+//   const availableProperties = properties.filter(property => !property.allocated).length;
+//   const availableRenters = renters.length;
 
-  
 //   return (
 //     <Grid container spacing={gridSpacing}>
 //       <Grid item xs={12}>
 //         <Grid container spacing={gridSpacing}>
 //           <Grid item lg={3} sm={6} xs={12}>
 //             <ReportCard
-//               primary={totalProperties}
+//               primary={`${totalProperties}`}
 //               secondary="Total Properties"
 //               color={theme.palette.primary.main}
 //               footerData="Total registered properties"
@@ -57,7 +59,7 @@
 //           </Grid>
 //           <Grid item lg={3} sm={6} xs={12}>
 //             <ReportCard
-//               primary={availableRenters}
+//               primary={`${availableRenters}`}
 //               secondary="Total Available Renters"
 //               color={theme.palette.success.main}
 //               footerData="Renters looking for properties"
@@ -67,7 +69,7 @@
 //           </Grid>
 //           <Grid item lg={3} sm={6} xs={12}>
 //             <ReportCard
-//               primary={allocatedProperties}
+//               primary={`${allocatedProperties}`}
 //               secondary="Total Allocated Properties"
 //               color={theme.palette.warning.main}
 //               footerData="Properties currently rented"
@@ -77,7 +79,7 @@
 //           </Grid>
 //           <Grid item lg={3} sm={6} xs={12}>
 //             <ReportCard
-//               primary={availableProperties}
+//               primary={`${availableProperties}`}
 //               secondary="Total Available Properties"
 //               color={theme.palette.error.main}
 //               footerData="Properties ready for rent"
@@ -90,8 +92,8 @@
 //     </Grid>
 //   );
 // };
-
 // export default Dashboard;
+
 
 
 import React, { useEffect, useState } from 'react';
@@ -116,16 +118,19 @@ const Dashboard = () => {
   const theme = useTheme();
   const [properties, setProperties] = useState([]);
   const [renters, setRenters] = useState([]);
+  const [allocations, setAllocations] = useState([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [propertiesResponse, rentersResponse] = await Promise.all([
+        const [propertiesResponse, rentersResponse, allocationsResponse] = await Promise.all([
           axios.get(`${API_URL}property`),
-          axios.get(`${API_URL}renter`)
+          axios.get(`${API_URL}renter`),
+          axios.get(`${API_URL}allocations`)
         ]);
         setProperties(propertiesResponse.data);
         setRenters(rentersResponse.data);
+        setAllocations(allocationsResponse.data);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
@@ -135,9 +140,10 @@ const Dashboard = () => {
 
   // Calculate stats
   const totalProperties = properties.length;
-  const allocatedProperties = properties.filter(property => property.allocated).length;
-  const availableProperties = properties.filter(property => !property.allocated).length;
+  const allocatedProperties = allocations.length; // Properties currently allocated
+  const availableProperties = totalProperties - allocatedProperties; // Properties not allocated
   const availableRenters = renters.length;
+  const totalAllocations = allocations.length;
 
   return (
     <Grid container spacing={gridSpacing}>
