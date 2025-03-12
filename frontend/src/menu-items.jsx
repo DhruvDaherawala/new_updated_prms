@@ -116,7 +116,14 @@ export default {
           type: 'item',
           url: '/rental-allocation-page',
           icon: icons['AssuredWorkloadIcon']
-        }
+        },
+        {
+          id: 'login',
+          title: 'Login',
+          type: 'item',
+          url: '/auth/login',
+          icon: icons['SecurityOutlinedIcon']
+        },
       ]
     }
     // {
