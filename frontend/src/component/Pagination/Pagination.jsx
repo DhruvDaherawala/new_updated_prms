@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 
 const itemsPerPage = 5;
 
-export default function PaginatedList({ properties, currentPage, totalPages, onPageChange }) {
-  const paginatedItems = properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+export default function PaginatedList({ properties, childProperties, currentPage, renters, totalPages, onPageChange }) {
+  // const paginatedItems = properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // const paginatedChildItem = childProperties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="max-w-lg mx-auto">
       <div className="flex justify-center mt-4">

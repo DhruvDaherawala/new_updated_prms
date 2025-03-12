@@ -8,6 +8,10 @@ import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import ChromeReaderModeOutlinedIcon from '@mui/icons-material/ChromeReaderModeOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import HouseIcon from '@mui/icons-material/House';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import PeopleIcon from '@mui/icons-material/People';
+import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 
 const icons = {
   NavigationOutlinedIcon: NavigationOutlinedIcon,
@@ -18,7 +22,11 @@ const icons = {
   AccountTreeOutlinedIcon: AccountTreeOutlinedIcon,
   BlockOutlinedIcon: BlockOutlinedIcon,
   AppsOutlinedIcon: AppsOutlinedIcon,
-  ContactSupportOutlinedIcon: ContactSupportOutlinedIcon
+  ContactSupportOutlinedIcon: ContactSupportOutlinedIcon,
+  HouseIcon: HouseIcon,
+  LocationCityIcon: LocationCityIcon,
+  PeopleIcon: PeopleIcon,
+  AssuredWorkloadIcon: AssuredWorkloadIcon
 };
 
 // ==============================|| MENU ITEMS ||============================== //
@@ -54,14 +62,14 @@ export default {
           title: 'Property',
           type: 'item',
           url: '/property-page',
-          icon: icons['ChromeReaderModeOutlinedIcon']
+          icon: icons['HouseIcon']
         },
         {
           id: 'childproperty-page',
           title: 'Child Property',
           type: 'item',
           url: '/childproperty-page',
-          icon: icons['SecurityOutlinedIcon']
+          icon: icons['LocationCityIcon']
           // children: [
           //   {
           //     id: 'login-1',
@@ -84,7 +92,7 @@ export default {
           title: 'Renter',
           type: 'item',
           url: '/renter-page',
-          icon: icons['SecurityOutlinedIcon']
+          icon: icons['PeopleIcon']
           // children: [
           //   {
           //     id: 'login-1',
@@ -107,7 +115,7 @@ export default {
           title: 'Rental Allocation',
           type: 'item',
           url: '/rental-allocation-page',
-          icon: icons['ChromeReaderModeOutlinedIcon']
+          icon: icons['AssuredWorkloadIcon']
         }
       ]
     }

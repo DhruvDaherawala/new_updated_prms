@@ -1,6 +1,7 @@
 // ChildPropertyList.jsx
-import React from 'react';
-
+import React, { useState } from 'react';
+import PaginatedList from '../Pagination/Pagination';
+const itemsPerPage = 5;
 export default function ChildPropertyList({
   childProperties,
   parentProperties,
@@ -10,6 +11,11 @@ export default function ChildPropertyList({
   onDetailsClick,
   onDeleteClick
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(childProperties.length / itemsPerPage);
+
+  const paginatedChildProperties = childProperties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   // Helper to get parent's propertyName using property_id
   const getParentName = (property_id) => {
     const parent = parentProperties.find((p) => p.id === parseInt(property_id));
@@ -24,7 +30,7 @@ export default function ChildPropertyList({
           {showForm ? 'Close Form' : 'Add Child Property'}
         </button>
       </div>
-      {childProperties.length === 0 ? (
+      {paginatedChildProperties.length === 0 ? (
         <p className="text-gray-600">No child properties found.</p>
       ) : (
         <table className="min-w-full divide-y divide-gray-200">
@@ -43,7 +49,7 @@ export default function ChildPropertyList({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {childProperties.map((child) => (
+            {paginatedChildProperties.map((child) => (
               <tr key={child.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 whitespace-nowrap text-sm">{getParentName(child.property_id)}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm">{child.floor}</td>
@@ -72,6 +78,8 @@ export default function ChildPropertyList({
           </tbody>
         </table>
       )}
+      {/* pagination */}
+      <PaginatedList childProperties={childProperties} currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }

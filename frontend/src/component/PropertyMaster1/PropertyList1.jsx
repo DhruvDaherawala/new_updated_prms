@@ -9,7 +9,7 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
   const paginatedProperties = properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   return (
     <>
-      {properties.length === 0 ? (
+      {paginatedProperties.length === 0 ? (
         <p className="text-gray-600">No properties found.</p>
       ) : (
         <table className="min-w-full  divide-gray-200 ">

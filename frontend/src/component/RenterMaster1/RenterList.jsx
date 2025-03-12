@@ -1,5 +1,6 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import PaginatedList from '../Pagination/Pagination';
+const itemsPerPage = 5;
 export default function RenterList({
   renters,
   onAddClick,
@@ -11,6 +12,11 @@ export default function RenterList({
   setEditForm,
   handleDeleteClick
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(renters.length / itemsPerPage);
+
+  const paginatedRenters = renters.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   return (
     <div className="bg-white shadow rounded-md p-6">
       <div className="flex items-center justify-between mb-4">
@@ -19,7 +25,7 @@ export default function RenterList({
           {showForm ? 'Close Form' : 'Add Renter'}
         </button>
       </div>
-      {renters.length === 0 ? (
+      {paginatedRenters.length === 0 ? (
         <p className="text-gray-600">No renters found.</p>
       ) : (
         <table className="min-w-full divide-y divide-gray-200">
@@ -34,7 +40,7 @@ export default function RenterList({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {renters.map((renter) => (
+            {paginatedRenters.map((renter) => (
               <tr key={renter.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{renter.renterName}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{renter.age}</td>
@@ -64,6 +70,8 @@ export default function RenterList({
           </tbody>
         </table>
       )}
+      {/* pagination */}
+      <PaginatedList renters={renters} currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }
