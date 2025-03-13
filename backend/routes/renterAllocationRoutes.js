@@ -71,7 +71,7 @@ router.post(
       const {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         rent_agreement,
         other_document,
@@ -86,14 +86,14 @@ router.post(
       // SQL query
       const insertQuery = `
         INSERT INTO renter_allocation 
-          (renter_id, property_id, childproperty_id, allocation_date, rent_agreement, other_document, remarks, status)
+          (renter_id, property_id,  allocation_date, rent_agreement, other_document, remarks, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       await pool.query(insertQuery, [
         renter_id,
         property_id,
-        childproperty_id,
+
         allocation_date,
         agreementDocument,
         idProof,
@@ -167,7 +167,7 @@ router.put(
       const {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         remarks,
         status,
@@ -190,7 +190,7 @@ router.put(
         UPDATE renter_allocation 
         SET renter_id = ?,
             property_id = ?,
-            childproperty_id = ?,
+          
             allocation_date = ?,
             rent_agreement = COALESCE(?, rent_agreement),
             other_document = COALESCE(?, other_document),
@@ -202,7 +202,7 @@ router.put(
       const [result] = await pool.query(updateQuery, [
         renter_id,
         property_id,
-        childproperty_id || null,
+        // childproperty_id || null,
         allocation_date || null,
         agreementDocument, // Will use existing value if null
         idProof, // Will use existing value if null

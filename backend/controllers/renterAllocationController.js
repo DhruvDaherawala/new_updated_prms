@@ -84,14 +84,14 @@ exports.createAllocationController = (req, res) => {
       const {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         remarks,
       } = req.body;
       const allocationData = {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         remarks,
         // Use Cloudinary URL returned in "path"
@@ -121,14 +121,14 @@ exports.updateAllocationController = (req, res) => {
       const {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         remarks,
       } = req.body;
       const allocationData = {
         renter_id,
         property_id,
-        childproperty_id,
+        // childproperty_id,
         allocation_date,
         remarks,
         rent_agreement: req.files?.rent_agreement?.[0]?.path || null,

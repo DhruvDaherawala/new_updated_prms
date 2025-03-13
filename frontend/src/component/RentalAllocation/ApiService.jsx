@@ -9,7 +9,7 @@ export const ApiService = {
   fetchAllocations: async () => {
     try {
       const response = await axios.get(`${ApiService.API_URL}allocations`);
-      console.log('Rental Allocation', response);
+      console.log('Rental Allocationcheck', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching allocations:', error);

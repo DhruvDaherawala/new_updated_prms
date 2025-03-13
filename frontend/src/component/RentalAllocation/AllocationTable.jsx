@@ -42,7 +42,7 @@ export default function AllocationTable({
                 {Utils.getPropertyName(allocation.property_id || allocation.propertyId, properties)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {Utils.getChildPropertyName(allocation.childproperty_id, childProperties)}
+                {Utils.getChildPropertyName(allocation.property_id, properties)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 {allocation.allocation_date || allocation.startDate || '-'}

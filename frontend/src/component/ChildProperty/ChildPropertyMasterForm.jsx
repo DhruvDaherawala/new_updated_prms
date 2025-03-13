@@ -52,6 +52,27 @@ export default function ChildPropertyMasterForm() {
     }
   };
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   if (name === 'property_id') {
+  //     // When parent changes, reset the floor value and error
+  //     setFormData((prev) => ({ ...prev, property_id: value, floor: '' }));
+  //     setFloorError('');
+  //   } else if (name === 'floor') {
+  //     // Validate floor against the parent's numberOfFloors
+  //     const selectedParent = parentProperties.find((p) => p.id === parseInt(formData.property_id));
+  //     const floorValue = parseInt(value);
+  //     if (selectedParent && floorValue > selectedParent.numberOfFloors) {
+  //       setFloorError(`Maximum floor for ${selectedParent.propertyName} is ${selectedParent.numberOfFloors}`);
+  //     } else {
+  //       setFloorError('');
+  //     }
+  //     setFormData((prev) => ({ ...prev, floor: value }));
+  //   } else {
+  //     setFormData((prev) => ({ ...prev, [name]: value }));
+  //   }
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'property_id') {
@@ -59,14 +80,8 @@ export default function ChildPropertyMasterForm() {
       setFormData((prev) => ({ ...prev, property_id: value, floor: '' }));
       setFloorError('');
     } else if (name === 'floor') {
-      // Validate floor against the parent's numberOfFloors
-      const selectedParent = parentProperties.find((p) => p.id === parseInt(formData.property_id));
-      const floorValue = parseInt(value);
-      if (selectedParent && floorValue > selectedParent.numberOfFloors) {
-        setFloorError(`Maximum floor for ${selectedParent.propertyName} is ${selectedParent.numberOfFloors}`);
-      } else {
-        setFloorError('');
-      }
+      // Since we're now using a dropdown with valid options, we don't need to validate here
+      // The dropdown will only show allowed floor numbers
       setFormData((prev) => ({ ...prev, floor: value }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));

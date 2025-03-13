@@ -29,9 +29,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS setup – ensure FRONT_URL in .env matches your frontend URL.
+// app.use(
+//   cors({
+//     origin: process.env.FRONT_URL || "http://localhost:3001",
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
+
 app.use(
   cors({
-    origin: process.env.FRONT_URL || "http://localhost:3001",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

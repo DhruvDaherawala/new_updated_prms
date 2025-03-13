@@ -4916,6 +4916,11 @@ svg.select.js@^3.0.1:
   dependencies:
     svg.js "^2.6.5"
 
+sweetalert2@^11.17.2:
+  version "11.17.2"
+  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.17.2.tgz"
+  integrity sha512-HKxDr1IyV3Lxr3W6sb61qm/p2epFIEdr5EKwteRFHnIg6f8nHFl2kX++DBVz16Mac+fFiU3hMpjq1L6yE2Ge5w==
+
 synckit@^0.8.6:
   version "0.8.8"
   resolved "https://registry.npmjs.org/synckit/-/synckit-0.8.8.tgz"
