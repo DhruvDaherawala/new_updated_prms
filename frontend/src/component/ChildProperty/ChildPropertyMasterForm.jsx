@@ -4,6 +4,31 @@ import axios from 'axios';
 import ChildPropertyList from './ChildPropertyList';
 import ChildPropertyForm from './ChildPropertyForm';
 import ChildPropertyDetailModal from './ChildPropertyDetailModal';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography,
+  TextField,
+  Paper,
+  CircularProgress,
+  Container,
+  Card,
+  CardContent,
+  Divider,
+  InputAdornment
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 export default function ChildPropertyMasterForm() {
   // VITE_API_URL should include the /api/ prefix
@@ -13,6 +38,8 @@ export default function ChildPropertyMasterForm() {
   const [parentProperties, setParentProperties] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [floorError, setFloorError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     id: null,
     property_id: '',
@@ -35,11 +62,14 @@ export default function ChildPropertyMasterForm() {
   }, []);
 
   const fetchChildProperties = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API_URL}child_property`);
       setChildProperties(response.data);
     } catch (error) {
       console.error('Error fetching child properties:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,19 +127,7 @@ export default function ChildPropertyMasterForm() {
         alert('Child property created successfully!');
       }
       fetchChildProperties();
-      setFormData({
-        id: null,
-        property_id: '',
-        floor: '',
-        title: '',
-        description: '',
-        rooms: '',
-        washroom: '',
-        gas: '',
-        electricity: '',
-        deposit: '',
-        rent: ''
-      });
+      resetForm();
       setShowForm(false);
     } catch (error) {
       console.error('Error saving child property:', error);
@@ -117,30 +135,51 @@ export default function ChildPropertyMasterForm() {
     }
   };
 
-  const handleEditClick = (childProperty) => {
-    setShowForm(true);
+  const resetForm = () => {
     setFormData({
-      id: childProperty.id,
-      property_id: childProperty.property_id,
-      floor: childProperty.floor,
-      title: childProperty.title,
-      description: childProperty.description,
-      rooms: childProperty.rooms,
-      washroom: childProperty.washroom,
-      gas: childProperty.gas,
-      electricity: childProperty.electricity,
-      deposit: childProperty.deposit,
-      rent: childProperty.rent
+      id: null,
+      property_id: '',
+      floor: '',
+      title: '',
+      description: '',
+      rooms: '',
+      washroom: '',
+      gas: '',
+      electricity: '',
+      deposit: '',
+      rent: ''
     });
+    setFloorError('');
+  };
+
+  const handleEditClick = (childProperty) => {
+    try {
+      setFormData({
+        id: childProperty.id,
+        property_id: childProperty.property_id.toString(),
+        floor: childProperty.floor,
+        title: childProperty.title,
+        description: childProperty.description,
+        rooms: childProperty.rooms,
+        washroom: childProperty.washroom,
+        gas: childProperty.gas,
+        electricity: childProperty.electricity,
+        deposit: childProperty.deposit,
+        rent: childProperty.rent
+      });
+      setShowForm(true);
+    } catch (error) {
+      console.error('Error setting form data:', error);
+      alert('Failed to load child property details for editing.');
+    }
   };
 
   const handleDetailsClick = async (childProperty) => {
     try {
-      const response = await axios.get(`${API_URL}child_property/${childProperty.id}`);
-      setSelectedChildProperty(response.data);
+      setSelectedChildProperty(childProperty);
       setIsModalOpen(true);
     } catch (error) {
-      console.error('Error fetching child property details:', error);
+      console.error('Error showing details:', error);
       alert('Failed to load child property details.');
     }
   };
@@ -159,94 +198,248 @@ export default function ChildPropertyMasterForm() {
   };
 
   const closeModal = () => {
-    setShowForm(false);
-    setSelectedChildProperty(null);
     setIsModalOpen(false);
-    // Reset form data when closing the form to ensure "Add" mode works correctly
-    setFormData({
-      id: null,
-      property_id: '',
-      floor: '',
-      title: '',
-      description: '',
-      rooms: '',
-      washroom: '',
-      gas: '',
-      electricity: '',
-      deposit: '',
-      rent: ''
-    });
+    setSelectedChildProperty(null);
   };
 
-  // Handle clicking "Add Child Property" button
-  const handleAddClick = () => {
-    if (showForm) {
-      // If form is already open, close it and reset form data
-      setShowForm(false);
-      setFormData({
-        id: null,
-        property_id: '',
-        floor: '',
-        title: '',
-        description: '',
-        rooms: '',
-        washroom: '',
-        gas: '',
-        electricity: '',
-        deposit: '',
-        rent: ''
-      });
-    } else {
-      // Open the form in "Add" mode by resetting form data
-      setFormData({
-        id: null,
-        property_id: '',
-        floor: '',
-        title: '',
-        description: '',
-        rooms: '',
-        washroom: '',
-        gas: '',
-        electricity: '',
-        deposit: '',
-        rent: ''
-      });
-      setShowForm(true);
+  // Filter child properties based on search term
+  const filteredChildProperties = childProperties.filter(
+    (childProperty) => {
+      const parentProperty = parentProperties.find(p => p.id === childProperty.property_id);
+      const searchValue = searchTerm.toLowerCase();
+      
+      return (
+        childProperty.title?.toLowerCase().includes(searchValue) ||
+        childProperty.description?.toLowerCase().includes(searchValue) ||
+        parentProperty?.propertyName?.toLowerCase().includes(searchValue) ||
+        childProperty.floor?.toString().toLowerCase().includes(searchValue) ||
+        childProperty.rent?.toString().includes(searchValue)
+      );
     }
+  );
+
+  // Calculate statistics for dashboard
+  const getTotalRent = () => {
+    return childProperties.reduce((sum, cp) => sum + (parseFloat(cp.rent) || 0), 0);
+  };
+
+  const getActiveCount = () => {
+    return childProperties.filter(cp => cp.status === 'Active').length;
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 space-y-6">
-      <ChildPropertyList
-        childProperties={childProperties}
-        parentProperties={parentProperties}
-        onAddClick={handleAddClick} // Updated to use handleAddClick
-        showForm={showForm}
-        onEditClick={handleEditClick}
-        onDetailsClick={handleDetailsClick}
-        onDeleteClick={handleDeleteClick}
-      />
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header */}
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 2,
+          background: 'linear-gradient(to right, #e0f7fa, #b2ebf2)'
+        }}
+      >
+        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+          <Grid item xs={12} md={6}>
+            <Typography variant="h4" component="h1" fontWeight="bold" color="primary.dark">
+              Child Property Management
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+              Manage all your property units and floors in one place
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <TextField
+                placeholder="Search child properties..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={showForm ? <CloseIcon /> : <AddIcon />}
+                onClick={() => {
+                  if (showForm) {
+                    setShowForm(false);
+                    resetForm();
+                  } else {
+                    setShowForm(true);
+                  }
+                }}
+              >
+                {showForm ? "Close Form" : "Add Child Property"}
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
 
+      {/* Dashboard Cards */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #00acc1', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Total Units
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {childProperties.length}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#e0f7fa', borderRadius: '50%' }}>
+                  <ApartmentIcon fontSize="large" color="primary" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #4caf50', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Active Units
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {getActiveCount()}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
+                  <CheckCircleIcon fontSize="large" color="success" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #ff9800', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Total Rent Value
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    ₹{getTotalRent().toLocaleString()}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#fff3e0', borderRadius: '50%' }}>
+                  <AttachMoneyIcon fontSize="large" color="warning" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Add/Edit Child Property Form */}
       {showForm && (
-        <ChildPropertyForm
-          formData={formData}
-          onInputChange={handleInputChange}
-          onSubmit={handleSubmit}
-          onClose={closeModal}
-          parentProperties={parentProperties}
-          floorError={floorError}
-        />
+        <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+          <Typography variant="h5" sx={{ mb: 3 }}>
+            {formData.id ? 'Edit Child Property' : 'Add New Child Property'}
+          </Typography>
+          <ChildPropertyForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            parentProperties={parentProperties}
+            floorError={floorError}
+          />
+        </Paper>
       )}
 
+      {/* Child Properties Listing */}
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Child Property Listings
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          View and manage all your property units
+        </Typography>
+        
+        <Divider sx={{ mb: 3 }} />
+        
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
+            <CircularProgress />
+          </Box>
+        ) : filteredChildProperties.length > 0 ? (
+          <ChildPropertyList
+            childProperties={filteredChildProperties}
+            parentProperties={parentProperties}
+            onDetailsClick={handleDetailsClick}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+          />
+        ) : (
+          <Box sx={{ textAlign: 'center', py: 5 }}>
+            <Typography variant="h6">
+              {searchTerm ? 'No child properties found matching your search' : 'No child properties available'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {searchTerm ? 'Try adjusting your search' : 'Click the "Add Child Property" button to get started'}
+            </Typography>
+            {searchTerm && (
+              <Button
+                sx={{ mt: 2 }}
+                onClick={() => setSearchTerm('')}
+                variant="outlined"
+              >
+                Clear Search
+              </Button>
+            )}
+          </Box>
+        )}
+      </Paper>
+
+      {/* Child Property Details Modal */}
       {isModalOpen && selectedChildProperty && (
-        <ChildPropertyDetailModal
-          childProperty={selectedChildProperty}
+        <Dialog 
+          open={isModalOpen} 
           onClose={closeModal}
-          refreshChildProperties={fetchChildProperties}
-          apiUrl={API_URL}
-          parentProperties={parentProperties}
-        />
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>
+            <Typography variant="h6">
+              Child Property Details
+            </Typography>
+            <IconButton
+              onClick={closeModal}
+              sx={{ position: 'absolute', right: 8, top: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers>
+            <ChildPropertyDetailModal 
+              childProperty={selectedChildProperty} 
+              parentProperties={parentProperties} 
+              onClose={closeModal}
+              refreshChildProperties={fetchChildProperties}
+              apiUrl={API_URL}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeModal}>Close</Button>
+          </DialogActions>
+        </Dialog>
       )}
-    </div>
+    </Container>
   );
 }

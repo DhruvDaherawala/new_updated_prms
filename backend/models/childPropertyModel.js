@@ -107,25 +107,66 @@ async function createChildProperty(childData) {
 async function updateChildProperty(childPropertyId, childData) {
   // Expect childData to contain: property_id, floor, title, description, rooms, washroom, gas, electricity, deposit, rent
   const { property_id, floor, title, description, rooms, washroom, gas, electricity, deposit, rent } = childData;
-  const query = `
-    UPDATE child_properties
-    SET property_id = ?, floor = ?, title = ?, description = ?, rooms = ?, washroom = ?, gas = ?, electricity = ?, deposit = ?, rent = ?
-    WHERE id = ?
-  `;
-  const [result] = await pool.query(query, [
-    property_id,
-    floor,
-    title,
-    description,
-    rooms,
-    washroom,
-    gas,
-    electricity,
-    deposit,
-    rent,
-    childPropertyId,
-  ]);
-  return result.affectedRows;
+  
+  // Check if property_id exists and is not null
+  if (property_id === null || property_id === undefined) {
+    // If property_id is missing or null, first get the current property_id
+    const [rows] = await pool.query(
+      "SELECT property_id FROM child_properties WHERE id = ?",
+      [childPropertyId]
+    );
+    
+    if (rows.length === 0) {
+      throw new Error("Child property not found");
+    }
+    
+    const currentPropertyId = rows[0].property_id;
+    
+    // Now update with all fields except property_id
+    const query = `
+      UPDATE child_properties
+      SET floor = ?, title = ?, description = ?, rooms = ?, washroom = ?, gas = ?, electricity = ?, deposit = ?, rent = ?
+      WHERE id = ?
+    `;
+    
+    const [result] = await pool.query(query, [
+      floor,
+      title,
+      description,
+      rooms,
+      washroom,
+      gas,
+      electricity,
+      deposit,
+      rent,
+      childPropertyId,
+    ]);
+    
+    return result.affectedRows;
+  } else {
+    // If property_id is provided, update all fields including property_id
+    const query = `
+      UPDATE child_properties
+      SET property_id = ?, floor = ?, title = ?, description = ?, rooms = ?, washroom = ?, gas = ?, electricity = ?, deposit = ?, rent = ?
+      WHERE id = ?
+    `;
+    
+    const [result] = await pool.query(query, [
+      property_id,
+      floor,
+      title,
+      description,
+      rooms,
+      washroom,
+      gas,
+      electricity,
+      deposit,
+      rent,
+      childPropertyId,
+    ]);
+    
+    return result.affectedRows;
+  }
 }
 
 async function deleteChildProperty(childPropertyId) {

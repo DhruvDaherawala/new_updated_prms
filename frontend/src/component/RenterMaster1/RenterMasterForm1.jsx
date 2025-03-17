@@ -3,6 +3,31 @@ import axios from 'axios';
 import RenterList from './RenterList';
 import RenterForm from './RenterForm';
 import RenterDetailModal from './RenterDetailModal';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography,
+  TextField,
+  Paper,
+  CircularProgress,
+  Container,
+  Card,
+  CardContent,
+  Divider,
+  InputAdornment
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 export default function RenterMasterForm() {
   // Pull API URL from environment
@@ -166,239 +191,228 @@ export default function RenterMasterForm() {
     }
   };
 
-  return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl shadow-sm">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Renter Management</h1>
-          <p className="text-gray-600 mt-1">Manage all your renters information in one place</p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          <div className="relative w-full sm:w-64">
-            <input
-              type="text"
-              placeholder="Search renters..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors duration-200"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              setShowForm(!showForm);
-              setEditFlag(false);
-              setFormData({
-                renterName: '',
-                fullAddress: '',
-                age: '',
-                numberOfStayers: '',
-                aadhaarCard: null,
-                panCard: null,
-                passportPhoto: null,
-                otherDocument: null,
-                contact1: '',
-                contact2: '',
-                remarks: '',
-                status: 'Active'
-              });
-            }}
-            className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md w-full sm:w-auto"
-          >
-            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>{showForm ? "Close Form" : "Add Renter"}</span>
-          </button>
-        </div>
-      </div>
+  // Get active renters count
+  const getActiveRenters = () => {
+    return renters.filter(r => r.status === 'Active').length;
+  };
 
-      {/* Renters Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wider">Total Renters</p>
-              <h3 className="text-3xl font-bold text-gray-800 mt-1">{renters.length}</h3>
-            </div>
-            <div className="bg-purple-100 p-3 rounded-full">
-              <svg className="w-8 h-8 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+  return (
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header */}
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 2,
+          background: 'linear-gradient(to right, #e3f2fd, #bbdefb)'
+        }}
+      >
+        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+          <Grid item xs={12} md={6}>
+            <Typography variant="h4" component="h1" fontWeight="bold" color="primary.dark">
+              Renter Management
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+              Manage all your renters information in one place
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <TextField
+                placeholder="Search renters..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={showForm ? <CloseIcon /> : <AddIcon />}
+                onClick={() => {
+                  setShowForm(!showForm);
+                  setEditFlag(false);
+                  setFormData({
+                    renterName: '',
+                    fullAddress: '',
+                    age: '',
+                    numberOfStayers: '',
+                    aadhaarCard: null,
+                    panCard: null,
+                    passportPhoto: null,
+                    otherDocument: null,
+                    contact1: '',
+                    contact2: '',
+                    remarks: '',
+                    status: 'Active'
+                  });
+                }}
+              >
+                {showForm ? "Close Form" : "Add Renter"}
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
+
+      {/* Dashboard Cards */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #2196f3', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Total Renters
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {renters.length}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#e3f2fd', borderRadius: '50%' }}>
+                  <PersonIcon fontSize="large" color="primary" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
         
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wider">Active Renters</p>
-              <h3 className="text-3xl font-bold text-gray-800 mt-1">
-                {renters.filter(r => r.status === 'Active').length}
-              </h3>
-            </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <svg className="w-8 h-8 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #4caf50', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Active Renters
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {getActiveRenters()}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
+                  <CheckCircleIcon fontSize="large" color="success" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
         
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wider">Average Age</p>
-              <h3 className="text-3xl font-bold text-gray-800 mt-1">
-                {renters.length ? Math.round(renters.reduce((acc, r) => acc + (parseInt(r.age) || 0), 0) / renters.length) : 0}
-              </h3>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <svg className="w-8 h-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
+        <Grid item xs={12} md={4}>
+          <Card elevation={2} sx={{ borderLeft: '4px solid #ff9800', height: '100%' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Average Age
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {renters.length ? Math.round(renters.reduce((acc, r) => acc + (parseInt(r.age) || 0), 0) / renters.length) : 0}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#fff3e0', borderRadius: '50%' }}>
+                  <PhoneIcon fontSize="large" color="warning" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       {/* Add/Edit Renter Form */}
       {showForm && (
-        <div className="bg-white shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-purple-100">
-            <h2 className="text-xl font-semibold text-gray-800">{editFlag ? "Edit Renter" : "Add New Renter"}</h2>
-            <p className="text-gray-500 mt-1">{editFlag ? "Update the renter's information" : "Enter details for the new renter"}</p>
-          </div>
-          <div className="p-6">
-            <RenterForm
-              editformData={formData}
-              editFlag={editFlag}
-              onSubmitSuccess={fetchRenters}
-              onClose={() => {
-                setShowForm(false);
-                setEditFlag(false);
-                setFormData({
-                  renterName: '',
-                  fullAddress: '',
-                  age: '',
-                  numberOfStayers: '',
-                  aadhaarCard: null,
-                  panCard: null,
-                  passportPhoto: null,
-                  otherDocument: null,
-                  contact1: '',
-                  contact2: '',
-                  remarks: '',
-                  status: 'Active'
-                });
-              }}
-            />
-          </div>
-        </div>
+        <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+          <Typography variant="h5" sx={{ mb: 3 }}>
+            {editFlag ? 'Edit Renter' : 'Add New Renter'}
+          </Typography>
+          <RenterForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleFileChange={handleFileChange}
+            handleSubmit={handleSubmit}
+            editFlag={editFlag}
+          />
+        </Paper>
       )}
 
       {/* Renters Listing */}
-      <div className="bg-white shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
-        <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-800">Renter Listings</h2>
-          <p className="text-gray-500 mt-1">View and manage all your registered renters</p>
-        </div>
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Renter Listings
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          View and manage all your renters
+        </Typography>
+        
+        <Divider sx={{ mb: 3 }} />
         
         {isLoading ? (
-          <div className="flex items-center justify-center p-12">
-            <div className="flex flex-col items-center">
-              <svg className="animate-spin h-10 w-10 text-purple-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <p className="text-gray-600">Loading renters...</p>
-            </div>
-          </div>
-        ) : filteredRenters.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 text-center">
-            <svg className="h-16 w-16 text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            {searchTerm ? (
-              <>
-                <h3 className="text-lg font-medium text-gray-800">No renters found</h3>
-                <p className="text-gray-500 mt-1">Try adjusting your search criteria</p>
-                <button 
-                  onClick={() => setSearchTerm('')}
-                  className="mt-4 text-purple-600 hover:text-purple-800 font-medium"
-                >
-                  Clear search
-                </button>
-              </>
-            ) : (
-              <>
-                <h3 className="text-lg font-medium text-gray-800">No renters added yet</h3>
-                <p className="text-gray-500 mt-1">Click the "Add Renter" button to get started</p>
-                <button 
-                  onClick={() => {
-                    setShowForm(true);
-                    setEditFlag(false);
-                  }}
-                  className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  Add Your First Renter
-                </button>
-              </>
-            )}
-          </div>
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
+            <CircularProgress />
+          </Box>
+        ) : filteredRenters.length > 0 ? (
+          <RenterList
+            renters={filteredRenters}
+            onDetailsClick={handleDetailsClick}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+            apiUrl={API_URL}
+          />
         ) : (
-          <div className="overflow-auto">
-            <RenterList
-              renters={filteredRenters}
-              onAddClick={() => {
-                setShowForm(!showForm);
-                setFormData({});
-              }}
-              showForm={showForm}
-              apiUrl={API_URL}
-              onEditClick={handleEditClick}
-              onDetailsClick={handleDetailsClick}
-              setEditForm={setFormData}
-              handleDeleteClick={handleDeleteClick}
-            />
-          </div>
+          <Box sx={{ textAlign: 'center', py: 5 }}>
+            <Typography variant="h6">
+              {searchTerm ? 'No renters found matching your search' : 'No renters available'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {searchTerm ? 'Try adjusting your search' : 'Click the "Add Renter" button to get started'}
+            </Typography>
+            {searchTerm && (
+              <Button
+                sx={{ mt: 2 }}
+                onClick={() => setSearchTerm('')}
+                variant="outlined"
+              >
+                Clear Search
+              </Button>
+            )}
+          </Box>
         )}
-      </div>
+      </Paper>
 
-      {/* Modal for Renter Details */}
+      {/* Renter Details Modal */}
       {isModalOpen && selectedRenter && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4 transition-opacity duration-300">
-          <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-all duration-300 transform animate-modal-in">
-            <button
+        <Dialog 
+          open={isModalOpen} 
+          onClose={closeModal}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>
+            <Typography variant="h6">
+              Renter Details
+            </Typography>
+            <IconButton
               onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+              sx={{ position: 'absolute', right: 8, top: 8 }}
             >
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="p-6">
-              <RenterDetailModal renter={selectedRenter} onClose={closeModal} refreshRenters={fetchRenters} apiUrl={API_URL} />
-            </div>
-          </div>
-        </div>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers>
+            <RenterDetailModal renter={selectedRenter} apiUrl={API_URL} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeModal}>Close</Button>
+          </DialogActions>
+        </Dialog>
       )}
-      
-      {/* Add these CSS animations to your global CSS */}
-      <style jsx>{`
-        @keyframes modalIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        .animate-modal-in {
-          animation: modalIn 0.2s ease-out forwards;
-        }
-      `}</style>
-    </div>
+    </Container>
   );
 }

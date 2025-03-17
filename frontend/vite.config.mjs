@@ -11,9 +11,18 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      // this ensures that the browser opens upon server start
-      open: true,
-      port: PORT
+      host: '0.0.0.0', // Listen on all network interfaces
+      port: 3000,
+      proxy: {
+        '/api': {
+            target: 'http://localhost:5000', // Backend URL
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+    }, // Specify the port
+      hmr: {
+        clientPort: 3000,
+      },
     },
     define: {
       global: 'window'

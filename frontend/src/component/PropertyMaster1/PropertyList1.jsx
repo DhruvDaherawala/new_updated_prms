@@ -50,63 +50,6 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
       },
       transition: 'box-shadow 0.3s ease-in-out'
     }}>
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          mb: 3, 
-          flexDirection: { xs: 'column', sm: 'row' },
-          gap: 2
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold" color="primary">
-          Properties Management
-        </Typography>
-        
-        <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', sm: 'auto' } }}>
-          <Box 
-            sx={{ 
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid #e0e0e0',
-              borderRadius: '4px',
-              padding: '4px 8px',
-              width: { xs: '100%', sm: '250px' }
-            }}
-          >
-            <SearchIcon sx={{ color: 'action.active', mr: 1 }} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search properties..."
-              style={{
-                border: 'none',
-                outline: 'none',
-                width: '100%',
-                fontSize: '14px'
-              }}
-            />
-          </Box>
-          
-          {onAddClick && (
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={onAddClick}
-              sx={{ 
-                whiteSpace: 'nowrap', 
-                minWidth: { xs: '100%', sm: 'auto' } 
-              }}
-            >
-              Add Property
-            </Button>
-          )}
-        </Box>
-      </Box>
-
       <div className="overflow-x-auto">
         {paginatedProperties.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center' }}>
@@ -118,12 +61,12 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
           <table className="min-w-full divide-gray-200 border-collapse">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documents</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Owner</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Property Title</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Documents</th>
+                <th className="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -161,52 +104,31 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
                       <Typography variant="caption" color="text.secondary">No documents</Typography>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                      <Tooltip title="Edit Property">
-                        <IconButton
-                          color="primary"
-                          size="small"
-                          onClick={() => onEdit(prop)}
-                          sx={{ 
-                            backgroundColor: 'primary.light',
-                            '&:hover': { backgroundColor: 'primary.main', color: 'white' }
-                          }}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-2 justify-center">
+                      <button 
+                        className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" 
+                        onClick={() => onEdit(prop)}
+                      >
+                        Edit
+                      </button>
                       
                       {onDetails && (
-                        <Tooltip title="View Details">
-                          <IconButton
-                            color="info"
-                            size="small"
-                            onClick={() => onDetails(prop)}
-                            sx={{ 
-                              backgroundColor: 'info.light',
-                              '&:hover': { backgroundColor: 'info.main', color: 'white' }
-                            }}
-                          >
-                            <VisibilityIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        <button
+                          className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
+                          onClick={() => onDetails(prop)}
+                        >
+                          View
+                        </button>
                       )}
                       
-                      <Tooltip title="Delete Property">
-                        <IconButton
-                          color="error"
-                          size="small"
-                          onClick={() => handleDeleteClick(prop)}
-                          sx={{ 
-                            backgroundColor: 'error.light',
-                            '&:hover': { backgroundColor: 'error.main', color: 'white' }
-                          }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
+                      <button 
+                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
+                        onClick={() => handleDeleteClick(prop)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

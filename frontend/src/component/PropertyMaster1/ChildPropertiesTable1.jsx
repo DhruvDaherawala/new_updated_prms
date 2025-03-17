@@ -1,7 +1,14 @@
 export default function ChildPropertiesTable({ childCount, onChange, formInputStyle }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full bg-gray-200 rounded-lg text-sm mt-4">
+    <div className="overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <style>
+        {`
+        .overflow-x-auto::-webkit-scrollbar {
+          display: none;
+        }
+        `}
+      </style>
+      <table className="w-full bg-gray-200 rounded-lg text-sm mt-4 table-auto">
         <thead>
           <tr className="bg-indigo-500 text-white">
             <th className="p-3 rounded-tl-lg">Floor</th>

@@ -1,18 +1,18 @@
 const pool = require("../config/db");
 
 async function getAllProperties() {
-  const [rows] = await pool.query("SELECT * FROM properties");
+  const [rows] = await pool.query("SELECT * FROM properties ORDER BY id DESC");
   return rows;
 }
 
 async function createProperty(propertyData, childProperties = []) {
   // Destructure including numberOfFloors from propertyData
-  const { propertyName, ownerName, address, documents, numberOfFloors } = propertyData;
+  const { propertyName, ownerName, address, documents, numberOfFloors, status } = propertyData;
 
   // 1. Insert the main property
   const insertPropertyQuery = `
-    INSERT INTO properties (propertyName, ownerName, address, documents, numberOfFloors)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO properties (propertyName, ownerName, address, documents, numberOfFloors, status)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
   const [result] = await pool.query(insertPropertyQuery, [
     propertyName,
@@ -20,6 +20,7 @@ async function createProperty(propertyData, childProperties = []) {
     address,
     documents,
     numberOfFloors,
+    status || 'Active', // Default to 'Active' if not provided
   ]);
   const newPropertyId = result.insertId;
 
@@ -60,6 +61,7 @@ async function getPropertyWithChildren(propertyId) {
       p.address,
       p.documents,
       p.numberOfFloors,
+      p.status,
       cp.id AS childId,
       cp.floor,
       cp.title,
@@ -89,6 +91,7 @@ async function getPropertyWithChildren(propertyId) {
     address: rows[0].address,
     documents: rows[0].documents,
     numberOfFloors: rows[0].numberOfFloors,
+    status: rows[0].status || 'Active', // Include status with default value
     childProperties: [],
   };
 
@@ -118,12 +121,12 @@ async function getPropertyWithChildren(propertyId) {
  */
 async function updateProperty(propertyId, propertyData) {
   // Destructure including numberOfFloors
-  const { propertyName, ownerName, address, documents, childProperties, numberOfFloors } = propertyData;
+  const { propertyName, ownerName, address, documents, childProperties, numberOfFloors, status } = propertyData;
 
   // 1. Update the main property
   const updatePropertyQuery = `
     UPDATE properties
-    SET propertyName = ?, ownerName = ?, address = ?, documents = ?, numberOfFloors = ?
+    SET propertyName = ?, ownerName = ?, address = ?, documents = ?, numberOfFloors = ?, status = ?
     WHERE id = ?
   `;
   await pool.query(updatePropertyQuery, [
@@ -132,6 +135,7 @@ async function updateProperty(propertyId, propertyData) {
     address,
     documents,
     numberOfFloors,
+    status || 'Active', // Default to 'Active' if not provided
     propertyId,
   ]);
 
