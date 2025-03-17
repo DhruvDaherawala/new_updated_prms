@@ -218,13 +218,13 @@ export default function RenterMasterForm() {
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <TextField
                 placeholder="Search renters..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 variant="outlined"
-                fullWidth
+                sx={{ flexGrow: 1 }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -362,7 +362,7 @@ export default function RenterMasterForm() {
             renters={filteredRenters}
             onDetailsClick={handleDetailsClick}
             onEditClick={handleEditClick}
-            onDeleteClick={handleDeleteClick}
+            handleDeleteClick={handleDeleteClick}
             apiUrl={API_URL}
           />
         ) : (
