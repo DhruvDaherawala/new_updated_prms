@@ -6,17 +6,11 @@ import {
   Card, 
   Button, 
   Tooltip, 
-  Chip, 
-  IconButton,
-  InputAdornment,
-  TextField
+  Chip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import PersonIcon from '@mui/icons-material/Person';
 
 const itemsPerPage = 5;
 
@@ -72,51 +66,6 @@ export default function RenterList({
       },
       transition: 'box-shadow 0.3s ease-in-out'
     }}>
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          mb: 3,
-          flexDirection: { xs: 'column', sm: 'row' },
-          gap: 2
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PersonIcon color="primary" />
-          <Typography variant="h6" fontWeight="bold" color="primary">
-            Registered Renters
-          </Typography>
-        </Box>
-        
-        <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', sm: 'auto' } }}>
-          <TextField
-            size="small"
-            placeholder="Search renters..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: { xs: '100%', sm: '250px' } }}
-          />
-          
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={onAddClick}
-            sx={{ whiteSpace: 'nowrap', minWidth: { xs: '100%', sm: 'auto' } }}
-          >
-            {showForm ? 'Close Form' : 'Add Renter'}
-          </Button>
-        </Box>
-      </Box>
-
       <div className="overflow-x-auto">
         {paginatedRenters.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center' }}>
@@ -128,36 +77,21 @@ export default function RenterList({
           <table className="min-w-full divide-y divide-gray-200 border-collapse">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renter Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documents</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Renter Name</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Age</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Documents</th>
+                <th className="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedRenters.map((renter) => (
                 <tr key={renter.id} className="hover:bg-gray-50 transition-colors duration-150">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ 
-                        width: 36, 
-                        height: 36, 
-                        borderRadius: '50%', 
-                        bgcolor: 'primary.light', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        color: 'primary.main',
-                        fontWeight: 'bold'
-                      }}>
-                        {renter.renterName ? renter.renterName.charAt(0).toUpperCase() : 'R'}
-                      </Box>
-                      <Typography variant="body2" fontWeight="medium">
-                        {renter.renterName}
-                      </Typography>
-                    </Box>
+                    <Typography variant="body2" fontWeight="medium">
+                      {renter.renterName}
+                    </Typography>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{renter.age}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -173,55 +107,34 @@ export default function RenterList({
                       variant="outlined"
                     />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     <DocumentLink document={renter.aadhaarCard} apiUrl={apiUrl} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                      <Tooltip title="Edit Renter">
-                        <IconButton
-                          color="primary"
-                          size="small"
-                          onClick={() => onEditClick(renter)}
-                          sx={{ 
-                            backgroundColor: 'primary.light',
-                            '&:hover': { backgroundColor: 'primary.main', color: 'white' }
-                          }}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-2 justify-center">
+                      <button 
+                        className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" 
+                        onClick={() => onEditClick(renter)}
+                      >
+                        Edit
+                      </button>
                       
                       {onDetailsClick && (
-                        <Tooltip title="View Details">
-                          <IconButton
-                            color="info"
-                            size="small"
-                            onClick={() => onDetailsClick(renter)}
-                            sx={{ 
-                              backgroundColor: 'info.light',
-                              '&:hover': { backgroundColor: 'info.main', color: 'white' }
-                            }}
-                          >
-                            <VisibilityIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        <button
+                          className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
+                          onClick={() => onDetailsClick(renter)}
+                        >
+                          View
+                        </button>
                       )}
                       
-                      <Tooltip title="Delete Renter">
-                        <IconButton
-                          color="error"
-                          size="small"
-                          onClick={() => handleDeleteClick(renter)}
-                          sx={{ 
-                            backgroundColor: 'error.light',
-                            '&:hover': { backgroundColor: 'error.main', color: 'white' }
-                          }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
+                      <button 
+                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
+                        onClick={() => handleDeleteClick(renter)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
