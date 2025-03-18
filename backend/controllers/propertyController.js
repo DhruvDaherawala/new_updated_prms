@@ -16,7 +16,14 @@ exports.createProperty = async (req, res) => {
     const { formData } = req.body;
     const parsedData = JSON.parse(formData);
     // Destructure numberOfFloors along with the other fields
-    const { propertyName, ownerName, address, numberOfFloors, status, childProperties } = parsedData;
+    const {
+      propertyName,
+      ownerName,
+      address,
+      numberOfFloors,
+      status,
+      childProperties,
+    } = parsedData;
 
     // If a file was uploaded, store the Cloudinary URL in documentsPath
     let documentsPath = null;
@@ -32,7 +39,7 @@ exports.createProperty = async (req, res) => {
         address,
         documents: documentsPath,
         numberOfFloors, // pass the new field
-        status: status || 'Active', // include status field with default
+        status: status || "Active", // include status field with default
       },
       childProperties
     );
@@ -68,7 +75,14 @@ exports.updateProperty = async (req, res) => {
     const { formData } = req.body;
     const parsedData = JSON.parse(formData);
     // Destructure numberOfFloors from the updated data
-    const { propertyName, ownerName, address, numberOfFloors, status, childProperties } = parsedData;
+    const {
+      propertyName,
+      ownerName,
+      address,
+      numberOfFloors,
+      status,
+      childProperties,
+    } = parsedData;
 
     // If a file was uploaded, store the Cloudinary URL
     let documentsPath = null;
@@ -83,7 +97,7 @@ exports.updateProperty = async (req, res) => {
       address,
       documents: documentsPath,
       numberOfFloors, // update the numberOfFloors field
-      status: status || 'Active', // include status field with default
+      status: status || "Active", // include status field with default
       childProperties,
     });
 

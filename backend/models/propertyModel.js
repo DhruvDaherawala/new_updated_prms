@@ -7,7 +7,14 @@ async function getAllProperties() {
 
 async function createProperty(propertyData, childProperties = []) {
   // Destructure including numberOfFloors from propertyData
-  const { propertyName, ownerName, address, documents, numberOfFloors, status } = propertyData;
+  const {
+    propertyName,
+    ownerName,
+    address,
+    documents,
+    numberOfFloors,
+    status,
+  } = propertyData;
 
   // 1. Insert the main property
   const insertPropertyQuery = `
@@ -20,7 +27,7 @@ async function createProperty(propertyData, childProperties = []) {
     address,
     documents,
     numberOfFloors,
-    status || 'Active', // Default to 'Active' if not provided
+    status || "Active", // Default to 'Active' if not provided
   ]);
   const newPropertyId = result.insertId;
 
@@ -91,7 +98,7 @@ async function getPropertyWithChildren(propertyId) {
     address: rows[0].address,
     documents: rows[0].documents,
     numberOfFloors: rows[0].numberOfFloors,
-    status: rows[0].status || 'Active', // Include status with default value
+    status: rows[0].status || "Active", // Include status with default value
     childProperties: [],
   };
 
@@ -121,7 +128,15 @@ async function getPropertyWithChildren(propertyId) {
  */
 async function updateProperty(propertyId, propertyData) {
   // Destructure including numberOfFloors
-  const { propertyName, ownerName, address, documents, childProperties, numberOfFloors, status } = propertyData;
+  const {
+    propertyName,
+    ownerName,
+    address,
+    documents,
+    childProperties,
+    numberOfFloors,
+    status,
+  } = propertyData;
 
   // 1. Update the main property
   const updatePropertyQuery = `
@@ -135,12 +150,14 @@ async function updateProperty(propertyId, propertyData) {
     address,
     documents,
     numberOfFloors,
-    status || 'Active', // Default to 'Active' if not provided
+    status || "Active", // Default to 'Active' if not provided
     propertyId,
   ]);
 
   // 2. Delete existing child properties for this property
-  await pool.query("DELETE FROM child_properties WHERE property_id = ?", [propertyId]);
+  await pool.query("DELETE FROM child_properties WHERE property_id = ?", [
+    propertyId,
+  ]);
 
   // 3. Re-insert child properties if provided
   if (Array.isArray(childProperties) && childProperties.length > 0) {
@@ -170,10 +187,14 @@ async function updateProperty(propertyId, propertyData) {
  */
 async function deleteProperty(propertyId) {
   // First remove the child properties
-  await pool.query("DELETE FROM child_properties WHERE property_id = ?", [propertyId]);
+  await pool.query("DELETE FROM child_properties WHERE property_id = ?", [
+    propertyId,
+  ]);
 
   // Then remove the property itself
-  const [result] = await pool.query("DELETE FROM properties WHERE id = ?", [propertyId]);
+  const [result] = await pool.query("DELETE FROM properties WHERE id = ?", [
+    propertyId,
+  ]);
   // If result.affectedRows = 0, property didn't exist
   return result.affectedRows > 0;
 }

@@ -12,7 +12,7 @@
     "@reduxjs/toolkit": "^2.2.3",
     "@tailwindcss/vite": "^4.0.9",
     "@vitejs/plugin-react": "^4.2.1",
-    "apexcharts": "^3.54.1",
+    "apexcharts": "^4.5.0",
     "axios": "^1.8.1",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",

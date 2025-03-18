@@ -24,12 +24,12 @@ export default function ChildPropertyList({
 
   return (
     <div className="bg-white shadow rounded-md p-6">
-      <div className="flex items-center justify-between mb-4">
+      {/* <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">Child Properties</h2>
         <button onClick={onAddClick} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
           {showForm ? 'Close Form' : 'Add Child Property'}
         </button>
-      </div>
+      </div> */}
       {paginatedChildProperties.length === 0 ? (
         <p className="text-gray-600">No child properties found.</p>
       ) : (
