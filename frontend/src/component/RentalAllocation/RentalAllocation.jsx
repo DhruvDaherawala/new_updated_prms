@@ -724,7 +724,7 @@ export default function RentalAllocation() {
       </Grid>
 
       {/* Allocation Form Modal */}
-      <AllocationForm
+      {/* <AllocationForm
         open={showForm}
         mode={formMode}
         allocation={selectedAllocation}
@@ -732,6 +732,23 @@ export default function RentalAllocation() {
         onFileChange={handleFileChange}
         onSubmit={handleSubmit}
         onClose={() => setShowForm(false)}
+        renters={renters}
+        properties={properties}
+        childProperties={childProperties}
+        apiUrl={API_URL}
+      /> */}
+
+      <AllocationForm
+        open={showForm}
+        mode={formMode}
+        allocation={formData} // This is an object
+        onInputChange={handleInputChange}
+        onFileChange={handleFileChange}
+        onSubmit={handleSubmit}
+        onClose={() => {
+          resetForm();
+          setShowForm(false);
+        }}
         renters={renters}
         properties={properties}
         childProperties={childProperties}
