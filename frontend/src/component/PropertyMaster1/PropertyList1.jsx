@@ -3,7 +3,6 @@ import PaginatedList from '../Pagination/Pagination';
 import { Tooltip, Chip, IconButton, Box, Typography, Card, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -112,16 +111,6 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
                       >
                         Edit
                       </button>
-                      
-                      {onDetails && (
-                        <button
-                          className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
-                          onClick={() => onDetails(prop)}
-                        >
-                          View
-                        </button>
-                      )}
-                      
                       <button 
                         className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
                         onClick={() => handleDeleteClick(prop)}

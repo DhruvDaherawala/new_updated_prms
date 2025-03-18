@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const itemsPerPage = 5;
 
@@ -118,16 +117,6 @@ export default function RenterList({
                       >
                         Edit
                       </button>
-                      
-                      {onDetailsClick && (
-                        <button
-                          className="text-indigo-600 hover:text-indigo-900 px-3 py-1 bg-indigo-100 rounded"
-                          onClick={() => onDetailsClick(renter)}
-                        >
-                          View
-                        </button>
-                      )}
-                      
                       <button 
                         className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
                         onClick={() => handleDeleteClick(renter)}
