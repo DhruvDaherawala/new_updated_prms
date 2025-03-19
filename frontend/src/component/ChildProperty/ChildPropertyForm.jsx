@@ -148,7 +148,181 @@
 // }
 
 // 18-03
-import React from 'react';
+
+// import React from 'react';
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogActions,
+//   Typography,
+//   Grid,
+//   TextField,
+//   Button,
+//   IconButton,
+//   Select,
+//   MenuItem,
+//   FormControl,
+//   InputLabel
+// } from '@mui/material';
+// import CloseIcon from '@mui/icons-material/Close';
+// import SaveIcon from '@mui/icons-material/Save';
+// import CancelIcon from '@mui/icons-material/Cancel';
+
+// export default function ChildPropertyForm({ open, formData, onInputChange, onSubmit, onClose, parentProperties, floorError }) {
+//   return (
+//     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+//       <DialogTitle>
+//         <Typography variant="h6">{formData.id ? 'Edit Child Property' : 'Add Child Property'}</Typography>
+//         <IconButton onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
+//           <CloseIcon />
+//         </IconButton>
+//       </DialogTitle>
+//       <DialogContent dividers>
+//         <Grid container spacing={2}>
+//           {/* Parent Property */}
+//           <Grid item xs={12} md={6}>
+//             <FormControl fullWidth variant="outlined">
+//               <InputLabel>Parent Property</InputLabel>
+//               <Select label="Parent Property" name="property_id" value={formData.property_id} onChange={onInputChange} required>
+//                 <MenuItem value="">
+//                   <em>Select Parent Property</em>
+//                 </MenuItem>
+//                 {parentProperties.map((parent) => (
+//                   <MenuItem key={parent.id} value={parent.id}>
+//                     {parent.propertyName} - {parent.ownerName} (Max Floors: {parent.numberOfFloors})
+//                   </MenuItem>
+//                 ))}
+//               </Select>
+//             </FormControl>
+//           </Grid>
+
+//           {/* Floor Number */}
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Floor Number"
+//               name="floor"
+//               type="number"
+//               value={formData.floor}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               error={!!floorError}
+//               helperText={floorError}
+//               required
+//             />
+//           </Grid>
+
+//           {/* Title */}
+//           <Grid item xs={12}>
+//             <TextField
+//               label="Child Property Title"
+//               name="title"
+//               value={formData.title}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               required
+//             />
+//           </Grid>
+
+//           {/* Description */}
+//           <Grid item xs={12}>
+//             <TextField
+//               label="Description"
+//               name="description"
+//               value={formData.description}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               multiline
+//               rows={3}
+//               required
+//             />
+//           </Grid>
+
+//           {/* Rooms and Washrooms */}
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Number of Rooms"
+//               name="rooms"
+//               type="number"
+//               value={formData.rooms}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               required
+//             />
+//           </Grid>
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Number of Washrooms"
+//               name="washroom"
+//               type="number"
+//               value={formData.washroom}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               required
+//             />
+//           </Grid>
+
+//           {/* Gas and Electricity */}
+//           <Grid item xs={12} md={6}>
+//             <TextField label="Gas Availability" name="gas" value={formData.gas} onChange={onInputChange} fullWidth variant="outlined" />
+//           </Grid>
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Electricity Availability"
+//               name="electricity"
+//               value={formData.electricity}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//             />
+//           </Grid>
+
+//           {/* Deposit and Rent */}
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Deposit Amount"
+//               name="deposit"
+//               type="number"
+//               value={formData.deposit}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               required
+//             />
+//           </Grid>
+//           <Grid item xs={12} md={6}>
+//             <TextField
+//               label="Rent Amount"
+//               name="rent"
+//               type="number"
+//               value={formData.rent}
+//               onChange={onInputChange}
+//               fullWidth
+//               variant="outlined"
+//               required
+//             />
+//           </Grid>
+//         </Grid>
+//       </DialogContent>
+//       <DialogActions>
+//         <Button onClick={onClose} startIcon={<CancelIcon />}>
+//           Cancel
+//         </Button>
+//         <Button onClick={onSubmit} startIcon={<SaveIcon />} variant="contained" color="primary">
+//           {formData.id ? 'Update' : 'Save'}
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   );
+// }
+//=====================19/3/25============================
+
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -169,6 +343,19 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function ChildPropertyForm({ open, formData, onInputChange, onSubmit, onClose, parentProperties, floorError }) {
+  const [maxFloors, setMaxFloors] = useState([]);
+
+  useEffect(() => {
+    if (formData.property_id) {
+      const selectedProperty = parentProperties.find((parent) => parent.id === formData.property_id);
+      if (selectedProperty) {
+        setMaxFloors(Array.from({ length: selectedProperty.numberOfFloors }, (_, i) => i + 1));
+      } else {
+        setMaxFloors([]);
+      }
+    }
+  }, [formData.property_id, parentProperties]);
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
@@ -183,7 +370,13 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Parent Property</InputLabel>
-              <Select label="Parent Property" name="property_id" value={formData.property_id} onChange={onInputChange} required>
+              <Select
+                label="Parent Property"
+                name="property_id"
+                value={formData.property_id || ''}
+                onChange={onInputChange}
+                required
+              >
                 <MenuItem value="">
                   <em>Select Parent Property</em>
                 </MenuItem>
@@ -198,18 +391,25 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
 
           {/* Floor Number */}
           <Grid item xs={12} md={6}>
-            <TextField
-              label="Floor Number"
-              name="floor"
-              type="number"
-              value={formData.floor}
-              onChange={onInputChange}
-              fullWidth
-              variant="outlined"
-              error={!!floorError}
-              helperText={floorError}
-              required
-            />
+            <FormControl fullWidth variant="outlined" error={!!floorError} required>
+              <InputLabel>Floor Number</InputLabel>
+              <Select
+                label="Floor Number"
+                name="floor"
+                value={formData.floor || ''}
+                onChange={onInputChange}
+              >
+                {maxFloors.length === 0 ? (
+                  <MenuItem value="">
+                    <em>Select Parent Property First</em>
+                  </MenuItem>
+                ) : (
+                  maxFloors.map((floor) => (
+                    <MenuItem key={floor} value={floor}>{floor}</MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
           </Grid>
 
           {/* Title */}
@@ -217,7 +417,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
             <TextField
               label="Child Property Title"
               name="title"
-              value={formData.title}
+              value={formData.title || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
@@ -230,7 +430,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
             <TextField
               label="Description"
               name="description"
-              value={formData.description}
+              value={formData.description || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
@@ -246,7 +446,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               label="Number of Rooms"
               name="rooms"
               type="number"
-              value={formData.rooms}
+              value={formData.rooms || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
@@ -258,7 +458,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               label="Number of Washrooms"
               name="washroom"
               type="number"
-              value={formData.washroom}
+              value={formData.washroom || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
@@ -266,19 +466,36 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
             />
           </Grid>
 
-          {/* Gas and Electricity */}
+          {/* Gas Availability */}
           <Grid item xs={12} md={6}>
-            <TextField label="Gas Availability" name="gas" value={formData.gas} onChange={onInputChange} fullWidth variant="outlined" />
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Gas Availability</InputLabel>
+              <Select
+                label="Gas Availability"
+                name="gas"
+                value={formData.gas || ''}
+                onChange={onInputChange}
+              >
+                <MenuItem value="Yes">Yes</MenuItem>
+                <MenuItem value="No">No</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
+          
+          {/* Electricity Availability */}
           <Grid item xs={12} md={6}>
-            <TextField
-              label="Electricity Availability"
-              name="electricity"
-              value={formData.electricity}
-              onChange={onInputChange}
-              fullWidth
-              variant="outlined"
-            />
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Electricity Availability</InputLabel>
+              <Select
+                label="Electricity Availability"
+                name="electricity"
+                value={formData.electricity || ''}
+                onChange={onInputChange}
+              >
+                <MenuItem value="Yes">Yes</MenuItem>
+                <MenuItem value="No">No</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           {/* Deposit and Rent */}
@@ -287,7 +504,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               label="Deposit Amount"
               name="deposit"
               type="number"
-              value={formData.deposit}
+              value={formData.deposit || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
@@ -299,7 +516,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               label="Rent Amount"
               name="rent"
               type="number"
-              value={formData.rent}
+              value={formData.rent || ''}
               onChange={onInputChange}
               fullWidth
               variant="outlined"
