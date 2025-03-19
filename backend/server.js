@@ -28,10 +28,31 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS setup – ensure FRONT_URL in .env matches your frontend URL.
+// CORS setup with improved configuration for Vercel deployment
+const allowedOrigins = [
+  process.env.FRONT_URL || "http://localhost:3000",
+  "https://new-updated-layout.vercel.app", // Add your frontend Vercel URL
+  /\.vercel\.app$/ // Allow all vercel.app subdomains
+];
+
 app.use(
   cors({
-    origin: process.env.FRONT_URL || "http://localhost:3001",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Check if origin is allowed
+      if (allowedOrigins.some(allowedOrigin => {
+        if (typeof allowedOrigin === 'string') {
+          return allowedOrigin === origin;
+        }
+        return allowedOrigin.test(origin);
+      })) {
+        return callback(null, true);
+      }
+      
+      callback(new Error('Not allowed by CORS'));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -50,6 +71,15 @@ app.use("/api/property", propertyRoutes);
 app.use("/api/renter", renterRoutes);
 app.use("/api/allocations", renterAllocationRoutes);
 app.use("/api/child_property", childPropertyRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ 
+    message: "Internal server error", 
+    error: process.env.NODE_ENV === 'production' ? null : err.message 
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
