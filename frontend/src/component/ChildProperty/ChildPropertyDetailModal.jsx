@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import {
   Box,
@@ -12,7 +13,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  IconButton,
+  IconButton
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -49,10 +50,12 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
 
   const saveChildProperty = async () => {
     if (floorError) {
-      alert('Please fix the errors before saving.');
+      // alert('Please fix the errors before saving.');
+      toast.error('Please fix the errors before saving.');
+
       return;
     }
-    
+
     try {
       const form = new FormData();
       const dataToSend = {
@@ -80,14 +83,16 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      alert('Child property updated successfully!');
+      // alert('Child property updated successfully!');
+      toast.success('Child property updated successfully!');
       if (refreshChildProperties) {
         refreshChildProperties();
       }
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating child property:', error);
-      alert('Failed to update child property!');
+      // alert('Failed to update child property!');
+      toast.error('Failed to update child property!');
     }
   };
 
@@ -105,29 +110,15 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
         <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
           {isEditing ? (
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-                onClick={saveChildProperty}
-              >
+              <Button variant="contained" color="primary" startIcon={<SaveIcon />} onClick={saveChildProperty}>
                 Save
               </Button>
-              <Button
-                variant="outlined"
-                startIcon={<CancelIcon />}
-                onClick={() => setIsEditing(false)}
-              >
+              <Button variant="outlined" startIcon={<CancelIcon />} onClick={() => setIsEditing(false)}>
                 Cancel
               </Button>
             </Box>
           ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<EditIcon />}
-              onClick={() => setIsEditing(true)}
-            >
+            <Button variant="contained" color="primary" startIcon={<EditIcon />} onClick={() => setIsEditing(true)}>
               Edit
             </Button>
           )}
@@ -145,10 +136,7 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
             </Typography>
             {isEditing ? (
               <FormControl fullWidth margin="dense" error={Boolean(floorError)}>
-                <Select
-                  value={localChild.property_id || ''}
-                  onChange={(e) => handlePropertyChange('property_id', e.target.value)}
-                >
+                <Select value={localChild.property_id || ''} onChange={(e) => handlePropertyChange('property_id', e.target.value)}>
                   {parentProperties.map((parent) => (
                     <MenuItem key={parent.id} value={parent.id}>
                       {parent.propertyName} - {parent.ownerName} (Max Floors: {parent.numberOfFloors})
@@ -210,10 +198,7 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
             </Typography>
             {isEditing ? (
               <FormControl fullWidth margin="dense">
-                <Select
-                  value={localChild.status || 'Active'}
-                  onChange={(e) => handlePropertyChange('status', e.target.value)}
-                >
+                <Select value={localChild.status || 'Active'} onChange={(e) => handlePropertyChange('status', e.target.value)}>
                   <MenuItem value="Active">Active</MenuItem>
                   <MenuItem value="Inactive">Inactive</MenuItem>
                   <MenuItem value="Rented">Rented</MenuItem>
@@ -229,10 +214,10 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
                     localChild.status === 'Active'
                       ? 'success.main'
                       : localChild.status === 'Inactive'
-                      ? 'error.main'
-                      : localChild.status === 'Rented'
-                      ? 'warning.main'
-                      : 'text.primary'
+                        ? 'error.main'
+                        : localChild.status === 'Rented'
+                          ? 'warning.main'
+                          : 'text.primary'
                 }}
               >
                 {localChild.status || 'Active'}
@@ -401,11 +386,7 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
                     No document uploaded
                   </Typography>
                 )}
-                <Button
-                  variant="outlined"
-                  component="label"
-                  startIcon={<AttachFileIcon />}
-                >
+                <Button variant="outlined" component="label" startIcon={<AttachFileIcon />}>
                   {documents ? 'Change Document' : 'Upload Document'}
                   <input type="file" hidden onChange={handleFileChange} />
                 </Button>

@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
+import { ToastContainer } from 'react-toastify';
 // assets
 import 'assets/scss/style.scss';
 
@@ -24,6 +25,7 @@ root.render(
   <Provider store={store}>
     <BrowserRouter basename={import.meta.env.VITE_APP_BASE_NAME}>
       <App />
+      <ToastContainer />
     </BrowserRouter>
   </Provider>
 );

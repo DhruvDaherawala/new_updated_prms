@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { DocumentDisplay, DocumentUpload } from './DocumentDisplay';
-
+import { ToastContainer, toast } from 'react-toastify';
 export default function RenterDetailModal({ renter, onClose, refreshRenters, apiUrl }) {
   const [isEditing, setIsEditing] = useState(renter.isEditing || false);
   const [localRenter, setLocalRenter] = useState(renter);
@@ -53,13 +53,14 @@ export default function RenterDetailModal({ renter, onClose, refreshRenters, api
       await axios.put(`${apiUrl}renter/${localRenter.id}`, form, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      alert('Renter updated successfully!');
+      toast.success('Renter updated successfully!');
+      // alert('Renter updated successfully!');
       refreshRenters();
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating renter:', error);
-      alert('Failed to update renter!');
+      // alert('Failed to update renter!');
+      toast.error('Failed to update renter!');
     }
   };
 

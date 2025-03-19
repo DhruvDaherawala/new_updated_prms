@@ -418,6 +418,7 @@
 // }
 
 // 18-03
+import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import RenterList from './RenterList';
@@ -442,7 +443,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PhoneIcon from '@mui/icons-material/Phone';
-
+import DeleteConfirmationModal from 'component/DeleteModal/DeleteConfirmationModal';
 export default function RenterMasterForm() {
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -470,6 +471,9 @@ export default function RenterMasterForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRenter, setSelectedRenter] = useState(null);
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [renterToDelete, setRenterToDelete] = useState(null);
+
   useEffect(() => {
     fetchRenters();
   }, []);
@@ -481,6 +485,7 @@ export default function RenterMasterForm() {
       setRenters(response.data);
     } catch (error) {
       console.error('Error fetching renters:', error);
+      toast.error('Error fetching renters.');
     } finally {
       setIsLoading(false);
     }
@@ -530,12 +535,14 @@ export default function RenterMasterForm() {
         await axios.put(`${API_URL}renter/${formData.id}`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        alert('Renter updated successfully!');
+        // alert('Renter updated successfully!');
+        toast.success('Renter updated successfully!');
       } else {
         await axios.post(`${API_URL}renter`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        alert('Renter created successfully!');
+        // alert('Renter created successfully!');
+        toast.success('Renter created successfully!');
       }
 
       fetchRenters();
@@ -544,7 +551,8 @@ export default function RenterMasterForm() {
       setEditFlag(false);
     } catch (error) {
       console.error('Error saving renter data:', error);
-      alert('Failed to save renter data!');
+      // alert('Failed to save renter data!');
+      toast.error('Failed to save renter data!');
     }
   };
 
@@ -593,7 +601,8 @@ export default function RenterMasterForm() {
       setIsModalOpen(true);
     } catch (error) {
       console.error('Error fetching renter details:', error);
-      alert('Failed to load renter details.');
+      // alert('Failed to load renter details.');
+      toast.error('Failed to load renter details.');
     }
   };
 
@@ -602,17 +611,32 @@ export default function RenterMasterForm() {
     setSelectedRenter(null);
   };
 
-  const handleDeleteClick = async (renter) => {
-    if (window.confirm('Are you sure you want to delete this renter?')) {
+  const handleDeleteConfirm = async (renter) => {
+    if (renterToDelete) {
       try {
         await axios.delete(`${API_URL}renter/${renter.id}`);
-        alert('Renter deleted successfully!');
+        // alert('Renter deleted successfully!');
+        toast.error('Renter deleted successfully!');
         fetchRenters();
       } catch (error) {
         console.error('Error deleting renter:', error);
-        alert('Failed to delete renter!');
+        // alert('Failed to delete renter!');
+        toast.error('Failed to delete renter!');
+      } finally {
+        setDeleteModalOpen(false);
+        setChildPropertyToDelete(null);
       }
     }
+  };
+
+  const handleDeleteClick = (renter) => {
+    setRenterToDelete(renter);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setRenterToDelete(null);
   };
 
   const getActiveRenters = () => renters.filter((r) => r.status === 'Active').length;
@@ -816,6 +840,14 @@ export default function RenterMasterForm() {
       {isModalOpen && selectedRenter && (
         <RenterDetailModal renter={selectedRenter} onClose={closeModal} refreshRenters={fetchRenters} apiUrl={API_URL} />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        message="Are you sure you want to delete this renter?"
+      />
     </Container>
   );
 }

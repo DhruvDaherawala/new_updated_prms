@@ -1,372 +1,5 @@
-// import axios from 'axios';
-// import { useState, useEffect, useMemo } from 'react';
-// import { ApiService } from './ApiService';
-// import AllocationForm from './AllocationForm';
-// import AllocationTable from './AllocationTable';
-// import AllocationDetailModal from './AllocationDetailModal';
-// import {
-//   Box,
-//   Button,
-//   CircularProgress,
-//   Container,
-//   Grid,
-//   Typography,
-//   Paper,
-//   Card,
-//   CardContent,
-//   TextField,
-//   InputAdornment,
-//   Divider,
-//   Snackbar,
-//   Alert
-// } from '@mui/material';
-// import AddIcon from '@mui/icons-material/Add';
-// import SearchIcon from '@mui/icons-material/Search';
-// import CloseIcon from '@mui/icons-material/Close';
-// import AssignmentIcon from '@mui/icons-material/Assignment';
-// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-// import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
-// export default function RentalAllocation() {
-//   // States
-//   const [allocations, setAllocations] = useState([]);
-//   const [properties, setProperties] = useState([]);
-//   const [renters, setRenters] = useState([]);
-//   const [childProperties, setChildProperties] = useState([]);
-//   const [showForm, setShowForm] = useState(false);
-//   const [formMode, setFormMode] = useState('add');
-//   const [selectedAllocation, setSelectedAllocation] = useState(null);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [alertMessage, setAlertMessage] = useState({ open: false, message: '', severity: 'info' });
-
-//   // Modal state for AllocationDetailModal (only for viewing details)
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const API_URL = import.meta.env.VITE_API_URL;
-
-//   // Fetch data on component mount
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const fetchData = async () => {
-//     setIsLoading(true);
-//     try {
-//       // Use the Promise.all for parallel fetching with improved caching
-//       const { allocations: allocationsData, properties: propertiesData, renters: rentersData, childProperties: childPropertiesData } =
-//         await ApiService.refreshAllData();
-
-//       setAllocations(allocationsData);
-//       setProperties(propertiesData);
-//       setRenters(rentersData);
-//       setChildProperties(childPropertiesData);
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//       showAlert('Failed to load data. Please try again.', 'error');
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   // Filter allocations based on search term - using useMemo for performance
-//   const filteredAllocations = useMemo(() => {
-//     if (!searchTerm.trim()) return allocations;
-
-//     return allocations.filter(
-//       (allocation) => {
-//         const renter = renters.find(r => r.id === allocation.renter_id);
-//         const property = properties.find(p => p.id === allocation.property_id);
-//         const childProperty = childProperties.find(cp => cp.id === allocation.child_property_id);
-
-//         const searchValue = searchTerm.toLowerCase();
-
-//         return (
-//           renter?.renterName?.toLowerCase().includes(searchValue) ||
-//           property?.propertyName?.toLowerCase().includes(searchValue) ||
-//           childProperty?.title?.toLowerCase().includes(searchValue) ||
-//           allocation?.rent?.toString().includes(searchValue) ||
-//           allocation?.status?.toLowerCase().includes(searchValue)
-//         );
-//       }
-//     );
-//   }, [allocations, renters, properties, childProperties, searchTerm]);
-
-//   // Function to show alert messages
-//   const showAlert = (message, severity = 'info') => {
-//     setAlertMessage({ open: true, message, severity });
-//   };
-
-//   // Close alert message
-//   const handleCloseAlert = () => {
-//     setAlertMessage({ ...alertMessage, open: false });
-//   };
-
-//   // Allocation Details Modal (only for viewing details)
-//   const handleDetailsClick = async (allocation) => {
-//     try {
-//       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
-//       setSelectedAllocation(allocationData);
-//       setIsModalOpen(true);
-//     } catch (error) {
-//       showAlert('Failed to load allocation details.', 'error');
-//     }
-//   };
-
-//   // Edit function - opens AllocationForm in edit mode
-//   const handleEditClick = async (allocation) => {
-//     try {
-//       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
-//       setSelectedAllocation(allocationData);
-//       setFormMode('edit');
-//       setShowForm(true);
-//     } catch (error) {
-//       showAlert('Failed to load allocation details.', 'error');
-//     }
-//   };
-
-//   const closeModal = () => {
-//     setIsModalOpen(false);
-//     setSelectedAllocation(null);
-//   };
-
-//   const closeForm = () => {
-//     setShowForm(false);
-//     setFormMode('add');
-//     setSelectedAllocation(null);
-//   };
-
-//   const handleDeleteClick = async (allocation) => {
-//     if (window.confirm('Are you sure you want to delete this allocation?')) {
-//       try {
-//         await ApiService.deleteAllocation(allocation.id);
-//         showAlert('Allocation deleted successfully!', 'success');
-//         fetchData();
-//       } catch (error) {
-//         console.error('Error Deleting Allocation:', error);
-//         showAlert('Failed to delete allocation!', 'error');
-//       }
-//     }
-//   };
-
-//   // Calculate statistics for dashboard
-//   const getTotalRent = () => {
-//     return allocations.reduce((sum, allocation) => sum + (parseFloat(allocation.rent) || 0), 0);
-//   };
-
-//   const getActiveAllocations = () => {
-//     return allocations.filter(a => a.status === 'Active').length;
-//   };
-
-//   return (
-//     <Container maxWidth="lg" sx={{ py: 4 }}>
-//       {/* Header */}
-//       <Paper
-//         elevation={0}
-//         sx={{
-//           p: 3,
-//           mb: 4,
-//           borderRadius: 2,
-//           background: 'linear-gradient(to right, #e8f5e9, #c8e6c9)'
-//         }}
-//       >
-//         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-//           <Grid item xs={12} md={6}>
-//             <Typography variant="h4" component="h1" fontWeight="bold" color="primary.dark">
-//               Rental Allocation Management
-//             </Typography>
-//             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-//               Manage property rentals and allocations in one place
-//             </Typography>
-//           </Grid>
-//           <Grid item xs={12} md={6}>
-//             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-//               <TextField
-//                 placeholder="Search allocations..."
-//                 value={searchTerm}
-//                 onChange={(e) => setSearchTerm(e.target.value)}
-//                 variant="outlined"
-//                 fullWidth
-//                 InputProps={{
-//                   endAdornment: (
-//                     <InputAdornment position="end">
-//                       <SearchIcon color="action" />
-//                     </InputAdornment>
-//                   )
-//                 }}
-//               />
-//               <Button
-//                 variant="contained"
-//                 color="primary"
-//                 startIcon={showForm && formMode === 'add' ? <CloseIcon /> : <AddIcon />}
-//                 onClick={() => {
-//                   setFormMode('add');
-//                   setShowForm(!showForm);
-//                 }}
-//               >
-//                 {showForm && formMode === 'add' ? "Close Form" : "Add Allocation"}
-//               </Button>
-//             </Box>
-//           </Grid>
-//         </Grid>
-//       </Paper>
-
-//       {/* Dashboard Cards */}
-//       <Grid container spacing={3} sx={{ mb: 4 }}>
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #4caf50', height: '100%' }}>
-//             <CardContent>
-//               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Box>
-//                   <Typography variant="overline" color="text.secondary">
-//                     Total Allocations
-//                   </Typography>
-//                   <Typography variant="h4" fontWeight="bold">
-//                     {allocations.length}
-//                   </Typography>
-//                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
-//                   <AssignmentIcon fontSize="large" color="success" />
-//                 </Box>
-//               </Box>
-//             </CardContent>
-//           </Card>
-//         </Grid>
-
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #2196f3', height: '100%' }}>
-//             <CardContent>
-//               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Box>
-//                   <Typography variant="overline" color="text.secondary">
-//                     Active Allocations
-//                   </Typography>
-//                   <Typography variant="h4" fontWeight="bold">
-//                     {getActiveAllocations()}
-//                   </Typography>
-//                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#e3f2fd', borderRadius: '50%' }}>
-//                   <CheckCircleIcon fontSize="large" color="primary" />
-//                 </Box>
-//               </Box>
-//             </CardContent>
-//           </Card>
-//         </Grid>
-
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #ff9800', height: '100%' }}>
-//             <CardContent>
-//               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Box>
-//                   <Typography variant="overline" color="text.secondary">
-//                     Total Rent
-//                   </Typography>
-//                   <Typography variant="h4" fontWeight="bold">
-//                     ₹{getTotalRent().toLocaleString()}
-//                   </Typography>
-//                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#fff3e0', borderRadius: '50%' }}>
-//                   <AttachMoneyIcon fontSize="large" color="warning" />
-//                 </Box>
-//               </Box>
-//             </CardContent>
-//           </Card>
-//         </Grid>
-//       </Grid>
-
-//       {/* Allocation Form */}
-//       {showForm && (
-//         <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-//           <Typography variant="h5" sx={{ mb: 3 }}>
-//             {formMode === 'add' ? 'Add New Allocation' : 'Edit Allocation'}
-//           </Typography>
-//           <AllocationForm
-//             mode={formMode}
-//             allocation={selectedAllocation}
-//             onClose={closeForm}
-//             refreshAllocations={fetchData}
-//             apiUrl={API_URL}
-//             renters={renters}
-//             properties={properties}
-//             childProperties={childProperties}
-//           />
-//         </Paper>
-//       )}
-
-//       {/* Allocations Listing */}
-//       <Paper sx={{ p: 3, borderRadius: 2 }}>
-//         <Typography variant="h5" sx={{ mb: 2 }}>
-//           Allocation Listings
-//         </Typography>
-//         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-//           View and manage all property rentals and allocations
-//         </Typography>
-
-//         <Divider sx={{ mb: 3 }} />
-
-//         {isLoading ? (
-//           <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
-//             <CircularProgress />
-//           </Box>
-//         ) : filteredAllocations.length > 0 ? (
-//           <AllocationTable
-//             allocations={filteredAllocations}
-//             onDetailsClick={handleDetailsClick}
-//             onEditClick={handleEditClick}
-//             onDeleteClick={handleDeleteClick}
-//             renters={renters}
-//             properties={properties}
-//             childProperties={childProperties}
-//           />
-//         ) : (
-//           <Box sx={{ textAlign: 'center', py: 5 }}>
-//             <Typography variant="h6">
-//               {searchTerm ? 'No allocations found matching your search' : 'No allocations available'}
-//             </Typography>
-//             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-//               {searchTerm ? 'Try adjusting your search' : 'Click the "Add Allocation" button to get started'}
-//             </Typography>
-//             {searchTerm && (
-//               <Button
-//                 sx={{ mt: 2 }}
-//                 onClick={() => setSearchTerm('')}
-//                 variant="outlined"
-//               >
-//                 Clear Search
-//               </Button>
-//             )}
-//           </Box>
-//         )}
-//       </Paper>
-
-//       {/* Allocation Details Modal */}
-//       {isModalOpen && selectedAllocation && (
-//         <AllocationDetailModal
-//           allocation={selectedAllocation}
-//           onClose={closeModal}
-//           refreshAllocations={fetchData}
-//           apiUrl={API_URL}
-//           renters={renters}
-//           properties={properties}
-//           childProperties={childProperties}
-//         />
-//       )}
-
-//       {/* Alert Snackbar */}
-//       <Snackbar
-//         open={alertMessage.open}
-//         autoHideDuration={6000}
-//         onClose={handleCloseAlert}
-//         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-//       >
-//         <Alert onClose={handleCloseAlert} severity={alertMessage.severity} sx={{ width: '100%' }}>
-//           {alertMessage.message}
-//         </Alert>
-//       </Snackbar>
-//     </Container>
-//   );
-// }
-
 // 18-03
+import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect, useMemo } from 'react';
 import { ApiService } from './ApiService';
 import AllocationTable from './AllocationTable';
@@ -438,7 +71,8 @@ export default function RentalAllocation() {
       setChildProperties(childPropertiesData);
     } catch (error) {
       console.error('Error fetching data:', error);
-      showAlert('Failed to load data. Please try again.', 'error');
+      // showAlert('Failed to load data. Please try again.', 'error');
+      toast.error('Failed to load data. Please try again');
     } finally {
       setIsLoading(false);
     }
@@ -494,10 +128,12 @@ export default function RentalAllocation() {
 
       if (formMode === 'add') {
         await ApiService.createAllocation(form);
-        showAlert('Allocation created successfully!', 'success');
+        // showAlert('Allocation created successfully!', 'success');
+        toast.success('Allocation created successfully!');
       } else if (formMode === 'edit' && selectedAllocation) {
         await ApiService.updateAllocation(selectedAllocation.id || selectedAllocation.allocation_id, form);
-        showAlert('Allocation updated successfully!', 'success');
+        // showAlert('Allocation updated successfully!', 'success');
+        toast.success('Allocation updated successfully!');
       }
 
       fetchData();
@@ -505,7 +141,8 @@ export default function RentalAllocation() {
       setShowForm(false);
     } catch (error) {
       console.error('Error saving allocation:', error);
-      showAlert(`Failed to ${formMode === 'add' ? 'save' : 'update'} allocation!`, 'error');
+      toast.error('Error saving allocation.');
+      // showAlert(`Failed to ${formMode === 'add' ? 'save' : 'update'} allocation!`, 'error');
     }
   };
 
@@ -541,7 +178,8 @@ export default function RentalAllocation() {
       setFormMode('edit');
       setShowForm(true);
     } catch (error) {
-      showAlert('Failed to load allocation details.', 'error');
+      // showAlert('Failed to load allocation details.', 'error');
+      toast.error('Failed to load allocation details.');
     }
   };
 
@@ -551,7 +189,8 @@ export default function RentalAllocation() {
       setSelectedAllocation(allocationData);
       setIsModalOpen(true);
     } catch (error) {
-      showAlert('Failed to load allocation details.', 'error');
+      // showAlert('Failed to load allocation details.', 'error');
+      toast.error('Failed to load allocation details.');
     }
   };
 
@@ -564,11 +203,13 @@ export default function RentalAllocation() {
     if (window.confirm('Are you sure you want to delete this allocation?')) {
       try {
         await ApiService.deleteAllocation(allocation.id);
-        showAlert('Allocation deleted successfully!', 'success');
+        // showAlert('Allocation deleted successfully!', 'success');
+        toast.error('Allocation deleted successfully!');
         fetchData();
       } catch (error) {
         console.error('Error Deleting Allocation:', error);
-        showAlert('Failed to delete allocation!', 'error');
+        // showAlert('Failed to delete allocation!', 'error');
+        toast.error('Failed to delete allocation!');
       }
     }
   };

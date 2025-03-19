@@ -445,6 +445,8 @@
 // }
 
 // 18-03
+
+import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChildPropertyList from './ChildPropertyList';
@@ -507,6 +509,7 @@ export default function ChildPropertyMasterForm() {
       setChildProperties(response.data);
     } catch (error) {
       console.error('Error fetching child properties:', error);
+      toast.error('Error fetching child properties!');
     } finally {
       setIsLoading(false);
     }
@@ -518,6 +521,7 @@ export default function ChildPropertyMasterForm() {
       setParentProperties(response.data);
     } catch (error) {
       console.error('Error fetching parent properties:', error);
+      toast.error('Error fetching parent properties!');
     }
   };
 
@@ -542,7 +546,8 @@ export default function ChildPropertyMasterForm() {
 
   const handleSubmit = async (e) => {
     if (floorError) {
-      alert('Please fix the errors before submitting.');
+      // alert('Please fix the errors before submitting.');
+      toast.warn('Please fix the error before subbmitting!');
       return;
     }
     try {
@@ -553,19 +558,22 @@ export default function ChildPropertyMasterForm() {
         await axios.put(`${API_URL}child_property/${formData.id}`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        alert('Child property updated successfully!');
+        // alert('Child property updated successfully!');
+        toast.success('Child property updated successfully!');
       } else {
         await axios.post(`${API_URL}child_property`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        alert('Child property created successfully!');
+        // alert('Child property created successfully!');
+        toast.success('Child property created successfully!');
       }
       fetchChildProperties();
       resetForm();
       setShowForm(false);
     } catch (error) {
       console.error('Error saving child property:', error);
-      alert('Failed to save child property!');
+      // alert('Failed to save child property!');
+      toast.error('Failed to save child property!');
     }
   };
 
@@ -612,11 +620,13 @@ export default function ChildPropertyMasterForm() {
     if (window.confirm('Are you sure you want to delete this child property?')) {
       try {
         await axios.delete(`${API_URL}child_property/${childProperty.id}`);
-        alert('Child property deleted successfully!');
+        // alert('Child property deleted successfully!');
+        toast.error('Child property deleted successfully!');
         fetchChildProperties();
       } catch (error) {
         console.error('Error deleting child property:', error);
-        alert('Failed to delete child property!');
+        // alert('Failed to delete child property!');
+        toast.error('Failed to delete child property!');
       }
     }
   };

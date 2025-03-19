@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ApiService } from './ApiService';
 import { Utils, Styles } from './Utils';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Box,
   Button,
@@ -65,7 +66,7 @@ export default function AllocationDetailModal({ allocation, onClose, refreshAllo
         childproperty_id: localAllocation.childproperty_id,
         allocation_date: localAllocation.allocation_date || localAllocation.startDate,
         remarks: localAllocation.remarks,
-        status: localAllocation.status,
+        status: localAllocation.status
       };
 
       form.append('formData', JSON.stringify(dataToSend));
@@ -81,10 +82,12 @@ export default function AllocationDetailModal({ allocation, onClose, refreshAllo
       await ApiService.updateAllocation(localAllocation.id || localAllocation.allocation_id, form);
 
       alert('Allocation updated successfully!');
+      toast.success('Allocation updated successfully!');
       refreshAllocations();
       setIsEditing(false);
     } catch (error) {
-      alert('Failed to update allocation!');
+      // alert('Failed to update allocation!');
+      toast.error('Failed to update allocation!');
     } finally {
       setIsSaving(false);
     }
@@ -93,8 +96,8 @@ export default function AllocationDetailModal({ allocation, onClose, refreshAllo
   // Determine status color
   const getStatusColor = (status) => {
     if (!status) return 'primary';
-    
-    switch(status.toLowerCase()) {
+
+    switch (status.toLowerCase()) {
       case 'active':
         return 'success';
       case 'inactive':
@@ -177,8 +180,12 @@ export default function AllocationDetailModal({ allocation, onClose, refreshAllo
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} startIcon={<CancelIcon />}>Cancel</Button>
-        <Button onClick={saveAllocation} startIcon={<SaveIcon />} variant="contained" color="primary">Save</Button>
+        <Button onClick={onClose} startIcon={<CancelIcon />}>
+          Cancel
+        </Button>
+        <Button onClick={saveAllocation} startIcon={<SaveIcon />} variant="contained" color="primary">
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
