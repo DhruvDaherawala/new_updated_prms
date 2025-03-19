@@ -16,7 +16,7 @@ export const Utils = {
   getChildPropertyName: (id, childProperties) => {
     if (!id) return "N/A"
     const childProperty = childProperties.find((cp) => (cp.id || cp.childproperty_id) == id)
-    return childProperty ? childProperty.title || childProperty.name : "Unknown"
+    return childProperty ? childProperty.floor || childProperty.name : "Unknown"
   },
 }
 
