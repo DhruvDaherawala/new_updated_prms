@@ -445,8 +445,7 @@
 // }
 
 // 18-03
-
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChildPropertyList from './ChildPropertyList';

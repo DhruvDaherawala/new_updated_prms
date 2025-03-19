@@ -614,7 +614,7 @@ export default function RenterMasterForm() {
   const handleDeleteConfirm = async (renter) => {
     if (renterToDelete) {
       try {
-        await axios.delete(`${API_URL}renter/${renter.id}`);
+        await axios.delete(`${API_URL}renter/${renterToDelete.id}`);
         // alert('Renter deleted successfully!');
         toast.error('Renter deleted successfully!');
         fetchRenters();
@@ -624,7 +624,7 @@ export default function RenterMasterForm() {
         toast.error('Failed to delete renter!');
       } finally {
         setDeleteModalOpen(false);
-        setChildPropertyToDelete(null);
+        setRenterToDelete(null);
       }
     }
   };
