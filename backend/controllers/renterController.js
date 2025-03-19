@@ -18,7 +18,15 @@ exports.getAllRenters = async (req, res) => {
  */
 exports.createRenter = async (req, res) => {
   try {
-    // Non-file fields from req.body
+    // Parse formData from request body if sent as JSON string
+    let formData;
+    if (req.body.formData) {
+      formData = JSON.parse(req.body.formData);
+    } else {
+      formData = req.body;
+    }
+
+    // Get non-file fields from parsed data
     const {
       renterName,
       fullAddress,
@@ -27,7 +35,15 @@ exports.createRenter = async (req, res) => {
       contact1,
       contact2,
       remarks,
-    } = req.body;
+    } = formData;
+
+    // Validate required fields
+    if (!renterName) {
+      return res.status(400).json({
+        success: false,
+        message: "Renter name is required",
+      });
+    }
 
     // Files from req.files using Cloudinary's uploaded file's URL
     const aadhaarCardFile = req.files?.aadhaarCard?.[0] || null;
