@@ -34,7 +34,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
-
+import PropertyAllocationVisual from './PropertyAllocationVisual';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
@@ -280,7 +280,7 @@ const Dashboard = () => {
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           {/* Monthly Rent Chart */}
-          <Grid item xs={12} md={8}>
+          {/* <Grid item xs={12} md={8}>
             <Card>
               <CardHeader
                 title={<Typography variant="h5">Monthly Rent Collection</Typography>}
@@ -290,10 +290,10 @@ const Dashboard = () => {
                 <Chart {...revenueChartData} />
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
 
           {/* Recent Activity */}
-          <Grid item xs={12} md={4}>
+          {/* <Grid item xs={12} md={4}>
             <Card
               sx={{
                 boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
@@ -347,19 +347,46 @@ const Dashboard = () => {
                 </List>
               )}
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
 
       {/* Property Status */}
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <SalesLineCard
               title="Property Allocation Status"
               percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : '0%'}
               icon={<ApartmentTwoTone fontSize="large" />}
               chartData={propertyChartData}
+              bgColor={theme.palette.warning.main}
+              footerData={[
+                {
+                  value: allocatedProperties,
+                  label: 'Allocated'
+                },
+                {
+                  value: availableProperties,
+                  label: 'Available'
+                },
+                {
+                  value: totalProperties,
+                  label: 'Total'
+                }
+              ]}
+            />
+          </Grid> */}
+          <Grid item xs={12} md={6}>
+            <SalesLineCard
+              title="Property Allocation Status"
+              percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : '0%'}
+              icon={<ApartmentTwoTone fontSize="large" />}
+              // We're no longer using the chartData prop here
+              // chartData={propertyChartData}
+              showPropertyVisual={true}
+              totalProperties={totalProperties}
+              allocatedProperties={allocatedProperties}
               bgColor={theme.palette.warning.main}
               footerData={[
                 {
