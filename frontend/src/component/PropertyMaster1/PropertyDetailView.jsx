@@ -1,5 +1,5 @@
-const cardStyle = "p-2 border rounded-lg bg-gray-100"
-const formInputStyle = "w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200"
+const cardStyle = 'p-2 border rounded-lg bg-gray-100';
+const formInputStyle = 'w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-200';
 
 export default function PropertyDetailsView({
   property,
@@ -9,7 +9,7 @@ export default function PropertyDetailsView({
   onSave,
   onEdit,
   onViewChildProperties,
-  apiUrl,
+  apiUrl
 }) {
   return (
     <div>
@@ -23,8 +23,8 @@ export default function PropertyDetailsView({
           {isEditing ? (
             <input
               type="text"
-              value={property.ownerName || ""}
-              onChange={(e) => onPropertyChange("ownerName", e.target.value)}
+              value={property.ownerName || ''}
+              onChange={(e) => onPropertyChange('ownerName', e.target.value)}
               className={formInputStyle}
             />
           ) : (
@@ -36,8 +36,8 @@ export default function PropertyDetailsView({
           {isEditing ? (
             <input
               type="text"
-              value={property.propertyName || ""}
-              onChange={(e) => onPropertyChange("propertyName", e.target.value)}
+              value={property.propertyName || ''}
+              onChange={(e) => onPropertyChange('propertyName', e.target.value)}
               className={formInputStyle}
             />
           ) : (
@@ -48,8 +48,8 @@ export default function PropertyDetailsView({
           <label className="font-semibold">Address:</label>
           {isEditing ? (
             <textarea
-              value={property.address || ""}
-              onChange={(e) => onPropertyChange("address", e.target.value)}
+              value={property.address || ''}
+              onChange={(e) => onPropertyChange('address', e.target.value)}
               className={`${formInputStyle} h-24`}
             />
           ) : (
@@ -60,8 +60,8 @@ export default function PropertyDetailsView({
           <label className="font-semibold">Status:</label>
           {isEditing ? (
             <select
-              value={property.status || "Active"}
-              onChange={(e) => onPropertyChange("status", e.target.value)}
+              value={property.status || 'Active'}
+              onChange={(e) => onPropertyChange('status', e.target.value)}
               className={formInputStyle}
             >
               <option value="Active">Active</option>
@@ -70,7 +70,7 @@ export default function PropertyDetailsView({
               <option value="Sold">Sold</option>
             </select>
           ) : (
-            <p className={cardStyle}>{property.status || "Active"}</p>
+            <p className={cardStyle}>{property.status || 'Active'}</p>
           )}
         </div>
         <div>
@@ -101,7 +101,7 @@ export default function PropertyDetailsView({
                   View Document
                 </a>
               ) : (
-                "No document"
+                'No document'
               )}
             </p>
           )}
@@ -122,6 +122,5 @@ export default function PropertyDetailsView({
         </button>
       </div>
     </div>
-  )
+  );
 }
-

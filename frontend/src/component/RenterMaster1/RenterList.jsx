@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import PaginatedList from '../Pagination/Pagination';
-import { 
-  Box, 
-  Typography, 
-  Card, 
-  Button, 
-  Tooltip, 
-  Chip
-} from '@mui/material';
+import { Box, Typography, Card, Button, Tooltip, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -29,21 +22,16 @@ export default function RenterList({
 
   // Filter renters based on search term
   const filteredRenters = renters.filter((renter) =>
-    Object.values(renter).some(
-      (val) => val && val.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    Object.values(renter).some((val) => val && val.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredRenters.length / itemsPerPage);
-  const paginatedRenters = filteredRenters.slice(
-    (currentPage - 1) * itemsPerPage, 
-    currentPage * itemsPerPage
-  );
+  const paginatedRenters = filteredRenters.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const getStatusColor = (status) => {
     if (!status) return 'primary';
-    
-    switch(status.toLowerCase()) {
+
+    switch (status.toLowerCase()) {
       case 'active':
         return 'success';
       case 'inactive':
@@ -56,20 +44,22 @@ export default function RenterList({
   };
 
   return (
-    <Card sx={{ 
-      p: 3, 
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      borderRadius: 2,
-      '&:hover': {
-        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
-      },
-      transition: 'box-shadow 0.3s ease-in-out'
-    }}>
+    <Card
+      sx={{
+        p: 3,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: 2,
+        '&:hover': {
+          boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
+        },
+        transition: 'box-shadow 0.3s ease-in-out'
+      }}
+    >
       <div className="overflow-x-auto">
         {paginatedRenters.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="body1" color="textSecondary">
-              {searchTerm ? "No renters match your search." : "No renters found."}
+              {searchTerm ? 'No renters match your search.' : 'No renters found.'}
             </Typography>
           </Box>
         ) : (
@@ -87,11 +77,7 @@ export default function RenterList({
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedRenters.map((renter) => (
                 <tr key={renter.id} className="hover:bg-gray-50 transition-colors duration-150">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    <Typography variant="body2" fontWeight="medium">
-                      {renter.renterName}
-                    </Typography>
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{renter.renterName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{renter.age}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     <Tooltip title={renter.fullAddress} arrow>
@@ -99,26 +85,21 @@ export default function RenterList({
                     </Tooltip>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Chip 
-                      label={renter.status || 'Active'} 
-                      color={getStatusColor(renter.status)} 
-                      size="small"
-                      variant="outlined"
-                    />
+                    <Chip label={renter.status || 'Active'} color={getStatusColor(renter.status)} size="small" variant="outlined" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     <DocumentLink document={renter.aadhaarCard} apiUrl={apiUrl} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2 justify-center">
-                      <button 
-                        className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" 
+                      <button
+                        className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded"
                         onClick={() => onEditClick(renter)}
                       >
                         Edit
                       </button>
-                      <button 
-                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
+                      <button
+                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200"
                         onClick={() => handleDeleteClick(renter)}
                       >
                         Delete
@@ -131,15 +112,10 @@ export default function RenterList({
           </table>
         )}
       </div>
-      
+
       {/* Pagination */}
       <Box sx={{ mt: 3 }}>
-        <PaginatedList 
-          renters={filteredRenters} 
-          currentPage={currentPage} 
-          totalPages={totalPages} 
-          onPageChange={setCurrentPage} 
-        />
+        <PaginatedList renters={filteredRenters} currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </Box>
     </Card>
   );
@@ -147,7 +123,12 @@ export default function RenterList({
 
 // Helper component for document links
 function DocumentLink({ document, apiUrl }) {
-  if (!document) return <Typography variant="caption" color="text.secondary">No document</Typography>;
+  if (!document)
+    return (
+      <Typography variant="caption" color="text.secondary">
+        No document
+      </Typography>
+    );
 
   return (
     <Button

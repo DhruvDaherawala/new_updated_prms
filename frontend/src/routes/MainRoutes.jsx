@@ -36,11 +36,6 @@
 
 // export default MainRoutes;
 
-
-
-
-
-
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import MainLayout from 'layout/MainLayout';

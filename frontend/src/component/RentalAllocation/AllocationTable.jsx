@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Utils } from './Utils';
 import PaginatedList from '../Pagination/Pagination';
 import { useState } from 'react';
+
 const itemsPerPage = 5;
 export default function AllocationTable({
   allocations,

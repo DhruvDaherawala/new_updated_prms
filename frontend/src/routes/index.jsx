@@ -10,8 +10,6 @@
 //   return useRoutes([MainRoutes, AuthenticationRoutes]);
 // }
 
-
-
 import React from 'react';
 import { useRoutes, Navigate } from 'react-router-dom';
 import ProtectedRoute from 'routes/ProtectedRoute';
@@ -30,11 +28,7 @@ export default function ThemeRoutes() {
     },
     {
       path: '/',
-      element: (
-        <ProtectedRoute>
-          {MainRoutes.element}
-        </ProtectedRoute>
-      ),
+      element: <ProtectedRoute>{MainRoutes.element}</ProtectedRoute>,
       children: MainRoutes.children
     },
     { path: '*', element: <Navigate to="/auth/login" /> }

@@ -370,13 +370,7 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Parent Property</InputLabel>
-              <Select
-                label="Parent Property"
-                name="property_id"
-                value={formData.property_id || ''}
-                onChange={onInputChange}
-                required
-              >
+              <Select label="Parent Property" name="property_id" value={formData.property_id || ''} onChange={onInputChange} required>
                 <MenuItem value="">
                   <em>Select Parent Property</em>
                 </MenuItem>
@@ -393,19 +387,16 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined" error={!!floorError} required>
               <InputLabel>Floor Number</InputLabel>
-              <Select
-                label="Floor Number"
-                name="floor"
-                value={formData.floor || ''}
-                onChange={onInputChange}
-              >
+              <Select label="Floor Number" name="floor" value={formData.floor || ''} onChange={onInputChange}>
                 {maxFloors.length === 0 ? (
                   <MenuItem value="">
                     <em>Select Parent Property First</em>
                   </MenuItem>
                 ) : (
                   maxFloors.map((floor) => (
-                    <MenuItem key={floor} value={floor}>{floor}</MenuItem>
+                    <MenuItem key={floor} value={floor}>
+                      {floor}
+                    </MenuItem>
                   ))
                 )}
               </Select>
@@ -470,28 +461,18 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Gas Availability</InputLabel>
-              <Select
-                label="Gas Availability"
-                name="gas"
-                value={formData.gas || ''}
-                onChange={onInputChange}
-              >
+              <Select label="Gas Availability" name="gas" value={formData.gas || ''} onChange={onInputChange}>
                 <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
               </Select>
             </FormControl>
           </Grid>
-          
+
           {/* Electricity Availability */}
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Electricity Availability</InputLabel>
-              <Select
-                label="Electricity Availability"
-                name="electricity"
-                value={formData.electricity || ''}
-                onChange={onInputChange}
-              >
+              <Select label="Electricity Availability" name="electricity" value={formData.electricity || ''} onChange={onInputChange}>
                 <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
               </Select>

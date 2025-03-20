@@ -194,45 +194,45 @@
 //             />
 //           </Grid>
 
-          // {/* Document Uploads */}
-          // <Grid item xs={12} md={6}>
-          //   <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
-          //     Upload Rent Agreement
-          //     <input type="file" name="rent_agreement" hidden onChange={onFileChange} />
-          //   </Button>
-          //   {allocation?.rent_agreement && mode === 'edit' && (
-          //     <Typography variant="body2" sx={{ mt: 1 }}>
-          //       Current:{' '}
-          //       <a
-          //         href={`${apiUrl}uploads/${allocation.rent_agreement}`}
-          //         target="_blank"
-          //         rel="noopener noreferrer"
-          //         className="text-blue-600 underline"
-          //       >
-          //         View
-          //       </a>
-          //     </Typography>
-          //   )}
-          // </Grid>
-          // <Grid item xs={12} md={6}>
-          //   <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
-          //     Upload Other Document
-          //     <input type="file" name="other_document" hidden onChange={onFileChange} />
-          //   </Button>
-          //   {allocation?.other_document && mode === 'edit' && (
-          //     <Typography variant="body2" sx={{ mt: 1 }}>
-          //       Current:{' '}
-          //       <a
-          //         href={`${apiUrl}uploads/${allocation.other_document}`}
-          //         target="_blank"
-          //         rel="noopener noreferrer"
-          //         className="text-blue-600 underline"
-          //       >
-          //         View
-          //       </a>
-          //     </Typography>
-          //   )}
-          // </Grid>
+// {/* Document Uploads */}
+// <Grid item xs={12} md={6}>
+//   <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+//     Upload Rent Agreement
+//     <input type="file" name="rent_agreement" hidden onChange={onFileChange} />
+//   </Button>
+//   {allocation?.rent_agreement && mode === 'edit' && (
+//     <Typography variant="body2" sx={{ mt: 1 }}>
+//       Current:{' '}
+//       <a
+//         href={`${apiUrl}uploads/${allocation.rent_agreement}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         className="text-blue-600 underline"
+//       >
+//         View
+//       </a>
+//     </Typography>
+//   )}
+// </Grid>
+// <Grid item xs={12} md={6}>
+//   <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+//     Upload Other Document
+//     <input type="file" name="other_document" hidden onChange={onFileChange} />
+//   </Button>
+//   {allocation?.other_document && mode === 'edit' && (
+//     <Typography variant="body2" sx={{ mt: 1 }}>
+//       Current:{' '}
+//       <a
+//         href={`${apiUrl}uploads/${allocation.other_document}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         className="text-blue-600 underline"
+//       >
+//         View
+//       </a>
+//     </Typography>
+//   )}
+// </Grid>
 //         </Grid>
 //       </DialogContent>
 //       <DialogActions>
@@ -306,8 +306,16 @@ export default function AllocationForm({
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Renter</InputLabel>
-              <Select label="Renter" name="renter_id" value={allocation?.renter_id || allocation?.renterId || ''} onChange={onInputChange} required>
-                <MenuItem value=""><em>-- Select Renter --</em></MenuItem>
+              <Select
+                label="Renter"
+                name="renter_id"
+                value={allocation?.renter_id || allocation?.renterId || ''}
+                onChange={onInputChange}
+                required
+              >
+                <MenuItem value="">
+                  <em>-- Select Renter --</em>
+                </MenuItem>
                 {renters.map((renter) => (
                   <MenuItem key={renter.id || renter.renter_id} value={renter.id || renter.renter_id}>
                     {renter.renterName || renter.renter_name}
@@ -319,8 +327,16 @@ export default function AllocationForm({
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Property</InputLabel>
-              <Select label="Property" name="property_id" value={allocation?.property_id || allocation?.propertyId || ''} onChange={onInputChange} required>
-                <MenuItem value=""><em>-- Select Property --</em></MenuItem>
+              <Select
+                label="Property"
+                name="property_id"
+                value={allocation?.property_id || allocation?.propertyId || ''}
+                onChange={onInputChange}
+                required
+              >
+                <MenuItem value="">
+                  <em>-- Select Property --</em>
+                </MenuItem>
                 {properties.map((property) => (
                   <MenuItem key={property.id || property.property_id} value={property.id || property.property_id}>
                     {property.propertyName || property.property_name}
@@ -333,9 +349,14 @@ export default function AllocationForm({
             <FormControl fullWidth variant="outlined">
               <InputLabel>Floor</InputLabel>
               <Select label="Floor" name="childproperty_id" value={allocation?.childproperty_id || ''} onChange={onInputChange}>
-                <MenuItem value=""><em>-- Select Floor (Optional) --</em></MenuItem>
+                <MenuItem value="">
+                  <em>-- Select Floor (Optional) --</em>
+                </MenuItem>
                 {childProperties.map((childProperty) => (
-                  <MenuItem key={childProperty.id || childProperty.childproperty_id} value={childProperty.id || childProperty.childproperty_id}>
+                  <MenuItem
+                    key={childProperty.id || childProperty.childproperty_id}
+                    value={childProperty.id || childProperty.childproperty_id}
+                  >
                     {childProperty.floor || 'N/A'}
                   </MenuItem>
                 ))}
@@ -343,7 +364,17 @@ export default function AllocationForm({
             </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField label="Allocation Date" name="allocation_date" type="date" value={allocation?.allocation_date || allocation?.startDate || ''} onChange={onInputChange} fullWidth variant="outlined" InputLabelProps={{ shrink: true }} required />
+            <TextField
+              label="Allocation Date"
+              name="allocation_date"
+              type="date"
+              value={allocation?.allocation_date || allocation?.startDate || ''}
+              onChange={onInputChange}
+              fullWidth
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              required
+            />
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
@@ -357,51 +388,62 @@ export default function AllocationForm({
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <TextField label="Remarks" name="remarks" value={allocation?.remarks || ''} onChange={onInputChange} fullWidth variant="outlined" multiline rows={3} />
+            <TextField
+              label="Remarks"
+              name="remarks"
+              value={allocation?.remarks || ''}
+              onChange={onInputChange}
+              fullWidth
+              variant="outlined"
+              multiline
+              rows={3}
+            />
           </Grid>
         </Grid>
-           {/* Document Uploads */}
-           <Grid item xs={12} md={6}>
-            <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
-              Upload Rent Agreement
-              <input type="file" name="rent_agreement" hidden onChange={onFileChange} />
-            </Button>
-            {allocation?.rent_agreement && mode === 'edit' && (
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Current:{' '}
-                <a
-                  href={`${apiUrl}uploads/${allocation.rent_agreement}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  View
-                </a>
-              </Typography>
-            )}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
-              Upload Other Document
-              <input type="file" name="other_document" hidden onChange={onFileChange} />
-            </Button>
-            {allocation?.other_document && mode === 'edit' && (
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Current:{' '}
-                <a
-                  href={`${apiUrl}uploads/${allocation.other_document}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  View
-                </a>
-              </Typography>
-            )}
-          </Grid>
+        {/* Document Uploads */}
+        <Grid item xs={12} md={6}>
+          <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+            Upload Rent Agreement
+            <input type="file" name="rent_agreement" hidden onChange={onFileChange} />
+          </Button>
+          {allocation?.rent_agreement && mode === 'edit' && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Current:{' '}
+              <a
+                href={`${apiUrl}uploads/${allocation.rent_agreement}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                View
+              </a>
+            </Typography>
+          )}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+            Upload Other Document
+            <input type="file" name="other_document" hidden onChange={onFileChange} />
+          </Button>
+          {allocation?.other_document && mode === 'edit' && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Current:{' '}
+              <a
+                href={`${apiUrl}uploads/${allocation.other_document}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                View
+              </a>
+            </Typography>
+          )}
+        </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} startIcon={<CancelIcon />}>Cancel</Button>
+        <Button onClick={onClose} startIcon={<CancelIcon />}>
+          Cancel
+        </Button>
         <Button onClick={onSubmit} startIcon={<SaveIcon />} variant="contained" color="primary">
           {mode === 'add' ? 'Save' : 'Update'}
         </Button>

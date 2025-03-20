@@ -123,7 +123,7 @@ export default {
           type: 'item',
           url: '/auth/login',
           icon: icons['SecurityOutlinedIcon']
-        },
+        }
       ]
     }
     // {

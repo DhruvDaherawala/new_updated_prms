@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { 
-  Grid, 
-  Card, 
-  Typography, 
-  Box, 
-  Divider, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  ListItemIcon, 
-  CircularProgress, 
+import {
+  Grid,
+  Card,
+  Typography,
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  CircularProgress,
   Paper,
   CardHeader,
   CardContent
@@ -55,19 +55,19 @@ const Dashboard = () => {
           axios.get(`${API_URL}renter`),
           axios.get(`${API_URL}allocations`)
         ]);
-        
+
         setProperties(propertiesResponse.data);
         setRenters(rentersResponse.data);
         setAllocations(allocationsResponse.data);
-        
+
         // Generate recent activities from the allocations
         const activities = allocationsResponse.data
           .sort((a, b) => new Date(b.createdAt || b.updated_at) - new Date(a.createdAt || a.updated_at))
           .slice(0, 5)
-          .map(allocation => {
-            const renter = rentersResponse.data.find(r => r.id === allocation.renter_id);
-            const property = propertiesResponse.data.find(p => p.id === allocation.property_id);
-            
+          .map((allocation) => {
+            const renter = rentersResponse.data.find((r) => r.id === allocation.renter_id);
+            const property = propertiesResponse.data.find((p) => p.id === allocation.property_id);
+
             return {
               id: allocation.id,
               type: 'allocation',
@@ -78,7 +78,7 @@ const Dashboard = () => {
               status: allocation.status
             };
           });
-          
+
         setRecentActivities(activities);
         setError(null);
       } catch (error) {
@@ -88,7 +88,7 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-    
+
     fetchDashboardData();
   }, []);
 
@@ -98,7 +98,7 @@ const Dashboard = () => {
   const availableProperties = totalProperties - allocatedProperties; // Properties not allocated
   const availableRenters = renters.length;
   const totalRent = allocations.reduce((sum, allocation) => sum + (parseFloat(allocation.rent) || 0), 0);
-  
+
   // Prepare data for charts
   const montlyRentData = [
     { name: 'Jan', rent: 0 },
@@ -114,9 +114,9 @@ const Dashboard = () => {
     { name: 'Nov', rent: 0 },
     { name: 'Dec', rent: 0 }
   ];
-  
+
   // Fill in actual rent data from allocations
-  allocations.forEach(allocation => {
+  allocations.forEach((allocation) => {
     const createdAt = new Date(allocation.createdAt || allocation.updated_at || new Date());
     const month = createdAt.getMonth();
     montlyRentData[month].rent += parseFloat(allocation.rent) || 0;
@@ -137,7 +137,7 @@ const Dashboard = () => {
         width: 2
       },
       xaxis: {
-        categories: montlyRentData.map(item => item.name)
+        categories: montlyRentData.map((item) => item.name)
       },
       yaxis: {
         labels: {
@@ -165,7 +165,7 @@ const Dashboard = () => {
     series: [
       {
         name: 'Monthly Rent',
-        data: montlyRentData.map(item => item.rent)
+        data: montlyRentData.map((item) => item.rent)
       }
     ]
   };
@@ -206,12 +206,14 @@ const Dashboard = () => {
       }
     ]
   };
-  
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
         <CircularProgress />
-        <Typography variant="h6" sx={{ ml: 2 }}>Loading dashboard data...</Typography>
+        <Typography variant="h6" sx={{ ml: 2 }}>
+          Loading dashboard data...
+        </Typography>
       </Box>
     );
   }
@@ -219,7 +221,9 @@ const Dashboard = () => {
   if (error) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-        <Typography variant="h6" color="error">{error}</Typography>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
       </Box>
     );
   }
@@ -279,37 +283,39 @@ const Dashboard = () => {
           <Grid item xs={12} md={8}>
             <Card>
               <CardHeader
-                title={
-                  <Typography variant="h5">Monthly Rent Collection</Typography>
-                }
-                subheader={
-                  <Typography variant="subtitle2">{`Total Annual: ₹${(totalRent * 12).toLocaleString()}`}</Typography>
-                }
+                title={<Typography variant="h5">Monthly Rent Collection</Typography>}
+                subheader={<Typography variant="subtitle2">{`Total Annual: ₹${(totalRent * 12).toLocaleString()}`}</Typography>}
               />
               <CardContent>
                 <Chart {...revenueChartData} />
               </CardContent>
             </Card>
           </Grid>
-          
+
           {/* Recent Activity */}
           <Grid item xs={12} md={4}>
-            <Card sx={{ 
-              boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-              height: '100%',
-              '&:hover': {
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
-              },
-              transition: 'box-shadow 0.3s ease-in-out'
-            }}>
+            <Card
+              sx={{
+                boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
+                height: '100%',
+                '&:hover': {
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
+                },
+                transition: 'box-shadow 0.3s ease-in-out'
+              }}
+            >
               <Box sx={{ p: 3, pb: 0 }}>
-                <Typography variant="h5" color="textPrimary">Recent Activity</Typography>
+                <Typography variant="h5" color="textPrimary">
+                  Recent Activity
+                </Typography>
               </Box>
               <Divider sx={{ my: 2 }} />
-              
+
               {recentActivities.length === 0 ? (
                 <Box sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="body2" color="textSecondary">No recent activities found</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    No recent activities found
+                  </Typography>
                 </Box>
               ) : (
                 <List>
@@ -317,9 +323,7 @@ const Dashboard = () => {
                     <ListItem key={activity.id} divider>
                       <ListItemIcon>
                         {activity.type === 'allocation' ? (
-                          <AssignmentOutlinedIcon 
-                            color={activity.status === 'Active' ? 'success' : 'action'} 
-                          />
+                          <AssignmentOutlinedIcon color={activity.status === 'Active' ? 'success' : 'action'} />
                         ) : (
                           <EventAvailableIcon color="primary" />
                         )}
@@ -346,14 +350,14 @@ const Dashboard = () => {
           </Grid>
         </Grid>
       </Grid>
-      
+
       {/* Property Status */}
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={12} md={6}>
             <SalesLineCard
               title="Property Allocation Status"
-              percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : "0%"}
+              percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : '0%'}
               icon={<ApartmentTwoTone fontSize="large" />}
               chartData={propertyChartData}
               bgColor={theme.palette.warning.main}
@@ -374,16 +378,20 @@ const Dashboard = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card sx={{ 
-              boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-              height: '100%',
-              '&:hover': {
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
-              },
-              transition: 'box-shadow 0.3s ease-in-out'
-            }}>
+            <Card
+              sx={{
+                boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
+                height: '100%',
+                '&:hover': {
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
+                },
+                transition: 'box-shadow 0.3s ease-in-out'
+              }}
+            >
               <Box sx={{ p: 3 }}>
-                <Typography variant="h5" color="textPrimary">Quick Actions</Typography>
+                <Typography variant="h5" color="textPrimary">
+                  Quick Actions
+                </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
@@ -402,10 +410,12 @@ const Dashboard = () => {
                         transition: 'all 0.3s ease-in-out',
                         borderRadius: 2
                       }}
-                      onClick={() => window.location.href = '/propertymasters'}
+                      onClick={() => (window.location.href = '/propertymasters')}
                     >
                       <HomeTwoTone fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>Add Property</Typography>
+                      <Typography variant="body1" sx={{ mt: 1 }}>
+                        Add Property
+                      </Typography>
                     </Paper>
                   </Grid>
                   <Grid item xs={6}>
@@ -424,10 +434,12 @@ const Dashboard = () => {
                         transition: 'all 0.3s ease-in-out',
                         borderRadius: 2
                       }}
-                      onClick={() => window.location.href = '/rentermasters'}
+                      onClick={() => (window.location.href = '/rentermasters')}
                     >
                       <PeopleAltTwoTone fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>Add Renter</Typography>
+                      <Typography variant="body1" sx={{ mt: 1 }}>
+                        Add Renter
+                      </Typography>
                     </Paper>
                   </Grid>
                   <Grid item xs={12}>
@@ -446,10 +458,12 @@ const Dashboard = () => {
                         transition: 'all 0.3s ease-in-out',
                         borderRadius: 2
                       }}
-                      onClick={() => window.location.href = '/rental-allocation'}
+                      onClick={() => (window.location.href = '/rental-allocation')}
                     >
                       <AssignmentOutlinedIcon fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>Create New Allocation</Typography>
+                      <Typography variant="body1" sx={{ mt: 1 }}>
+                        Create New Allocation
+                      </Typography>
                     </Paper>
                   </Grid>
                 </Grid>

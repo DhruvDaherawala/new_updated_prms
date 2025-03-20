@@ -50,6 +50,7 @@
   },
   "babel": {
     "presets": [
+      "@babel/preset-env",
       "@babel/preset-react"
     ]
   },
@@ -67,8 +68,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
-    "@babel/eslint-parser": "^7.24.5",
+    "@babel/eslint-parser": "^7.26.10",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-react": "^7.26.3",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.5",
     "@testing-library/user-event": "^14.5.2",

@@ -1,5 +1,5 @@
 // 18-03
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useState, useEffect, useMemo } from 'react';
 import { ApiService } from './ApiService';
 import AllocationTable from './AllocationTable';
@@ -26,7 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
+import DeleteConfirmationModal from 'component/DeleteModal/DeleteConfirmationModal';
 export default function RentalAllocation() {
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -51,6 +51,9 @@ export default function RentalAllocation() {
   const [alertMessage, setAlertMessage] = useState({ open: false, message: '', severity: 'info' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAllocation, setSelectedAllocation] = useState(null);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [allocationToDelete, setAllocationToDelete] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -199,21 +202,45 @@ export default function RentalAllocation() {
     setSelectedAllocation(null);
   };
 
-  const handleDeleteClick = async (allocation) => {
-    if (window.confirm('Are you sure you want to delete this allocation?')) {
+  // const handleDeleteClick = async (allocation) => {
+  //   if (window.confirm('Are you sure you want to delete this allocation?')) {
+  //     try {
+  //       await ApiService.deleteAllocation(allocation.id);
+  //       // showAlert('Allocation deleted successfully!', 'success');
+  //       toast.error('Allocation deleted successfully!');
+  //       fetchData();
+  //     } catch (error) {
+  //       console.error('Error Deleting Allocation:', error);
+  //       // showAlert('Failed to delete allocation!', 'error');
+  //       toast.error('Failed to delete allocation!');
+  //     }
+  //   }
+  // };
+  const handleDeleteClick = (allocation) => {
+    setAllocationToDelete(allocation);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (allocationToDelete) {
       try {
-        await ApiService.deleteAllocation(allocation.id);
-        // showAlert('Allocation deleted successfully!', 'success');
+        await ApiService.deleteAllocation(allocationToDelete.id);
         toast.error('Allocation deleted successfully!');
         fetchData();
       } catch (error) {
         console.error('Error Deleting Allocation:', error);
-        // showAlert('Failed to delete allocation!', 'error');
         toast.error('Failed to delete allocation!');
+      } finally {
+        setDeleteModalOpen(false);
+        setAllocationToDelete(null);
       }
     }
   };
 
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setAllocationToDelete(null);
+  };
   const getTotalRent = () => allocations.reduce((sum, allocation) => sum + (parseFloat(allocation.rent) || 0), 0);
   const getActiveAllocations = () => allocations.filter((a) => a.status === 'Active').length;
 
@@ -459,6 +486,15 @@ export default function RentalAllocation() {
           {alertMessage.message}
         </Alert>
       </Snackbar>
+
+      {/* Delete Confirmation Modal */}
+
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        message="Are you sure you want to delete this allocation?"
+      />
     </Container>
   );
 }

@@ -470,7 +470,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
+import DeleteConfirmationModal from 'component/DeleteModal/DeleteConfirmationModal';
 export default function ChildPropertyMasterForm() {
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -495,6 +495,10 @@ export default function ChildPropertyMasterForm() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedChildProperty, setSelectedChildProperty] = useState(null);
+
+  // Delete Dialog Modal
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [childPropertyToDelete, setChildPropertyToDelete] = useState(null);
 
   useEffect(() => {
     fetchChildProperties();
@@ -615,19 +619,30 @@ export default function ChildPropertyMasterForm() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteClick = async (childProperty) => {
-    if (window.confirm('Are you sure you want to delete this child property?')) {
+  const handleDeleteClick = (childProperty) => {
+    setChildPropertyToDelete(childProperty);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (childPropertyToDelete) {
       try {
-        await axios.delete(`${API_URL}child_property/${childProperty.id}`);
-        // alert('Child property deleted successfully!');
+        await axios.delete(`${API_URL}child_property/${childPropertyToDelete.id}`);
         toast.error('Child property deleted successfully!');
         fetchChildProperties();
       } catch (error) {
         console.error('Error deleting child property:', error);
-        // alert('Failed to delete child property!');
         toast.error('Failed to delete child property!');
+      } finally {
+        setDeleteModalOpen(false);
+        setChildPropertyToDelete(null);
       }
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setChildPropertyToDelete(null);
   };
 
   const closeModal = () => {
@@ -866,6 +881,14 @@ export default function ChildPropertyMasterForm() {
           apiUrl={API_URL}
         />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        message="Are you sure you want to delete this child property?"
+      />
     </Container>
   );
 }

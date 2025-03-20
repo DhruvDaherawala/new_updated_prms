@@ -13,21 +13,16 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredProperties = properties.filter((property) =>
-    Object.values(property).some(
-      (val) => val && val.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    Object.values(property).some((val) => val && val.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredProperties.length / itemsPerPage);
-  const paginatedProperties = filteredProperties.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedProperties = filteredProperties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const getStatusColor = (status) => {
     if (!status) return 'primary';
-    
-    switch(status.toLowerCase()) {
+
+    switch (status.toLowerCase()) {
       case 'active':
         return 'success';
       case 'inactive':
@@ -40,20 +35,22 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
   };
 
   return (
-    <Card sx={{ 
-      p: 3, 
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      borderRadius: 2,
-      '&:hover': {
-        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
-      },
-      transition: 'box-shadow 0.3s ease-in-out'
-    }}>
+    <Card
+      sx={{
+        p: 3,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: 2,
+        '&:hover': {
+          boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
+        },
+        transition: 'box-shadow 0.3s ease-in-out'
+      }}
+    >
       <div className="overflow-x-auto">
         {paginatedProperties.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="body1" color="textSecondary">
-              {searchTerm ? "No properties match your search." : "No properties found."}
+              {searchTerm ? 'No properties match your search.' : 'No properties found.'}
             </Typography>
           </Box>
         ) : (
@@ -79,12 +76,7 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
                     </Tooltip>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Chip 
-                      label={prop.status || 'Active'} 
-                      color={getStatusColor(prop.status)} 
-                      size="small"
-                      variant="outlined"
-                    />
+                    <Chip label={prop.status || 'Active'} color={getStatusColor(prop.status)} size="small" variant="outlined" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     {prop.documents ? (
@@ -100,19 +92,18 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
                         View Document
                       </Button>
                     ) : (
-                      <Typography variant="caption" color="text.secondary">No documents</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        No documents
+                      </Typography>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2 justify-center">
-                      <button 
-                        className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" 
-                        onClick={() => onEdit(prop)}
-                      >
+                      <button className="text-blue-600 hover:text-blue-900 px-3 py-1 bg-blue-100 rounded" onClick={() => onEdit(prop)}>
                         Edit
                       </button>
-                      <button 
-                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" 
+                      <button
+                        className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200"
                         onClick={() => handleDeleteClick(prop)}
                       >
                         Delete
@@ -125,15 +116,10 @@ export default function PropertyList({ properties, onEdit, handleDeleteClick, on
           </table>
         )}
       </div>
-      
+
       {/* Pagination */}
       <Box sx={{ mt: 3 }}>
-        <PaginatedList 
-          properties={filteredProperties} 
-          currentPage={currentPage} 
-          totalPages={totalPages} 
-          onPageChange={setCurrentPage} 
-        />
+        <PaginatedList properties={filteredProperties} currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </Box>
     </Card>
   );

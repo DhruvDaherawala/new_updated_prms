@@ -133,7 +133,7 @@ export const ApiService = {
       });
       // Invalidate the allocations cache
       cache.allocations.data = null;
-      toast.success('Allocation data saved!');
+      // toast.success('Allocation data saved!');
       return response.data;
     } catch (error) {
       console.error('Error saving allocation data:', error);
@@ -157,7 +157,7 @@ export const ApiService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching allocation details:', error);
-      toast.error('Error fetching allocation details');
+      // toast.error('Error fetching allocation details');
       throw error;
     }
   },
@@ -185,11 +185,11 @@ export const ApiService = {
       const response = await api.delete(`${ApiService.API_URL}allocations/${id}`);
       // Invalidate the allocations cache
       cache.allocations.data = null;
-      toast.error('Allocation Deleted Successfully!');
+      // toast.error('Allocation Deleted Successfully!');
       return response.data;
     } catch (error) {
       console.error('Error deleting allocation:', error);
-      toast.error('Error deleting allocation');
+      // toast.error('Error deleting allocation');
       throw error;
     }
   },

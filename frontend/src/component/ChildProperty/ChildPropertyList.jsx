@@ -1,6 +1,7 @@
 // ChildPropertyList.jsx
 import React, { useState } from 'react';
 import PaginatedList from '../Pagination/Pagination';
+import { Typography } from '@mui/material';
 const itemsPerPage = 5;
 export default function ChildPropertyList({
   childProperties,
@@ -59,16 +60,16 @@ export default function ChildPropertyList({
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedChildProperties.map((child) => (
                 <tr key={child.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{getParentName(child.property_id)}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.floor}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.title}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.rooms}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.washroom}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.gas}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.electricity}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.deposit}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-sm">{child.rent}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-center text-sm">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{getParentName(child.property_id)}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.floor}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.title}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.rooms}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.washroom}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.gas}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.electricity}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.deposit}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{child.rent}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-center text-sm text-gray-700">
                     <div className="flex justify-center space-x-2">
                       <button className="bg-blue-100 text-blue-600 px-2 py-1 rounded" onClick={() => onEditClick(child)}>
                         Edit
