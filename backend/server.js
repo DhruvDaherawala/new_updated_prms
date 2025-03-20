@@ -14,6 +14,7 @@ const propertyRoutes = require("./routes/propertyRoutes");
 const renterRoutes = require("./routes/renterRoutes");
 const renterAllocationRoutes = require("./routes/renterAllocationRoutes");
 const childPropertyRoutes = require("./routes/childPropertyRoutes");
+const rentDepositRoutes = require("./routes/rentDepositRoutes");
 
 const app = express();
 // parse application/x-www-form-urlencoded
@@ -50,6 +51,7 @@ app.use("/api/property", propertyRoutes);
 app.use("/api/renter", renterRoutes);
 app.use("/api/allocations", renterAllocationRoutes);
 app.use("/api/child_property", childPropertyRoutes);
+app.use("/api/rent-deposit", rentDepositRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

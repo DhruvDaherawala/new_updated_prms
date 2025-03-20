@@ -12,6 +12,8 @@ import HouseIcon from '@mui/icons-material/House';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import PeopleIcon from '@mui/icons-material/People';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 const icons = {
   NavigationOutlinedIcon: NavigationOutlinedIcon,
@@ -26,7 +28,9 @@ const icons = {
   HouseIcon: HouseIcon,
   LocationCityIcon: LocationCityIcon,
   PeopleIcon: PeopleIcon,
-  AssuredWorkloadIcon: AssuredWorkloadIcon
+  AssuredWorkloadIcon: AssuredWorkloadIcon,
+  PaymentsIcon: PaymentsIcon,
+  AccountBalanceWalletIcon: AccountBalanceWalletIcon
 };
 
 // ==============================|| MENU ITEMS ||============================== //
@@ -53,7 +57,6 @@ export default {
     {
       id: 'pages',
       title: 'Pages',
-      // caption: 'Prebuild Pages',
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],
       children: [
@@ -70,22 +73,6 @@ export default {
           type: 'item',
           url: '/childproperty-page',
           icon: icons['LocationCityIcon']
-          // children: [
-          //   {
-          //     id: 'login-1',
-          //     title: 'Login',
-          //     type: 'item',
-          //     url: '/application/login',
-          //     target: true
-          //   }
-          //   // {
-          //   //   id: 'register',
-          //   //   title: 'Register',
-          //   //   type: 'item',
-          //   //   url: '/application/register',
-          //   //   target: true
-          //   // }
-          // ]
         },
         {
           id: 'renter-page',
@@ -93,22 +80,6 @@ export default {
           type: 'item',
           url: '/renter-page',
           icon: icons['PeopleIcon']
-          // children: [
-          //   {
-          //     id: 'login-1',
-          //     title: 'Login',
-          //     type: 'item',
-          //     url: '/application/login',
-          //     target: true
-          //   }
-          //   // {
-          //   //   id: 'register',
-          //   //   title: 'Register',
-          //   //   type: 'item',
-          //   //   url: '/application/register',
-          //   //   target: true
-          //   // }
-          // ]
         },
         {
           id: 'rental-allocation-page',
@@ -116,6 +87,20 @@ export default {
           type: 'item',
           url: '/rental-allocation-page',
           icon: icons['AssuredWorkloadIcon']
+        },
+        {
+          id: 'rent-master',
+          title: 'Rent Master',
+          type: 'item',
+          url: '/rent-master',
+          icon: icons['PaymentsIcon']
+        },
+        {
+          id: 'deposit-master',
+          title: 'Deposit Master',
+          type: 'item',
+          url: '/deposit-master',
+          icon: icons['AccountBalanceWalletIcon']
         },
         {
           id: 'login',
@@ -126,58 +111,5 @@ export default {
         }
       ]
     }
-    // {
-    //   id: 'utils',
-    //   title: 'Utils',
-    //   type: 'group',
-    //   icon: icons['AccountTreeOutlinedIcon'],
-    //   children: [
-    //     {
-    //       id: 'util-icons',
-    //       title: 'Icons',
-    //       type: 'item',
-    //       url: 'https://mui.com/material-ui/material-icons/',
-    //       icon: icons['AppsOutlinedIcon'],
-    //       external: true,
-    //       target: true
-    //     },
-    //     {
-    //       id: 'util-typography',
-    //       title: 'Typography',
-    //       type: 'item',
-    //       url: '/utils/util-typography',
-    //       icon: icons['FormatColorTextOutlinedIcon']
-    //     }
-    //   ]
-    // },
-    // {
-    //   id: 'support',
-    //   title: 'Support',
-    //   type: 'group',
-    //   icon: icons['ContactSupportOutlinedIcon'],
-    //   children: [
-    //     {
-    //       id: 'disabled-menu',
-    //       title: 'Disabled Menu',
-    //       type: 'item',
-    //       url: '#',
-    //       icon: icons['BlockOutlinedIcon'],
-    //       disabled: true
-    //     },
-    //     {
-    //       id: 'documentation',
-    //       title: 'Documentation',
-    //       type: 'item',
-    //       url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
-    //       icon: icons['HelpOutlineOutlinedIcon'],
-    //       chip: {
-    //         label: 'Help?',
-    //         color: 'primary'
-    //       },
-    //       external: true,
-    //       target: true
-    //     }
-    //   ]
-    // }
   ]
 };

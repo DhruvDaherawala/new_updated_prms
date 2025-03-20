@@ -490,6 +490,8 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               fullWidth
               variant="outlined"
               required
+              disabled={true}
+              helperText="This field can only be edited in the Deposit Master page"
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -502,6 +504,8 @@ export default function ChildPropertyForm({ open, formData, onInputChange, onSub
               fullWidth
               variant="outlined"
               required
+              disabled={true}
+              helperText="This field can only be edited in the Rent Master page"
             />
           </Grid>
         </Grid>
