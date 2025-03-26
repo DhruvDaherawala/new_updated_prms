@@ -11,6 +11,7 @@ const RentalAllocation = Loadable(lazy(() => import('component/RentalAllocation/
 const ChildPropertyMasterForm = Loadable(lazy(() => import('component/ChildProperty/ChildPropertyMasterForm')));
 const RentMaster = Loadable(lazy(() => import('views/RentMaster')));
 const DepositMaster = Loadable(lazy(() => import('views/DepositMaster')));
+const PropertyDashboard = Loadable(lazy(() => import('views/PropertyDashboard')));
 
 const MainRoutes = {
   // MainLayout will be shown for all authenticated routes
@@ -23,7 +24,8 @@ const MainRoutes = {
     { path: '/rental-allocation-page', element: <RentalAllocation /> },
     { path: '/childproperty-page', element: <ChildPropertyMasterForm /> },
     { path: '/rent-master', element: <RentMaster /> },
-    { path: '/deposit-master', element: <DepositMaster /> }
+    { path: '/deposit-master', element: <DepositMaster /> },
+    { path: '/property-dashboard', element: <PropertyDashboard /> }
   ]
 };
 

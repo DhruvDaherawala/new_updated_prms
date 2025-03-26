@@ -14,6 +14,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const icons = {
   NavigationOutlinedIcon: NavigationOutlinedIcon,
@@ -30,7 +31,8 @@ const icons = {
   PeopleIcon: PeopleIcon,
   AssuredWorkloadIcon: AssuredWorkloadIcon,
   PaymentsIcon: PaymentsIcon,
-  AccountBalanceWalletIcon: AccountBalanceWalletIcon
+  AccountBalanceWalletIcon: AccountBalanceWalletIcon,
+  DashboardIcon: DashboardIcon
 };
 
 // ==============================|| MENU ITEMS ||============================== //
@@ -60,6 +62,13 @@ export default {
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],
       children: [
+        {
+          id: 'property-dashboard',
+          title: 'Property Dashboard',
+          type: 'item',
+          url: '/property-dashboard',
+          icon: icons['DashboardIcon']
+        },
         {
           id: 'property-page',
           title: 'Property',
