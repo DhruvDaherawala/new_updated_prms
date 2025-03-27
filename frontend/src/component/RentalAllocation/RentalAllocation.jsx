@@ -202,20 +202,6 @@ export default function RentalAllocation() {
     setSelectedAllocation(null);
   };
 
-  // const handleDeleteClick = async (allocation) => {
-  //   if (window.confirm('Are you sure you want to delete this allocation?')) {
-  //     try {
-  //       await ApiService.deleteAllocation(allocation.id);
-  //       // showAlert('Allocation deleted successfully!', 'success');
-  //       toast.error('Allocation deleted successfully!');
-  //       fetchData();
-  //     } catch (error) {
-  //       console.error('Error Deleting Allocation:', error);
-  //       // showAlert('Failed to delete allocation!', 'error');
-  //       toast.error('Failed to delete allocation!');
-  //     }
-  //   }
-  // };
   const handleDeleteClick = (allocation) => {
     setAllocationToDelete(allocation);
     setDeleteModalOpen(true);
@@ -390,21 +376,6 @@ export default function RentalAllocation() {
           </Card>
         </Grid>
       </Grid>
-
-      {/* Allocation Form Modal */}
-      {/* <AllocationForm
-        open={showForm}
-        mode={formMode}
-        allocation={selectedAllocation}
-        onInputChange={handleInputChange}
-        onFileChange={handleFileChange}
-        onSubmit={handleSubmit}
-        onClose={() => setShowForm(false)}
-        renters={renters}
-        properties={properties}
-        childProperties={childProperties}
-        apiUrl={API_URL}
-      /> */}
 
       <AllocationForm
         open={showForm}
