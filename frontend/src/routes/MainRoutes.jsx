@@ -25,7 +25,7 @@ const MainRoutes = {
     { path: '/childproperty-page', element: <ChildPropertyMasterForm /> },
     { path: '/rent-master', element: <RentMaster /> },
     { path: '/deposit-master', element: <DepositMaster /> },
-    { path: '/property-dashboard', element: <PropertyDashboard /> }
+    // { path: '/property-dashboard', element: <PropertyDashboard /> }
   ]
 };
 

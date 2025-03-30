@@ -62,13 +62,13 @@ export default {
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],
       children: [
-        {
-          id: 'property-dashboard',
-          title: 'Property Dashboard',
-          type: 'item',
-          url: '/property-dashboard',
-          icon: icons['DashboardIcon']
-        },
+        // {
+        //   id: 'property-dashboard',
+        //   title: 'Property Dashboard',
+        //   type: 'item',
+        //   url: '/property-dashboard',
+        //   icon: icons['DashboardIcon']
+        // },
         {
           id: 'property-page',
           title: 'Property',
@@ -111,13 +111,13 @@ export default {
           url: '/deposit-master',
           icon: icons['AccountBalanceWalletIcon']
         },
-        {
-          id: 'login',
-          title: 'Login',
-          type: 'item',
-          url: '/auth/login',
-          icon: icons['SecurityOutlinedIcon']
-        }
+        // {
+        //   id: 'login',
+        //   title: 'Login',
+        //   type: 'item',
+        //   url: '/auth/login',
+        //   icon: icons['SecurityOutlinedIcon']
+        // }
       ]
     }
   ]

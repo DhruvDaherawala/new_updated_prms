@@ -42,6 +42,7 @@ export default function RentalAllocation() {
     childproperty_id: '',
     allocation_date: '',
     remarks: '',
+    rent: '',
     rent_agreement: null,
     other_document: null,
     status: 'Active'
@@ -125,17 +126,16 @@ export default function RentalAllocation() {
       form.append('allocation_date', formData.allocation_date);
       form.append('remarks', formData.remarks);
       form.append('status', formData.status);
+      form.append('rent', formData.rent);
 
-      if (formData.rent_agreement) form.append('agreementDocument', formData.rent_agreement);
-      if (formData.other_document) form.append('idProof', formData.other_document);
+      if (formData.rent_agreement) form.append('rent_agreement', formData.rent_agreement);
+      if (formData.other_document) form.append('other_document', formData.other_document);
 
       if (formMode === 'add') {
         await ApiService.createAllocation(form);
-        // showAlert('Allocation created successfully!', 'success');
         toast.success('Allocation created successfully!');
       } else if (formMode === 'edit' && selectedAllocation) {
         await ApiService.updateAllocation(selectedAllocation.id || selectedAllocation.allocation_id, form);
-        // showAlert('Allocation updated successfully!', 'success');
         toast.success('Allocation updated successfully!');
       }
 
@@ -145,7 +145,6 @@ export default function RentalAllocation() {
     } catch (error) {
       console.error('Error saving allocation:', error);
       toast.error('Error saving allocation.');
-      // showAlert(`Failed to ${formMode === 'add' ? 'save' : 'update'} allocation!`, 'error');
     }
   };
 
@@ -156,6 +155,7 @@ export default function RentalAllocation() {
       childproperty_id: '',
       allocation_date: '',
       remarks: '',
+      rent: '',
       rent_agreement: null,
       other_document: null,
       status: 'Active'
@@ -173,6 +173,7 @@ export default function RentalAllocation() {
         property_id: allocationData.property_id || allocationData.propertyId || '',
         childproperty_id: allocationData.childproperty_id || '',
         allocation_date: allocationData.allocation_date || allocationData.startDate || '',
+        rent: allocationData.rent || '',
         remarks: allocationData.remarks || '',
         rent_agreement: null,
         other_document: null,

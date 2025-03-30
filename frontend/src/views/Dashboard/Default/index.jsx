@@ -24,6 +24,7 @@ import ReportCard from './ReportCard';
 import { gridSpacing } from 'config.js';
 import RevenuChartCard from '../card/RevenuChartCard';
 import SalesLineCard from '../card/SalesLineCard';
+import PropertyDashboard from '../../PropertyDashboard';
 
 // Icons
 import HomeTwoTone from '@mui/icons-material/HomeTwoTone';
@@ -34,7 +35,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
-import PropertyAllocationVisual from './PropertyAllocationVisual';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
@@ -276,228 +276,10 @@ const Dashboard = () => {
         </Grid>
       </Grid>
 
-      {/* Charts and Recent Activity */}
+      {/* Property Dashboard */}
       <Grid item xs={12}>
-        <Grid container spacing={gridSpacing}>
-          {/* Monthly Rent Chart */}
-          {/* <Grid item xs={12} md={8}>
-            <Card>
-              <CardHeader
-                title={<Typography variant="h5">Monthly Rent Collection</Typography>}
-                subheader={<Typography variant="subtitle2">{`Total Annual: ₹${(totalRent * 12).toLocaleString()}`}</Typography>}
-              />
-              <CardContent>
-                <Chart {...revenueChartData} />
-              </CardContent>
-            </Card>
-          </Grid> */}
-
-          {/* Recent Activity */}
-          {/* <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-                height: '100%',
-                '&:hover': {
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
-                },
-                transition: 'box-shadow 0.3s ease-in-out'
-              }}
-            >
-              <Box sx={{ p: 3, pb: 0 }}>
-                <Typography variant="h5" color="textPrimary">
-                  Recent Activity
-                </Typography>
-              </Box>
-              <Divider sx={{ my: 2 }} />
-
-              {recentActivities.length === 0 ? (
-                <Box sx={{ p: 3, textAlign: 'center' }}>
-                  <Typography variant="body2" color="textSecondary">
-                    No recent activities found
-                  </Typography>
-                </Box>
-              ) : (
-                <List>
-                  {recentActivities.map((activity) => (
-                    <ListItem key={activity.id} divider>
-                      <ListItemIcon>
-                        {activity.type === 'allocation' ? (
-                          <AssignmentOutlinedIcon color={activity.status === 'Active' ? 'success' : 'action'} />
-                        ) : (
-                          <EventAvailableIcon color="primary" />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={activity.title}
-                        secondary={
-                          <>
-                            <Typography variant="body2" component="span" color="textPrimary">
-                              {activity.description}
-                            </Typography>
-                            <br />
-                            <Typography variant="caption" color="textSecondary">
-                              {activity.date ? format(new Date(activity.date), 'PPP') : 'Unknown date'} • {activity.amount}
-                            </Typography>
-                          </>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-            </Card>
-          </Grid> */}
-        </Grid>
-      </Grid>
-
-      {/* Property Status */}
-      <Grid item xs={12}>
-        <Grid container spacing={gridSpacing}>
-          {/* <Grid item xs={12} md={6}>
-            <SalesLineCard
-              title="Property Allocation Status"
-              percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : '0%'}
-              icon={<ApartmentTwoTone fontSize="large" />}
-              chartData={propertyChartData}
-              bgColor={theme.palette.warning.main}
-              footerData={[
-                {
-                  value: allocatedProperties,
-                  label: 'Allocated'
-                },
-                {
-                  value: availableProperties,
-                  label: 'Available'
-                },
-                {
-                  value: totalProperties,
-                  label: 'Total'
-                }
-              ]}
-            />
-          </Grid> */}
-          <Grid item xs={12} md={6}>
-            <SalesLineCard
-              title="Property Allocation Status"
-              percentage={totalProperties > 0 ? `${((allocatedProperties / totalProperties) * 100).toFixed(1)}%` : '0%'}
-              icon={<ApartmentTwoTone fontSize="large" />}
-              // We're no longer using the chartData prop here
-              // chartData={propertyChartData}
-              showPropertyVisual={true}
-              totalProperties={totalProperties}
-              allocatedProperties={allocatedProperties}
-              bgColor={theme.palette.warning.main}
-              footerData={[
-                {
-                  value: allocatedProperties,
-                  label: 'Allocated'
-                },
-                {
-                  value: availableProperties,
-                  label: 'Available'
-                },
-                {
-                  value: totalProperties,
-                  label: 'Total'
-                }
-              ]}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-                height: '100%',
-                '&:hover': {
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
-                },
-                transition: 'box-shadow 0.3s ease-in-out'
-              }}
-            >
-              <Box sx={{ p: 3 }}>
-                <Typography variant="h5" color="textPrimary">
-                  Quick Actions
-                </Typography>
-                <Divider sx={{ my: 2 }} />
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 2,
-                        textAlign: 'center',
-                        bgcolor: theme.palette.primary.light,
-                        color: theme.palette.primary.dark,
-                        cursor: 'pointer',
-                        '&:hover': {
-                          bgcolor: theme.palette.primary.main,
-                          color: theme.palette.primary.contrastText
-                        },
-                        transition: 'all 0.3s ease-in-out',
-                        borderRadius: 2
-                      }}
-                      onClick={() => (window.location.href = '/propertymasters')}
-                    >
-                      <HomeTwoTone fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>
-                        Add Property
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 2,
-                        textAlign: 'center',
-                        bgcolor: theme.palette.success.light,
-                        color: theme.palette.success.dark,
-                        cursor: 'pointer',
-                        '&:hover': {
-                          bgcolor: theme.palette.success.main,
-                          color: theme.palette.success.contrastText
-                        },
-                        transition: 'all 0.3s ease-in-out',
-                        borderRadius: 2
-                      }}
-                      onClick={() => (window.location.href = '/rentermasters')}
-                    >
-                      <PeopleAltTwoTone fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>
-                        Add Renter
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 2,
-                        textAlign: 'center',
-                        bgcolor: theme.palette.warning.light,
-                        color: theme.palette.warning.dark,
-                        cursor: 'pointer',
-                        '&:hover': {
-                          bgcolor: theme.palette.warning.main,
-                          color: theme.palette.warning.contrastText
-                        },
-                        transition: 'all 0.3s ease-in-out',
-                        borderRadius: 2
-                      }}
-                      onClick={() => (window.location.href = '/rental-allocation')}
-                    >
-                      <AssignmentOutlinedIcon fontSize="large" />
-                      <Typography variant="body1" sx={{ mt: 1 }}>
-                        Create New Allocation
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
+        <Typography/>
+        <PropertyDashboard />
       </Grid>
     </Grid>
   );

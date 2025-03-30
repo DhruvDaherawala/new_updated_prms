@@ -10,9 +10,9 @@ import {
   Container,
   Skeleton,
   Button,
-  Tabs,
-  Tab,
-  Tooltip
+  Badge,
+  Tooltip,
+  Avatar
 } from '@mui/material';
 import MainCard from '../../component/MainCard';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -23,7 +23,6 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import ConstructionIcon from '@mui/icons-material/Construction';
-import GridViewIcon from '@mui/icons-material/GridView';
 import axios from 'axios';
 
 const PropertyDashboard = () => {
@@ -32,8 +31,8 @@ const PropertyDashboard = () => {
   const [childProperties, setChildProperties] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [propertyMap, setPropertyMap] = useState({});
+  const [propertyChildCountMap, setPropertyChildCountMap] = useState({});
   const [stats, setStats] = useState({ available: 0, allocated: 0, maintenance: 0 });
-  const [selectedTab, setSelectedTab] = useState(0);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
 
   useEffect(() => {
@@ -52,8 +51,9 @@ const PropertyDashboard = () => {
       ]);
 
       const propertyData = propRes.data;
+      const childPropertyData = childPropRes.data;
       setProperties(propertyData);
-      setChildProperties(childPropRes.data);
+      setChildProperties(childPropertyData);
       setAllocations(allocRes.data);
       
       // Create property lookup map
@@ -63,13 +63,33 @@ const PropertyDashboard = () => {
       });
       setPropertyMap(propMap);
 
+      // Count child properties for each parent property
+      const childCountMap = {};
+      childPropertyData.forEach(childProp => {
+        const parentId = childProp.property_id;
+        if (!childCountMap[parentId]) {
+          childCountMap[parentId] = { 
+            total: 0,
+            available: 0,
+            allocated: 0,
+            maintenance: 0
+          };
+        }
+        childCountMap[parentId].total++;
+        
+        // Calculate status for each child property
+        const status = getPropertyStatus(childProp, allocRes.data, propMap);
+        childCountMap[parentId][status]++;
+      });
+      setPropertyChildCountMap(childCountMap);
+
       // Set initial selected building
       if (propertyData.length > 0) {
         setSelectedBuilding(propertyData[0].id);
       }
 
       // Calculate statistics
-      calculateStats(propertyData, childPropRes.data, allocRes.data, propMap);
+      calculateStats(propertyData, childPropertyData, allocRes.data, propMap);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -150,15 +170,11 @@ const PropertyDashboard = () => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
-
   const handleBuildingChange = (buildingId) => {
     setSelectedBuilding(buildingId);
   };
 
-  const renderPropertySeats = () => {
+  const renderEnhancedPropertyView = () => {
     if (!selectedBuilding) {
       return (
         <Box sx={{ textAlign: 'center', my: 5 }}>
@@ -204,7 +220,7 @@ const PropertyDashboard = () => {
     });
 
     return (
-      <Box>
+      <Box sx={{ mt: 3 }}>
         {sortedFloors.map(floor => (
           <Box key={floor} sx={{ mb: 4 }}>
             <Box sx={{ 
@@ -212,311 +228,297 @@ const PropertyDashboard = () => {
               alignItems: 'center', 
               mb: 1, 
               pb: 1, 
-              borderBottom: '1px dashed #e0e0e0' 
+              borderBottom: '1px solid #e0e0e0' 
             }}>
-              <Typography variant="h6">Floor {floor}</Typography>
+              <Typography variant="h6" sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                background: 'linear-gradient(45deg, #f5f5f5, #e0e0e0)',
+                px: 2,
+                py: 0.5,
+                borderRadius: 2,
+                boxShadow: '0px 2px 4px rgba(0,0,0,0.05)'
+              }}>
+                <HomeIcon sx={{ mr: 1, color: '#666' }} />
+                Floor {floor}
+              </Typography>
+              <Typography variant="body2" sx={{ ml: 2, color: '#666' }}>
+                {floorGroups[floor].length} Properties
+              </Typography>
             </Box>
             
-            {/* Bus-style seat layout */}
-            <Box 
+            {/* Enhanced Property View */}
+            <Paper
+              elevation={3}
               sx={{ 
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 2,
-                p: 2,
-                border: '2px solid #e0e0e0',
-                borderRadius: 2,
+                p: 3,
+                borderRadius: 3,
+                backgroundImage: 'linear-gradient(to bottom, #fbfbfb, #f5f5f5)',
                 position: 'relative',
-                backgroundImage: 'linear-gradient(to bottom, #f5f5f5, #ffffff)'
+                overflow: 'hidden'
               }}
             >
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  position: 'absolute', 
-                  top: -10, 
-                  left: 'calc(50% - 40px)',
-                  bgcolor: '#fff',
-                  px: 1,
-                  border: '1px solid #e0e0e0',
-                  borderRadius: 1
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 2,
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start'
                 }}
               >
-                FRONT
-              </Typography>
-
-              {floorGroups[floor].map(property => {
-                const status = getPropertyStatus(property, allocations, propertyMap);
-                const { color, bgColor, icon, label, seatIcon } = getStatusInfo(status);
-                
-                return (
-                  <Tooltip
-                    key={property.id}
-                    title={
-                      <Box>
-                        <Typography variant="body2"><strong>{property.title}</strong></Typography>
-                        <Typography variant="caption">Status: {label}</Typography>
-                        <Typography variant="caption" display="block">Floor: {property.floor}</Typography>
-                        {property.rooms && (
-                          <Typography variant="caption" display="block">Rooms: {property.rooms}</Typography>
-                        )}
-                        {property.rent && (
-                          <Typography variant="caption" display="block">Rent: ₹{property.rent}</Typography>
-                        )}
-                      </Box>
-                    }
-                    arrow
-                  >
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        width: '55px',
-                        height: '55px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: bgColor,
-                        border: `2px solid ${color}`,
-                        borderRadius: '5px',
-                        transition: 'all 0.2s',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: `0 4px 8px rgba(0,0,0,0.15)`
-                        }
-                      }}
+                {floorGroups[floor].map(property => {
+                  const status = getPropertyStatus(property, allocations, propertyMap);
+                  const { color, bgColor, icon, label, seatIcon } = getStatusInfo(status);
+                  
+                  return (
+                    <Tooltip
+                      key={property.id}
+                      title={
+                        <Box>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1, color: color }}>
+                            {property.title}
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                            {icon}
+                            <Typography variant="body2" sx={{ ml: 1 }}>Status: {label}</Typography>
+                          </Box>
+                          <Typography variant="body2" sx={{ mb: 0.5 }}>Floor: {property.floor}</Typography>
+                          {property.rooms && (
+                            <Typography variant="body2" sx={{ mb: 0.5 }}>Rooms: {property.rooms}</Typography>
+                          )}
+                          {property.rent && (
+                            <Typography variant="body2" sx={{ mb: 0.5 }}>Rent: ₹{property.rent.toLocaleString()}</Typography>
+                          )}
+                          {property.size && (
+                            <Typography variant="body2" sx={{ mb: 0.5 }}>Size: {property.size} sq.ft</Typography>
+                          )}
+                        </Box>
+                      }
+                      arrow
+                      placement="top"
                     >
-                      {seatIcon}
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          width: '100%',
-                          textAlign: 'center',
-                          fontWeight: 'medium',
-                          fontSize: '0.65rem'
-                        }}
-                      >
-                        {property.title}
-                      </Typography>
                       <Box
                         sx={{
-                          position: 'absolute',
-                          top: -5,
-                          right: -5,
-                          bgcolor: color,
-                          color: 'white',
-                          borderRadius: '50%',
-                          width: '18px',
-                          height: '18px',
+                          position: 'relative',
+                          width: '70px',
+                          height: '70px',
                           display: 'flex',
+                          flexDirection: 'column',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontSize: '10px'
+                          bgcolor: bgColor,
+                          border: `2px solid ${color}`,
+                          borderRadius: '8px',
+                          transition: 'all 0.3s ease',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            transform: 'translateY(-5px)',
+                            boxShadow: `0 8px 15px rgba(0,0,0,0.1)`,
+                            borderWidth: '3px'
+                          }
                         }}
                       >
-                        {icon}
+                        <Box sx={{ mb: 1 }}>{seatIcon}</Box>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            width: '90%',
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                            fontSize: '0.7rem'
+                          }}
+                        >
+                          {property.title}
+                        </Typography>
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: -7,
+                            right: -7,
+                            bgcolor: color,
+                            color: 'white',
+                            borderRadius: '50%',
+                            width: '22px',
+                            height: '22px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                            zIndex: 1
+                          }}
+                        >
+                          {icon}
+                        </Box>
                       </Box>
-                    </Box>
-                  </Tooltip>
-                );
-              })}
-            </Box>
+                    </Tooltip>
+                  );
+                })}
+              </Box>
+            </Paper>
           </Box>
         ))}
       </Box>
     );
   };
 
-  // Render all properties as a grid - alternative view
-  const renderPropertyGrid = () => {
-    if (!selectedBuilding) {
-      return (
-        <Box sx={{ textAlign: 'center', my: 5 }}>
-          <Typography variant="h6" color="textSecondary">
-            No building selected
-          </Typography>
-        </Box>
-      );
-    }
-
-    const filteredProperties = childProperties.filter(
-      childProp => childProp.property_id === selectedBuilding
-    );
-
-    if (filteredProperties.length === 0) {
-      return (
-        <Box sx={{ textAlign: 'center', my: 5 }}>
-          <Typography variant="h6" color="textSecondary">
-            No properties found in this building
-          </Typography>
-        </Box>
-      );
-    }
-
-    return (
-      <Grid container spacing={2}>
-        {filteredProperties.map(property => {
-          const status = getPropertyStatus(property, allocations, propertyMap);
-          const { color, bgColor, icon, label } = getStatusInfo(status);
-          
-          return (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={property.id}>
-              <Paper
-                sx={{
-                  height: '100%',
-                  bgcolor: bgColor,
-                  border: `2px solid ${color}`,
-                  borderRadius: 2,
-                  overflow: 'hidden',
-                  transition: 'all 0.2s',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: `0 5px 15px rgba(0,0,0,0.1)`
-                  }
-                }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    p: 1,
-                    bgcolor: color,
-                    color: 'white'
-                  }}
-                >
-                  {icon}
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      ml: 0.5,
-                      fontWeight: 'medium'
-                    }}
-                  >
-                    {label}
-                  </Typography>
-                </Box>
-                <Box sx={{ p: 1.5 }}>
-                  <Typography
-                    variant="body2"
-                    fontWeight="bold"
-                    sx={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    {property.title}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" display="block">
-                    Floor: {property.floor}
-                  </Typography>
-                  {property.rooms && (
-                    <Typography variant="caption" color="textSecondary" display="block">
-                      Rooms: {property.rooms}
-                    </Typography>
-                  )}
-                </Box>
-              </Paper>
-            </Grid>
-          );
-        })}
-      </Grid>
-    );
-  };
-
   return (
-    <MainCard title="Property Dashboard">
+    <MainCard contentSX={{ p: { xs: 2, md: 3 } }}>
       <Container maxWidth="lg">
         {loading ? (
           <>
             {/* Skeleton loading state */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
               <Grid item xs={12} sm={4}>
-                <Skeleton variant="rectangular" height={100} />
+                <Skeleton variant="rectangular" height={100} sx={{ borderRadius: 2 }} />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Skeleton variant="rectangular" height={100} />
+                <Skeleton variant="rectangular" height={100} sx={{ borderRadius: 2 }} />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Skeleton variant="rectangular" height={100} />
+                <Skeleton variant="rectangular" height={100} sx={{ borderRadius: 2 }} />
               </Grid>
             </Grid>
-            <Skeleton variant="rectangular" height={60} sx={{ mb: 2 }} />
-            <Skeleton variant="rectangular" height={300} />
+            <Skeleton variant="rectangular" height={60} sx={{ mb: 2, borderRadius: 1 }} />
+            <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 2 }} />
           </>
         ) : (
           <>
             {/* Status Legend */}
-            <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
-              <Chip 
-                icon={<EventSeatIcon style={{ color: '#4caf50' }} />} 
-                label={`Available (${stats.available})`}
-                sx={{ 
-                  bgcolor: 'rgba(76, 175, 80, 0.15)', 
-                  border: '1px solid #4caf50',
-                  '& .MuiChip-icon': { color: '#4caf50' } 
-                }} 
-              />
-              <Chip 
-                icon={<EventSeatIcon style={{ color: '#9e9e9e' }} />}
-                label={`Allocated (${stats.allocated})`}
-                sx={{ 
-                  bgcolor: 'rgba(158, 158, 158, 0.15)', 
-                  border: '1px solid #9e9e9e',
-                  '& .MuiChip-icon': { color: '#9e9e9e' } 
-                }} 
-              />
-              <Chip 
-                icon={<EventSeatIcon style={{ color: '#f44336' }} />}
-                label={`Maintenance (${stats.maintenance})`}
-                sx={{ 
-                  bgcolor: 'rgba(244, 67, 54, 0.15)', 
-                  border: '1px solid #f44336',
-                  '& .MuiChip-icon': { color: '#f44336' } 
-                }} 
-              />
-            </Box>
-
-            {/* Building Selector */}
-            <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', gap: 1, pb: 2, borderBottom: '1px solid #e0e0e0' }}>
-              <Typography variant="body1" sx={{ fontWeight: 'medium', mr: 2, display: 'flex', alignItems: 'center' }}>
-                <ApartmentIcon sx={{ mr: 0.5 }} /> Select Building:
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                p: 2, 
+                mb: 4, 
+                borderRadius: 3, 
+                background: 'linear-gradient(45deg, #f9f9f9, #ffffff)'
+              }}
+            >
+              <Typography variant="h5" sx={{ mb: 2, color: '#424242', fontWeight: 'medium' }}>
+                Property Overview
               </Typography>
-              {properties.map(property => (
-                <Button
-                  key={property.id}
-                  variant={selectedBuilding === property.id ? "contained" : "outlined"}
-                  size="small"
-                  onClick={() => handleBuildingChange(property.id)}
-                  sx={{ mb: 1 }}
-                >
-                  {property.propertyName}
-                </Button>
-              ))}
-            </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+                <Chip 
+                  icon={<EventSeatIcon style={{ color: '#4caf50' }} />} 
+                  label={`Available (${stats.available})`}
+                  sx={{ 
+                    bgcolor: 'rgba(76, 175, 80, 0.15)', 
+                    border: '1px solid #4caf50',
+                    '& .MuiChip-icon': { color: '#4caf50' },
+                    fontWeight: 'medium',
+                    px: 1
+                  }} 
+                />
+                <Chip 
+                  icon={<EventSeatIcon style={{ color: '#9e9e9e' }} />}
+                  label={`Allocated (${stats.allocated})`}
+                  sx={{ 
+                    bgcolor: 'rgba(158, 158, 158, 0.15)', 
+                    border: '1px solid #9e9e9e',
+                    '& .MuiChip-icon': { color: '#9e9e9e' },
+                    fontWeight: 'medium',
+                    px: 1
+                  }} 
+                />
+                <Chip 
+                  icon={<EventSeatIcon style={{ color: '#f44336' }} />}
+                  label={`Maintenance (${stats.maintenance})`}
+                  sx={{ 
+                    bgcolor: 'rgba(244, 67, 54, 0.15)', 
+                    border: '1px solid #f44336',
+                    '& .MuiChip-icon': { color: '#f44336' },
+                    fontWeight: 'medium',
+                    px: 1
+                  }} 
+                />
+              </Box>
+            </Paper>
 
-            {/* View Selector */}
-            <Box sx={{ mb: 3 }}>
-              <Tabs 
-                value={selectedTab} 
-                onChange={handleTabChange}
-                variant="fullWidth"
-                sx={{ borderBottom: 1, borderColor: 'divider' }}
-              >
-                <Tab label="Bus Seat View" icon={<EventSeatIcon />} />
-                <Tab label="Grid View" icon={<GridViewIcon />} />
-              </Tabs>
-            </Box>
+            {/* Building Selector with Child Property Count */}
+            <Paper 
+              elevation={3} 
+              sx={{ 
+                p: 3, 
+                mb: 4, 
+                borderRadius: 3, 
+                background: 'linear-gradient(45deg, #f5f7fa, #ffffff)'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <ApartmentIcon sx={{ fontSize: 28, mr: 1, color: '#5c6bc0' }} />
+                <Typography variant="h5" sx={{ color: '#424242', fontWeight: 'medium' }}>
+                  Properties
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 3 }} />
+              
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                {properties.map(property => {
+                  const childCount = propertyChildCountMap[property.id] || { total: 0, available: 0, allocated: 0, maintenance: 0 };
+                  
+                  return (
+                    <Tooltip
+                      key={property.id}
+                      title={
+                        <Box>
+                          <Typography variant="subtitle2" sx={{ mb: 1 }}>Property Units</Typography>
+                          <Typography variant="body2" sx={{ color: '#4caf50', mb: 0.5 }}>
+                            Available: {childCount.available}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#9e9e9e', mb: 0.5 }}>
+                            Allocated: {childCount.allocated}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#f44336', mb: 0.5 }}>
+                            Maintenance: {childCount.maintenance}
+                          </Typography>
+                        </Box>
+                      }
+                      arrow
+                    >
+                      <Button
+                        variant={selectedBuilding === property.id ? "contained" : "outlined"}
+                        color={selectedBuilding === property.id ? "primary" : "secondary"}
+                        onClick={() => handleBuildingChange(property.id)}
+                        sx={{ 
+                          borderRadius: 2, 
+                          py: 1, 
+                          textTransform: 'none',
+                          position: 'relative',
+                          pl: 2,
+                          pr: 3
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Badge
+                            badgeContent={childCount.total}
+                            color="error"
+                            sx={{ mr: 1 }}
+                          >
+                            <Avatar 
+                              sx={{ 
+                                bgcolor: selectedBuilding === property.id ? 'primary.light' : 'background.paper',
+                                width: 28,
+                                height: 28
+                              }}
+                            >
+                              <HomeIcon fontSize="small" />
+                            </Avatar>
+                          </Badge>
+                          {property.propertyName}
+                        </Box>
+                      </Button>
+                    </Tooltip>
+                  );
+                })}
+              </Box>
+            </Paper>
 
-            {/* Property Views */}
-            <Box>
-              {selectedTab === 0 ? renderPropertySeats() : renderPropertyGrid()}
-            </Box>
+            {/* Property View (Enhanced from the former Bus Seat view) */}
+            {renderEnhancedPropertyView()}
           </>
         )}
       </Container>
