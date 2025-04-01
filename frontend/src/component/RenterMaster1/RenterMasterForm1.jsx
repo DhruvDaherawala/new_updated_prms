@@ -509,6 +509,53 @@ export default function RenterMasterForm() {
     setFormData((prev) => ({ ...prev, [name]: files[0] }));
   };
 
+  // const handleSubmit = async () => {
+  //   try {
+  //     const form = new FormData();
+
+  //     const textData = {
+  //       renterName: formData.renterName,
+  //       fullAddress: formData.fullAddress,
+  //       age: formData.age,
+  //       numberOfStayers: formData.numberOfStayers,
+  //       contact1: formData.contact1,
+  //       contact2: formData.contact2,
+  //       remarks: formData.remarks,
+  //       status: formData.status
+  //     };
+
+  //     form.append('formData', JSON.stringify(textData));
+
+  //     if (formData.aadhaarCard) form.append('aadhaarCard', formData.aadhaarCard);
+  //     if (formData.panCard) form.append('panCard', formData.panCard);
+  //     if (formData.passportPhoto) form.append('passportPhoto', formData.passportPhoto);
+  //     if (formData.otherDocument) form.append('otherDocument', formData.otherDocument);
+
+  //     if (editFlag && formData.id) {
+  //       await axios.put(`${API_URL}renter/${formData.id}`, form, {
+  //         headers: { 'Content-Type': 'multipart/form-data' }
+  //       });
+  //       // alert('Renter updated successfully!');
+  //       toast.success('Renter updated successfully!');
+  //     } else {
+  //       await axios.post(`${API_URL}renter`, form, {
+  //         headers: { 'Content-Type': 'multipart/form-data' }
+  //       });
+  //       // alert('Renter created successfully!');
+  //       toast.success('Renter created successfully!');
+  //     }
+
+  //     fetchRenters();
+  //     resetForm();
+  //     setShowForm(false);
+  //     setEditFlag(false);
+  //   } catch (error) {
+  //     console.error('Error saving renter data:', error);
+  //     // alert('Failed to save renter data!');
+  //     toast.error('Failed to save renter data!');
+  //   }
+  // };
+
   const handleSubmit = async () => {
     try {
       const form = new FormData();
@@ -535,26 +582,35 @@ export default function RenterMasterForm() {
         await axios.put(`${API_URL}renter/${formData.id}`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        // alert('Renter updated successfully!');
+
+        // **Update the state immediately instead of refetching**
+        setRenters((prevRenters) =>
+          prevRenters.map((r) =>
+            r.id === formData.id ? { ...r, ...textData } : r
+          )
+        );
+
         toast.success('Renter updated successfully!');
       } else {
-        await axios.post(`${API_URL}renter`, form, {
+        const response = await axios.post(`${API_URL}renter`, form, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        // alert('Renter created successfully!');
+
+        // **Add the new renter to state immediately**
+        setRenters((prevRenters) => [...prevRenters, response.data]);
+
         toast.success('Renter created successfully!');
       }
 
-      fetchRenters();
       resetForm();
       setShowForm(false);
       setEditFlag(false);
     } catch (error) {
       console.error('Error saving renter data:', error);
-      // alert('Failed to save renter data!');
       toast.error('Failed to save renter data!');
     }
   };
+
 
   const resetForm = () => {
     setFormData({

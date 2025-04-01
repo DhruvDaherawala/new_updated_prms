@@ -479,7 +479,7 @@ const PropertyDashboard = () => {
                       }
                       arrow
                     >
-                      <Button
+                      {/* <Button
                         variant={selectedBuilding === property.id ? "contained" : "outlined"}
                         color={selectedBuilding === property.id ? "primary" : "secondary"}
                         onClick={() => handleBuildingChange(property.id)}
@@ -510,7 +510,62 @@ const PropertyDashboard = () => {
                           </Badge>
                           {property.propertyName}
                         </Box>
-                      </Button>
+                      </Button> */}
+                       <Button
+      variant="contained"
+      onClick={() => handleBuildingChange(property.id)}
+      sx={{
+        borderRadius: "50px",
+        py: 1.2,
+        px: 2.5,
+        textTransform: 'none',
+        position: 'relative',
+        background: selectedBuilding === property.id
+          ? "linear-gradient(135deg, #1E3A8A, #3B82F6)"
+          : "#F3F4F6",
+        color: selectedBuilding === property.id ? "#fff" : "#1F2937",
+        boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.1)",
+        border: selectedBuilding === property.id ? "none" : "1.5px solid #E5E7EB",
+        transition: "all 0.3s ease-in-out",
+        '&:hover': {
+          background: selectedBuilding === property.id
+            ? "linear-gradient(135deg, #1E40AF, #2563EB)"
+            : "#E5E7EB",
+          boxShadow: "0px 5px 14px rgba(0, 0, 0, 0.15)",
+          transform: "translateY(-2px)",
+        },
+        display: "flex",
+        alignItems: "center",
+        gap: 1.5,
+        minWidth: 180,
+        justifyContent: "flex-start",
+        borderRadius: "50px",
+      }}
+    >
+      <Badge badgeContent={childCount.total} color="error">
+        <Avatar
+          sx={{
+            bgcolor: "#000000", // Black color for the circle
+            width: 36,
+            height: 36,
+            transition: "all 0.3s ease-in-out",
+          }}
+        >
+          <HomeIcon fontSize="small" style={{ color: "#fff" }} />
+        </Avatar>
+      </Badge>
+      <Typography
+        sx={{
+          fontSize: 14,
+          fontWeight: "600",
+          flexGrow: 1,
+          textAlign: "left",
+          color: selectedBuilding === property.id ? "#fff" : "#1F2937",
+        }}
+      >
+        {property.propertyName}
+      </Typography>
+    </Button>
                     </Tooltip>
                   );
                 })}

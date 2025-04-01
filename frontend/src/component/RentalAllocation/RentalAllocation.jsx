@@ -154,7 +154,7 @@ export default function RentalAllocation() {
       property_id: '',
       childproperty_id: '',
       allocation_date: '',
-      remarks: '',
+      remarks: '',   
       rent: '',
       rent_agreement: null,
       other_document: null,
