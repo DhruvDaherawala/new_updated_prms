@@ -582,8 +582,8 @@ export default function RenterForm({ open, formData, onInputChange, onFileChange
               <Select label="Status" name="status" value={formData.status || 'Active'} onChange={onInputChange} required>
                 <MenuItem value="Active">Active</MenuItem>
                 <MenuItem value="Inactive">Inactive</MenuItem>
-                <MenuItem value="Blacklisted">Blacklisted</MenuItem>
-                <MenuItem value="Former">Former</MenuItem>
+                <MenuItem value="Blacklisted">Deactivated</MenuItem>
+                
               </Select>
             </FormControl>
           </Grid>

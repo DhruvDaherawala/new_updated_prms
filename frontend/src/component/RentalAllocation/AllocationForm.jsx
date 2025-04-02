@@ -866,8 +866,7 @@ export default function AllocationForm({
               <Select label="Status" name="status" value={allocation?.status || 'Active'} onChange={onInputChange} required>
                 <MenuItem value="Active">Active</MenuItem>
                 <MenuItem value="Inactive">Inactive</MenuItem>
-                <MenuItem value="Terminated">Terminated</MenuItem>
-                <MenuItem value="Pending">Pending</MenuItem>
+               
               </Select>
               <FormHelperText>Current status of this rental allocation</FormHelperText>
             </FormControl>
