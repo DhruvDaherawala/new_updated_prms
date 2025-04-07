@@ -5,8 +5,10 @@ const path = require("path");
 require("dotenv").config();
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const pool = require("./config/db");
 
 const upload = multer(); // This allows handling multipart form data
+const router = express.Router();
 
 // Routes
 const authRoutes = require("./routes/auth.routes");
@@ -52,6 +54,36 @@ app.use("/api/renter", renterRoutes);
 app.use("/api/allocations", renterAllocationRoutes);
 app.use("/api/child_property", childPropertyRoutes);
 app.use("/api/rent-deposit", rentDepositRoutes);
+
+// allocation-due
+app.get("/due-renters", async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        ra.*, 
+        r.*,
+        DATEDIFF(CURDATE(), ra.allocation_date) as days_since_allocation,
+        CASE 
+          WHEN DATEDIFF(CURDATE(), ra.allocation_date) >= 30 THEN 'overdue'
+          WHEN DATEDIFF(CURDATE(), ra.allocation_date) >= 20 THEN 'due_soon'
+          WHEN DATEDIFF(CURDATE(), ra.allocation_date) >= -7 THEN 'upcoming'
+          ELSE 'normal'
+        END as rent_status
+      FROM renter_allocation ra
+      INNER JOIN renters r ON ra.renter_id = r.id
+      WHERE 
+        DATEDIFF(CURDATE(), ra.allocation_date) >= 20
+        OR DATEDIFF(CURDATE(), ra.allocation_date) >= -7
+      ORDER BY ra.allocation_date ASC;
+    `;
+
+    const [rows] = await pool.query(query);
+    res.json({ success: true, data: rows });
+  } catch (error) {
+    console.error("Error fetching due allocations:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

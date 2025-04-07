@@ -113,6 +113,16 @@ export default function AllocationTable({
   const totalPages = Math.ceil(allocations.length / itemsPerPage);
   const paginatedAllocations = allocations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = String(date.getUTCFullYear()).slice(-2); // Get last 2 digits of the year
+
+    return `${day}-${month}-${year}`;
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -141,7 +151,8 @@ export default function AllocationTable({
                   {Utils.getChildPropertyName(allocation.childproperty_id, childProperties)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                  {allocation.allocation_date || allocation.startDate || '-'}
+                  {/* {allocation.allocation_date || allocation.startDate || '-'} */}
+                  {formatDate(allocation.allocation_date)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{allocation.status || 'Active'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">

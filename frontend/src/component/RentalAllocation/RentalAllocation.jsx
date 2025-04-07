@@ -581,10 +581,10 @@ export default function RentalAllocation() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: files[0] }));
-  };
+  // const handleFileChange = (e) => {
+  //   const { name, files } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: files[0] }));
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -631,6 +631,27 @@ export default function RentalAllocation() {
     setSelectedAllocation(null);
   };
 
+  // const handleEditClick = async (allocation) => {
+  //   try {
+  //     const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
+  //     setSelectedAllocation(allocationData);
+  //     setFormData({
+  //       renter_id: allocationData.renter_id || allocationData.renterId || '',
+  //       property_id: allocationData.property_id || allocationData.propertyId || '',
+  //       childproperty_id: allocationData.childproperty_id || '',
+  //       allocation_date: allocationData.allocation_date || allocationData.startDate || '',
+  //       remarks: allocationData.remarks || '',
+  //       rent_agreement: null,
+  //       other_document: null,
+  //       status: allocationData.status || 'Active'
+  //     });
+  //     setFormMode('edit');
+  //     setShowForm(true);
+  //   } catch (error) {
+  //     toast.error('Failed to load allocation details.');
+  //   }
+  // };
+
   const handleEditClick = async (allocation) => {
     try {
       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);
@@ -641,8 +662,8 @@ export default function RentalAllocation() {
         childproperty_id: allocationData.childproperty_id || '',
         allocation_date: allocationData.allocation_date || allocationData.startDate || '',
         remarks: allocationData.remarks || '',
-        rent_agreement: null,
-        other_document: null,
+        rent_agreement: null, // Reset to null for new upload
+        other_document: null, // Reset to null for new upload
         status: allocationData.status || 'Active'
       });
       setFormMode('edit');
@@ -652,6 +673,10 @@ export default function RentalAllocation() {
     }
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: files[0] }));
+  };
   const handleDetailsClick = async (allocation) => {
     try {
       const allocationData = await ApiService.getAllocationDetails(allocation.id || allocation.allocation_id);

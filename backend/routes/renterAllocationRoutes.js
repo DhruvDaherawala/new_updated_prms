@@ -363,6 +363,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// GET RENTER ALLOCATION DUE DATA
+// router.get("/due-renters", async (req, res) => {
+//   try {
+//     const query = `
+//       SELECT ra.*, r.name as renterName
+//       FROM renter_allocation ra
+//       JOIN renter r ON ra.renter_id = r.id
+//       WHERE ra.status = 'Active'
+//       AND DATEDIFF(ra.allocation_date, CURDATE()) BETWEEN 0 AND 5
+//       ORDER BY ra.allocation_date ASC
+//     `;
+
+//     const [rows] = await pool.query(query);
+//     res.json({ success: true, data: rows });
+//   } catch (error) {
+//     console.error("Error fetching due allocations:", error);
+//     res.status(500).json({ success: false, message: "Server Error" });
+//   }
+// });
+
 // POST create allocation
 router.post("/", (req, res) => {
   upload(req, res, async (err) => {
