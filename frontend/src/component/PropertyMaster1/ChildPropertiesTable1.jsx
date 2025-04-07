@@ -37,14 +37,6 @@ export default function ChildPropertiesTable({ childCount, onChange, formInputSt
                   />
                 </td>
               ))}
-              <td className="p-3">
-                <select name="status" onChange={(e) => onChange(index, e)} className={formInputStyle} defaultValue="Active">
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                  <option value="Under Maintenance">Under Maintenance</option>
-                  <option value="Occupied">Occupied</option>
-                </select>
-              </td>
             </tr>
           ))}
         </tbody>

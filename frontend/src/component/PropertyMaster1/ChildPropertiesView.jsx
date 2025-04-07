@@ -11,12 +11,21 @@ export default function ChildPropertiesView({
   onBack,
   apiUrl
 }) {
+  // Sort child properties in descending order by id
+  const sortedChildProperties = [...childProperties].sort((a, b) => b.id - a.id);
+
   return (
     <div>
       <div className="space-y-6">
-        {childProperties && childProperties.length > 0 ? (
-          childProperties.map((child, index) => (
-            <div key={index} className="border p-4 rounded-lg bg-gray-50">
+        {sortedChildProperties && sortedChildProperties.length > 0 ? (
+          sortedChildProperties.map((child, index) => (
+            <div key={index} className="border p-4 rounded-lg bg-gray-50 relative">
+              {/* New/Updated indicator */}
+              {index < 3 && (
+                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                  {index === 0 ? 'New' : 'Updated'}
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="font-semibold">Floor:</label>
@@ -189,7 +198,7 @@ export default function ChildPropertiesView({
             </div>
           ))
         ) : (
-          <p className="text-gray-600">No child properties available.</p>
+          <p className="text-center text-gray-500">No child properties available</p>
         )}
       </div>
       <div className="mt-4 flex justify-end space-x-3">

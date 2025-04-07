@@ -50,9 +50,7 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
 
   const saveChildProperty = async () => {
     if (floorError) {
-      // alert('Please fix the errors before saving.');
       toast.error('Please fix the errors before saving.');
-
       return;
     }
 
@@ -68,8 +66,7 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
         gas: localChild.gas,
         electricity: localChild.electricity,
         deposit: localChild.deposit,
-        rent: localChild.rent,
-        status: localChild.status || 'Active'
+        rent: localChild.rent
       };
 
       form.append('formData', JSON.stringify(dataToSend));
@@ -83,7 +80,6 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      // alert('Child property updated successfully!');
       toast.success('Child property updated successfully!');
       if (refreshChildProperties) {
         refreshChildProperties();
@@ -91,7 +87,6 @@ export default function ChildPropertyDetailModal({ childProperty, onClose, refre
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating child property:', error);
-      // alert('Failed to update child property!');
       toast.error('Failed to update child property!');
     }
   };

@@ -1089,8 +1089,8 @@ export default function ChildPropertyMasterForm() {
         await axios.delete(`${API_URL}child_property/${childPropertyToDelete.id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        toast.success('Child property marked as deleted successfully!'); // Updated message
-        fetchChildProperties(); // Refresh the list, excluding 'Deleted' status
+        toast.success('Child property marked as deleted successfully!');
+        fetchChildProperties();
       } catch (error) {
         console.error('Error marking child property as deleted:', error);
         toast.error('Failed to mark child property as deleted!');
@@ -1119,8 +1119,7 @@ export default function ChildPropertyMasterForm() {
       childProperty.description?.toLowerCase().includes(searchValue) ||
       parentProperty?.propertyName?.toLowerCase().includes(searchValue) ||
       childProperty.floor?.toString().toLowerCase().includes(searchValue) ||
-      childProperty.rent?.toString().includes(searchValue) ||
-      childProperty.status?.toLowerCase().includes(searchValue)
+      childProperty.rent?.toString().includes(searchValue)
     );
   });
 

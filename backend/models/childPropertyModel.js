@@ -323,23 +323,22 @@ const pool = require("../config/db");
 async function getAllChildProperties() {
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM child_properties WHERE status != 'Deleted'"
+      "SELECT * FROM child_properties WHERE status != 'Deleted' ORDER BY id DESC"
     );
     return rows;
   } catch (error) {
-    // Fallback if status column doesn’t exist (temporary for debugging)
+    // Fallback if status column doesn't exist (temporary for debugging)
     if (error.code === "ER_BAD_FIELD_ERROR") {
       console.warn(
         "Status column not found, fetching all child properties without filter"
       );
-      const [rows] = await pool.query("SELECT * FROM child_properties");
+      const [rows] = await pool.query("SELECT * FROM child_properties ORDER BY id DESC");
       return rows;
     }
     throw error;
   }
 }
 
-// Rest of the code remains unchanged
 async function getChildPropertyById(childPropertyId) {
   const [rows] = await pool.query(
     "SELECT * FROM child_properties WHERE id = ?",
@@ -362,8 +361,8 @@ async function createChildProperty(childData) {
     rent,
   } = childData;
   const query = `
-    INSERT INTO child_properties (property_id, floor, title, description, rooms, washroom, gas, electricity, deposit, rent, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')
+    INSERT INTO child_properties (property_id, floor, title, description, rooms, washroom, gas, electricity, deposit, rent)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const [result] = await pool.query(query, [
     property_id,
