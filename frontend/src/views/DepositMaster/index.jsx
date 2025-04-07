@@ -448,13 +448,8 @@ const DepositMaster = () => {
       const formData = new FormData();
       formData.append('formData', JSON.stringify(updatedData));
 
-      if (isEdit) {
-        await axios.put(`${API_URL}child_property/${selectedChildProperty}`, formData);
-        toast.success('Deposit updated successfully!');
-      } else {
-        await axios.post(`${API_URL}child_property`, formData);
-        toast.success('Deposit added successfully!');
-      }
+      await axios.put(`${API_URL}child_property/${selectedChildProperty}`, formData);
+      toast.success('Deposit updated successfully!');
       fetchData();
       resetForm();
     } catch (error) {

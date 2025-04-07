@@ -447,13 +447,9 @@ const RentMaster = () => {
       const formData = new FormData();
       formData.append('formData', JSON.stringify(updatedData));
 
-      if (isEdit) {
-        await axios.put(`${API_URL}child_property/${selectedChildProperty}`, formData);
-        toast.success('Rent updated successfully!');
-      } else {
-        await axios.post(`${API_URL}child_property`, formData);
-        toast.success('Rent added successfully!');
-      }
+      // Always use PUT to update the existing row
+      await axios.put(`${API_URL}child_property/${selectedChildProperty}`, formData);
+      toast.success('Rent updated successfully!');
       fetchData();
       resetForm();
     } catch (error) {
