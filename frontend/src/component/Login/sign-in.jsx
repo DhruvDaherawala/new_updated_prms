@@ -68,7 +68,7 @@ export function SignIn() {
             </div>
           </div>
           <h4 className="text-3xl font-bold text-gray-800 mb-2">Property Rental Management</h4>
-          <p className="text-gray-600 text-sm">Sign in to access your dashboard</p>
+          {/* <p className="text-gray-600 text-sm">Sign in to access your dashboard</p> */}
         </div>
 
         <form className="space-y-6" onSubmit={handleLogin}>
@@ -80,7 +80,7 @@ export function SignIn() {
                 placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-10 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <UserIcon className="h-5 w-5 text-gray-400" />
@@ -96,7 +96,7 @@ export function SignIn() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-10 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <LockIcon className="h-5 w-5 text-gray-400" />
@@ -111,7 +111,7 @@ export function SignIn() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          {/* <div className="flex items-center justify-between text-sm">
             <div className="flex items-center">
               <input
                 id="remember-me"
@@ -126,7 +126,7 @@ export function SignIn() {
             <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
               Forgot password?
             </a>
-          </div>
+          </div> */}
 
           <button
             type="submit"
