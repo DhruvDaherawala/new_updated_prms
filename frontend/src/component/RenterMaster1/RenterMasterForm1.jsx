@@ -1,5 +1,6 @@
 // 02-24-25
 // RenterMasterForm.jsx
+
 import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -60,21 +61,39 @@ export default function RenterMasterForm() {
     fetchRenters();
   }, []);
 
+  // const fetchRenters = async () => {
+  //   setIsLoading(true); 
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const response = await axios.get(`${API_URL}renter`, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setRenters(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching renters:', error);
+  //     toast.error('Error fetching renters.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const fetchRenters = async () => {
-    setIsLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}renter`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setRenters(response.data);
-    } catch (error) {
-      console.error('Error fetching renters:', error);
-      toast.error('Error fetching renters.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${API_URL}renter`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    // Show latest renters first
+    setRenters(response.data.reverse());
+  } catch (error) {
+    console.error('Error fetching renters:', error);
+    toast.error('Error fetching renters.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const filteredRenters = renters.filter(
     (renter) =>
@@ -109,6 +128,18 @@ export default function RenterMasterForm() {
         remarks: formData.remarks,
         status: formData.status
       };
+
+//       const textData = {
+//   renterName: formData.renterName,
+//   fullAddress: formData.fullAddress,
+//   age: formData.age,
+//   numberOfStayers: formData.numberOfStayers,
+//   contact1: formData.contact1,
+//   contact2: formData.contact2,
+//   remarks: formData.remarks,
+//   status: formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()
+// };
+
 
       form.append('formData', JSON.stringify(textData));
 
@@ -162,6 +193,8 @@ export default function RenterMasterForm() {
       status: 'Active'
     });
   };
+
+  
 
   const handleEditClick = (renter) => {
     setFormData({
