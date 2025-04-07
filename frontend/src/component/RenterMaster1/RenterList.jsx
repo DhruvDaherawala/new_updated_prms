@@ -24,7 +24,7 @@ export default function RenterList({
   const filteredRenters = renters.filter((renter) =>
     Object.values(renter).some((val) => val && val.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
+  console.log(filteredRenters);
   const totalPages = Math.ceil(filteredRenters.length / itemsPerPage);
   const paginatedRenters = filteredRenters.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -70,7 +70,7 @@ export default function RenterList({
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Age</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Documents</th>
+                <th className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Documents</th>
                 <th className="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -88,7 +88,53 @@ export default function RenterList({
                     <Chip label={renter.status || 'Active'} color={getStatusColor(renter.status)} size="small" variant="outlined" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    <DocumentLink document={renter.aadhaarCard} apiUrl={apiUrl} />
+                    <div className="flex items-center gap-2">
+                      {renter.aadhaarCard ? (
+                        <Button
+                          href={renter.aadhaarCard} // Use the Cloudinary URL directly
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          sx={{ fontSize: '12px' }}
+                        >
+                          View Document
+                        </Button>
+                      ) : (
+                        '-'
+                      )}
+                      {renter.passportPhoto ? (
+                        <Button
+                          href={renter.passportPhoto} // Use the Cloudinary URL directly
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          sx={{ fontSize: '12px' }}
+                        >
+                          View Document
+                        </Button>
+                      ) : (
+                        '-'
+                      )}
+                      {renter.otherDocument ? (
+                        <Button
+                          href={renter.otherDocument} // Use the Cloudinary URL directly
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          sx={{ fontSize: '12px' }}
+                        >
+                          View Document
+                        </Button>
+                      ) : (
+                        '-'
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2 justify-center">
@@ -122,25 +168,25 @@ export default function RenterList({
 }
 
 // Helper component for document links
-function DocumentLink({ document, apiUrl }) {
-  if (!document)
-    return (
-      <Typography variant="caption" color="text.secondary">
-        No document
-      </Typography>
-    );
+// function DocumentLink({ document, apiUrl }) {
+//   if (!document)
+//     return (
+//       <Typography variant="caption" color="text.secondary">
+//         No document
+//       </Typography>
+//     );
 
-  return (
-    <Button
-      href={`${apiUrl}uploads/${document}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      variant="outlined"
-      size="small"
-      color="primary"
-      sx={{ fontSize: '12px' }}
-    >
-      View Document
-    </Button>
-  );
-}
+//   return (
+//     <Button
+//       href={`${apiUrl}uploads/${document}`}
+//       target="_blank"
+//       rel="noopener noreferrer"
+//       variant="outlined"
+//       size="small"
+//       color="primary"
+//       sx={{ fontSize: '12px' }}
+//     >
+//       View Document
+//     </Button>
+//   );
+// }
