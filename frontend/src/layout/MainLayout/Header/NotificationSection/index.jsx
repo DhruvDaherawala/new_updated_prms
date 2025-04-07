@@ -19,7 +19,9 @@ import {
   Badge,
   Modal,
   Box,
-  IconButton
+  IconButton,
+  Divider,
+  Tooltip
 } from '@mui/material';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import QueryBuilderTwoToneIcon from '@mui/icons-material/QueryBuilderTwoTone';
@@ -34,9 +36,12 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  borderRadius: '8px',
-  boxShadow: 24,
-  p: 4
+  borderRadius: '12px',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  p: 4,
+  '&:focus': {
+    outline: 'none'
+  }
 };
 
 const NotificationSection = () => {
@@ -128,19 +133,44 @@ const NotificationSection = () => {
 
   return (
     <>
-      <Button
-        sx={{ minWidth: { sm: 50, xs: 35 } }}
-        ref={anchorRef}
-        aria-controls={open ? 'menu-list-grow' : undefined}
-        aria-haspopup="true"
-        aria-label="Notification"
-        onClick={handleToggle}
-        color="inherit"
-      >
-        <Badge badgeContent={renterDueData?.length} color="error">
-          <NotificationsNoneTwoToneIcon sx={{ fontSize: '1.5rem' }} />
-        </Badge>
-      </Button>
+      <Tooltip title="Notifications">
+        <Button
+          sx={{
+            minWidth: { sm: 50, xs: 35 },
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              transform: 'scale(1.05)'
+            }
+          }}
+          ref={anchorRef}
+          aria-controls={open ? 'menu-list-grow' : undefined}
+          aria-haspopup="true"
+          aria-label="Notification"
+          onClick={handleToggle}
+          color="inherit"
+        >
+          <Badge
+            badgeContent={renterDueData?.length}
+            color="error"
+            sx={{
+              '& .MuiBadge-badge': {
+                right: -3,
+                top: 13,
+                border: `2px solid ${theme.palette.background.paper}`,
+                padding: '0 4px',
+                minWidth: '20px',
+                height: '20px',
+                borderRadius: '10px',
+                backgroundColor: theme.palette.error.main,
+                boxShadow: `0 0 0 2px ${theme.palette.background.paper}`
+              }
+            }}
+          >
+            <NotificationsNoneTwoToneIcon sx={{ fontSize: '1.5rem' }} />
+          </Badge>
+        </Button>
+      </Tooltip>
 
       <Popper
         placement="bottom-end"
@@ -162,63 +192,152 @@ const NotificationSection = () => {
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
-            <Paper>
+            <Paper
+              elevation={8}
+              sx={{
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                width: '400px'
+              }}
+            >
               <ClickAwayListener onClickAway={handleClose}>
                 <List
                   sx={{
                     width: '100%',
-                    maxWidth: 350,
-                    minWidth: 250,
+                    maxWidth: 400,
+                    minWidth: 350,
                     backgroundColor: theme.palette.background.paper,
                     pb: 0,
-                    borderRadius: '10px'
+                    borderRadius: '12px'
                   }}
                 >
-                  <PerfectScrollbar style={{ height: 320, overflowX: 'hidden' }}>
-                    <ListSubheader disableSticky>
-                      <Chip size="small" color="primary" label="Renter Due Notifications" />
-                    </ListSubheader>
-                    {renterDueData?.map((d) => (
-                      <ListItemButton key={d.id} alignItems="flex-start" sx={{ pt: 0 }} onClick={() => handleRenterClick(d)}>
-                        <ListItemAvatar>
-                          <Avatar alt={d.renterName} src={d?.rent_agreement} />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={<Typography variant="subtitle1">{d?.renterName || 'No Name'}</Typography>}
-                          secondary={
-                            <>
-                              <Typography variant="subtitle2">{formatDate(d?.allocation_date)}</Typography>
-                              <Chip
-                                size="small"
-                                label={getStatusLabel(d.rent_status)}
-                                color={getStatusColor(d.rent_status)}
-                                sx={{ mt: 1 }}
-                              />
-                            </>
-                          }
+                  <PerfectScrollbar style={{ height: 480, overflowX: 'hidden' }}>
+                    <ListSubheader
+                      disableSticky
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.primary.contrastText,
+                        py: 2,
+                        px: 3
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          Renter Due Notifications
+                        </Typography>
+                        <Chip
+                          size="medium"
+                          label={renterDueData?.length || 0}
+                          sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            color: 'white',
+                            '& .MuiChip-label': { px: 2, fontSize: '0.9rem' }
+                          }}
                         />
-                        <ListItemSecondaryAction sx={{ top: 20 }}>
-                          <Grid container justifyContent="flex-end">
-                            <Grid item>
-                              <QueryBuilderTwoToneIcon
+                      </Box>
+                    </ListSubheader>
+                    {renterDueData?.length === 0 ? (
+                      <Box sx={{ p: 4, textAlign: 'center' }}>
+                        <NotificationsNoneTwoToneIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+                        <Typography variant="body1" color="text.secondary">
+                          No notifications at the moment
+                        </Typography>
+                      </Box>
+                    ) : (
+                      renterDueData?.map((d) => (
+                        <ListItemButton
+                          key={d.id}
+                          alignItems="flex-start"
+                          sx={{
+                            pt: 2,
+                            pb: 2,
+                            px: 3,
+                            transition: 'all 0.2s ease-in-out',
+                            '&:hover': {
+                              backgroundColor: theme.palette.action.hover
+                            }
+                          }}
+                          onClick={() => handleRenterClick(d)}
+                        >
+                          <ListItemAvatar>
+                            <Avatar
+                              alt={d.renterName}
+                              src={d?.rent_agreement}
+                              sx={{
+                                width: 56,
+                                height: 56,
+                                border: `2px solid ${theme.palette[getStatusColor(d.rent_status)].main}`
+                              }}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="h6"
                                 sx={{
-                                  fontSize: '0.75rem',
-                                  mr: 0.5,
-                                  color: theme.palette.grey[400]
+                                  fontWeight: 600,
+                                  color: theme.palette.text.primary,
+                                  mb: 0.5
                                 }}
-                              />
-                            </Grid>
-                            <Grid item>
-                              <Typography variant="caption" display="block" gutterBottom sx={{ color: theme.palette.grey[400] }}>
-                                {d.days_since_allocation >= 0
-                                  ? `${d.days_since_allocation} days ago`
-                                  : `${Math.abs(d.days_since_allocation)} days ahead`}
+                              >
+                                {d?.renterName || 'No Name'}
                               </Typography>
+                            }
+                            secondary={
+                              <Box sx={{ mt: 1 }}>
+                                <Typography
+                                  variant="subtitle1"
+                                  sx={{
+                                    color: theme.palette.text.secondary,
+                                    mb: 1
+                                  }}
+                                >
+                                  {formatDate(d?.allocation_date)}
+                                </Typography>
+                                <Chip
+                                  size="medium"
+                                  label={getStatusLabel(d.rent_status)}
+                                  color={getStatusColor(d.rent_status)}
+                                  sx={{
+                                    height: 28,
+                                    '& .MuiChip-label': { px: 2, fontSize: '0.9rem' }
+                                  }}
+                                />
+                              </Box>
+                            }
+                          />
+                          <ListItemSecondaryAction sx={{ top: 24 }}>
+                            <Grid container justifyContent="flex-end" alignItems="center">
+                              <Grid item>
+                                <QueryBuilderTwoToneIcon
+                                  sx={{
+                                    fontSize: '1rem',
+                                    mr: 1,
+                                    color: theme.palette.grey[400]
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Typography
+                                  variant="body2"
+                                  display="block"
+                                  sx={{
+                                    color: theme.palette.grey[400],
+                                    fontWeight: 500,
+                                    fontSize: '0.9rem'
+                                  }}
+                                >
+                                  {d.days_since_allocation >= 0
+                                    ? `${d.days_since_allocation} days ago`
+                                    : `${Math.abs(d.days_since_allocation)} days ahead`}
+                                </Typography>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </ListItemSecondaryAction>
-                      </ListItemButton>
-                    ))}
+                          </ListItemSecondaryAction>
+                        </ListItemButton>
+                      ))
+                    )}
                   </PerfectScrollbar>
                 </List>
               </ClickAwayListener>
@@ -227,7 +346,17 @@ const NotificationSection = () => {
         )}
       </Popper>
 
-      <Modal open={modalOpen} onClose={handleModalClose} aria-labelledby="renter-due-modal" aria-describedby="renter-due-description">
+      <Modal
+        open={modalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="renter-due-modal"
+        aria-describedby="renter-due-description"
+        sx={{
+          '& .MuiBackdrop-root': {
+            backgroundColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        }}
+      >
         <Box sx={style}>
           <IconButton
             aria-label="close"
@@ -235,26 +364,79 @@ const NotificationSection = () => {
             sx={{
               position: 'absolute',
               right: 8,
-              top: 8
+              top: 8,
+              color: theme.palette.grey[500],
+              '&:hover': {
+                backgroundColor: theme.palette.action.hover
+              }
             }}
           >
             <CloseIcon />
           </IconButton>
           {selectedRenter && (
             <>
-              <Typography id="renter-due-modal" variant="h6" component="h2">
+              <Typography
+                id="renter-due-modal"
+                variant="h6"
+                component="h2"
+                sx={{
+                  fontWeight: 600,
+                  color: theme.palette.text.primary,
+                  mb: 2
+                }}
+              >
                 Rent Notification
               </Typography>
-              <Typography id="renter-due-description" sx={{ mt: 2 }}>
-                Rent is {getStatusLabel(selectedRenter.rent_status).toLowerCase()} for {selectedRenter.renterName}.
-              </Typography>
-              <Typography sx={{ mt: 1 }}>Allocation Date: {formatDate(selectedRenter.allocation_date)}</Typography>
-              <Typography sx={{ mt: 1 }}>
-                Days:{' '}
-                {selectedRenter.days_since_allocation >= 0
-                  ? `${selectedRenter.days_since_allocation} days ago`
-                  : `${Math.abs(selectedRenter.days_since_allocation)} days ahead`}
-              </Typography>
+              <Divider sx={{ mb: 3 }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Avatar
+                  alt={selectedRenter.renterName}
+                  src={selectedRenter?.rent_agreement}
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    mr: 2,
+                    border: `2px solid ${theme.palette[getStatusColor(selectedRenter.rent_status)].main}`
+                  }}
+                />
+                <Box>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontWeight: 600,
+                      color: theme.palette.text.primary
+                    }}
+                  >
+                    {selectedRenter.renterName}
+                  </Typography>
+                  <Chip
+                    size="small"
+                    label={getStatusLabel(selectedRenter.rent_status)}
+                    color={getStatusColor(selectedRenter.rent_status)}
+                    sx={{ mt: 0.5 }}
+                  />
+                </Box>
+              </Box>
+              <Box sx={{ pl: 2 }}>
+                <Typography
+                  id="renter-due-description"
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    mb: 2
+                  }}
+                >
+                  Rent is {getStatusLabel(selectedRenter.rent_status).toLowerCase()} for {selectedRenter.renterName}.
+                </Typography>
+                <Typography sx={{ color: theme.palette.text.secondary, mb: 1 }}>
+                  Allocation Date: {formatDate(selectedRenter.allocation_date)}
+                </Typography>
+                <Typography sx={{ color: theme.palette.text.secondary }}>
+                  Days:{' '}
+                  {selectedRenter.days_since_allocation >= 0
+                    ? `${selectedRenter.days_since_allocation} days ago`
+                    : `${Math.abs(selectedRenter.days_since_allocation)} days ahead`}
+                </Typography>
+              </Box>
             </>
           )}
         </Box>
