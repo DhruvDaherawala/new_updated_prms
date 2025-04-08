@@ -210,6 +210,7 @@
 
 // 01-04-25
 // childPropertyController.js
+
 const childPropertyModel = require("../models/childPropertyModel");
 
 exports.getAllChildProperties = async (req, res) => {
@@ -291,12 +292,10 @@ exports.deleteChildProperty = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Child property not found" });
     }
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Child property marked as deleted successfully!",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Child property marked as deleted successfully!",
+    });
   } catch (error) {
     console.error("Error marking child property as deleted:", error);
     return res.status(500).json({

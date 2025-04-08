@@ -22,12 +22,24 @@ export default function AllocationTable({
   const totalPages = Math.ceil(allocations.length / itemsPerPage);
   const paginatedAllocations = allocations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  // const formatDate = (isoString) => {
+  //   const date = new Date(isoString);
+
+  //   const day = String(date.getUTCDate()).padStart(2, '0');
+  //   const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+  //   const year = String(date.getUTCFullYear()).slice(-2); // Get last 2 digits of the year
+
+  //   return `${day}-${month}-${year}`;
+  // };
+
   const formatDate = (isoString) => {
+    if (!isoString) return '-';
     const date = new Date(isoString);
 
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const year = String(date.getUTCFullYear()).slice(-2); // Get last 2 digits of the year
+    // Use local date methods instead of UTC to match the input from <input type="date">
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is 0-based
+    const year = String(date.getFullYear()).slice(-2); // Last 2 digits of the year
 
     return `${day}-${month}-${year}`;
   };

@@ -99,7 +99,7 @@ export default function RenterList({
                           color="primary"
                           sx={{ fontSize: '12px' }}
                         >
-                          View Document
+                          Aadhaar Card
                         </Button>
                       ) : (
                         '-'
@@ -114,7 +114,7 @@ export default function RenterList({
                           color="primary"
                           sx={{ fontSize: '12px' }}
                         >
-                          View Document
+                          Passport Photo
                         </Button>
                       ) : (
                         '-'
@@ -129,7 +129,7 @@ export default function RenterList({
                           color="primary"
                           sx={{ fontSize: '12px' }}
                         >
-                          View Document
+                          Other Document
                         </Button>
                       ) : (
                         '-'
