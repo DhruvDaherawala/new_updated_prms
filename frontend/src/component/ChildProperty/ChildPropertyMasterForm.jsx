@@ -286,8 +286,21 @@
 
 //       {/* Dashboard Cards */}
 //       <Grid container spacing={3} sx={{ mb: 4 }}>
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #00acc1', height: '100%' }}>
+//         <Grid item xs={12} md={6}>
+//           <Card
+//             elevation={2}
+//             sx={{
+//               borderLeft: '4px solid #2196f3',
+//               height: '100%',
+//               cursor: 'pointer',
+//               transition: 'transform 0.2s',
+//               '&:hover': {
+//                 transform: 'translateY(-4px)',
+//                 boxShadow: '0 12px 20px -10px rgba(33, 150, 243, 0.28)'
+//               }
+//             }}
+//             onClick={() => setSearchTerm('')}
+//           >
 //             <CardContent>
 //               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 //                 <Box>
@@ -298,36 +311,28 @@
 //                     {childProperties.length}
 //                   </Typography>
 //                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#e0f7fa', borderRadius: '50%' }}>
+//                 <Box sx={{ p: 1.5, bgcolor: '#e3f2fd', borderRadius: '50%' }}>
 //                   <ApartmentIcon fontSize="large" color="primary" />
 //                 </Box>
 //               </Box>
 //             </CardContent>
 //           </Card>
 //         </Grid>
-
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #4caf50', height: '100%' }}>
-//             <CardContent>
-//               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Box>
-//                   <Typography variant="overline" color="text.secondary">
-//                     Active Units
-//                   </Typography>
-//                   <Typography variant="h4" fontWeight="bold">
-//                     {getActiveCount()}
-//                   </Typography>
-//                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
-//                   <CheckCircleIcon fontSize="large" color="success" />
-//                 </Box>
-//               </Box>
-//             </CardContent>
-//           </Card>
-//         </Grid>
-
-//         <Grid item xs={12} md={4}>
-//           <Card elevation={2} sx={{ borderLeft: '4px solid #ff9800', height: '100%' }}>
+//         <Grid item xs={12} md={6}>
+//           <Card
+//             elevation={2}
+//             sx={{
+//               borderLeft: '4px solid #ff9800',
+//               height: '100%',
+//               cursor: 'pointer',
+//               transition: 'transform 0.2s',
+//               '&:hover': {
+//                 transform: 'translateY(-4px)',
+//                 boxShadow: '0 12px 20px -10px rgba(255, 152, 0, 0.28)'
+//               }
+//             }}
+//             onClick={() => setSearchTerm('')}
+//           >
 //             <CardContent>
 //               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 //                 <Box>
@@ -719,7 +724,7 @@
 
 //       {/* Dashboard Cards */}
 //       <Grid container spacing={3} sx={{ mb: 4 }}>
-//         <Grid item xs={12} md={4}>
+//         <Grid item xs={12} md={6}>
 //           <Card
 //             elevation={2}
 //             sx={{
@@ -751,39 +756,7 @@
 //             </CardContent>
 //           </Card>
 //         </Grid>
-//         <Grid item xs={12} md={4}>
-//           <Card
-//             elevation={2}
-//             sx={{
-//               borderLeft: '4px solid #4caf50',
-//               height: '100%',
-//               cursor: 'pointer',
-//               transition: 'transform 0.2s',
-//               '&:hover': {
-//                 transform: 'translateY(-4px)',
-//                 boxShadow: '0 12px 20px -10px rgba(76, 175, 80, 0.28)'
-//               }
-//             }}
-//             onClick={() => setSearchTerm('Active')}
-//           >
-//             <CardContent>
-//               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Box>
-//                   <Typography variant="overline" color="text.secondary">
-//                     Active Units
-//                   </Typography>
-//                   <Typography variant="h4" fontWeight="bold">
-//                     {getActiveCount()}
-//                   </Typography>
-//                 </Box>
-//                 <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
-//                   <CheckCircleIcon fontSize="large" color="success" />
-//                 </Box>
-//               </Box>
-//             </CardContent>
-//           </Card>
-//         </Grid>
-//         <Grid item xs={12} md={4}>
+//         <Grid item xs={12} md={6}>
 //           <Card
 //             elevation={2}
 //             sx={{
@@ -1179,7 +1152,7 @@ export default function ChildPropertyMasterForm() {
 
       {/* Dashboard Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Card
             elevation={2}
             sx={{
@@ -1211,39 +1184,7 @@ export default function ChildPropertyMasterForm() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Card
-            elevation={2}
-            sx={{
-              borderLeft: '4px solid #4caf50',
-              height: '100%',
-              cursor: 'pointer',
-              transition: 'transform 0.2s',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 12px 20px -10px rgba(76, 175, 80, 0.28)'
-              }
-            }}
-            onClick={() => setSearchTerm('Active')}
-          >
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography variant="overline" color="text.secondary">
-                    Active Units
-                  </Typography>
-                  <Typography variant="h4" fontWeight="bold">
-                    {getActiveCount()}
-                  </Typography>
-                </Box>
-                <Box sx={{ p: 1.5, bgcolor: '#e8f5e9', borderRadius: '50%' }}>
-                  <CheckCircleIcon fontSize="large" color="success" />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Card
             elevation={2}
             sx={{

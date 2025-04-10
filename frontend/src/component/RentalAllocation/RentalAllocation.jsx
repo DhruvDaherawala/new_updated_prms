@@ -25,6 +25,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import DeleteConfirmationModal from 'component/DeleteModal/DeleteConfirmationModal';
 
 export default function RentalAllocation() {
@@ -48,6 +49,7 @@ export default function RentalAllocation() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [cardFilter, setCardFilter] = useState('all'); // 'all', 'active', 'overdue'
   const [alertMessage, setAlertMessage] = useState({ open: false, message: '', severity: 'info' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAllocation, setSelectedAllocation] = useState(null);
@@ -80,8 +82,24 @@ export default function RentalAllocation() {
   };
 
   const filteredAllocations = useMemo(() => {
-    if (!searchTerm.trim()) return allocations;
-    return allocations.filter((allocation) => {
+    // First apply the card filter
+    let filtered = allocations;
+    
+    if (cardFilter === 'active') {
+      filtered = allocations.filter(a => a.status === 'Active');
+    } else if (cardFilter === 'overdue') {
+      const today = new Date();
+      filtered = allocations.filter(allocation => {
+        if (allocation.status !== 'Active') return false;
+        const allocationDate = new Date(allocation.allocation_date);
+        const daysDifference = Math.floor((today - allocationDate) / (1000 * 60 * 60 * 24));
+        return daysDifference > 30;
+      });
+    }
+    
+    // Then apply the search term filter
+    if (!searchTerm.trim()) return filtered;
+    return filtered.filter((allocation) => {
       const renter = renters.find((r) => r.id === allocation.renter_id);
       const property = properties.find((p) => p.id === allocation.property_id);
       const childProperty = childProperties.find((cp) => cp.id === allocation.childproperty_id);
@@ -93,7 +111,7 @@ export default function RentalAllocation() {
         allocation?.status?.toLowerCase().includes(searchValue)
       );
     });
-  }, [allocations, renters, properties, childProperties, searchTerm]);
+  }, [allocations, renters, properties, childProperties, searchTerm, cardFilter]);
 
   const showAlert = (message, severity = 'info') => {
     setAlertMessage({ open: true, message, severity });
@@ -226,6 +244,27 @@ export default function RentalAllocation() {
 
   const getActiveAllocations = () => allocations.filter((a) => a.status === 'Active').length;
 
+  // Function to calculate overdue rents
+  const getOverdueRents = () => {
+    if (!allocations || allocations.length === 0) return 0;
+    
+    const today = new Date();
+    // Assume any active allocation with allocation_date more than 30 days ago is overdue
+    return allocations.filter(allocation => {
+      if (allocation.status !== 'Active') return false;
+      const allocationDate = new Date(allocation.allocation_date);
+      // Calculate the days since allocation
+      const daysDifference = Math.floor((today - allocationDate) / (1000 * 60 * 60 * 24));
+      return daysDifference > 30; // More than 30 days considered overdue
+    }).length;
+  };
+
+  // Function to handle card click
+  const handleCardClick = (filter) => {
+    setCardFilter(filter);
+    setSearchTerm(''); // Clear any existing search term for clarity
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Header */}
@@ -281,18 +320,21 @@ export default function RentalAllocation() {
 
       {/* Dashboard Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Card
             elevation={2}
             sx={{
               borderLeft: '4px solid #4caf50',
               height: '100%',
               transition: 'transform 0.2s',
+              cursor: 'pointer',
+              backgroundColor: cardFilter === 'all' ? '#f0f7f0' : 'white',
               '&:hover': {
                 transform: 'translateY(-4px)',
                 boxShadow: '0 12px 20px -10px rgba(76, 175, 80, 0.28)'
               }
             }}
+            onClick={() => handleCardClick('all')}
           >
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -311,18 +353,21 @@ export default function RentalAllocation() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Card
             elevation={2}
             sx={{
               borderLeft: '4px solid #2196f3',
               height: '100%',
               transition: 'transform 0.2s',
+              cursor: 'pointer',
+              backgroundColor: cardFilter === 'active' ? '#eaf6ff' : 'white',
               '&:hover': {
                 transform: 'translateY(-4px)',
                 boxShadow: '0 12px 20px -10px rgba(33, 150, 243, 0.28)'
               }
             }}
+            onClick={() => handleCardClick('active')}
           >
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -336,6 +381,39 @@ export default function RentalAllocation() {
                 </Box>
                 <Box sx={{ p: 1.5, bgcolor: '#e3f2fd', borderRadius: '50%' }}>
                   <CheckCircleIcon fontSize="large" color="primary" />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card
+            elevation={2}
+            sx={{
+              borderLeft: '4px solid #f44336',
+              height: '100%',
+              transition: 'transform 0.2s',
+              cursor: 'pointer',
+              backgroundColor: cardFilter === 'overdue' ? '#fff5f5' : 'white',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: '0 12px 20px -10px rgba(244, 67, 54, 0.28)'
+              }
+            }}
+            onClick={() => handleCardClick('overdue')}
+          >
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="text.secondary">
+                    Rent Dues
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {getOverdueRents()}
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 1.5, bgcolor: '#ffebee', borderRadius: '50%' }}>
+                  <MoneyOffIcon fontSize="large" color="error" />
                 </Box>
               </Box>
             </CardContent>
@@ -362,11 +440,27 @@ export default function RentalAllocation() {
 
       {/* Allocations Listing */}
       <Paper sx={{ p: 3, borderRadius: 2 }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          Allocation Listings
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h5">
+            {cardFilter === 'all' ? 'All Allocations' : 
+             cardFilter === 'active' ? 'Active Allocations' : 
+             'Overdue Rent Allocations'}
+          </Typography>
+          {cardFilter !== 'all' && (
+            <Button 
+              variant="outlined" 
+              size="small" 
+              onClick={() => setCardFilter('all')}
+              startIcon={<AssignmentIcon />}
+            >
+              Show All
+            </Button>
+          )}
+        </Box>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          View and manage all property rentals and allocations
+          {cardFilter === 'all' ? 'Viewing all property rentals and allocations' : 
+           cardFilter === 'active' ? 'Viewing only active property allocations' : 
+           'Viewing allocations with overdue rent (>30 days)'}
         </Typography>
         <Divider sx={{ mb: 3 }} />
         {isLoading ? (
